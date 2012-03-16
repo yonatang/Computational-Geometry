@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,8 +31,9 @@ public class CH {
 			throw new IllegalArgumentException("File " + inFile + " not exist");
 		}
 		if (outFile.exists()) {
-			throw new IllegalArgumentException("File " + outFile
-					+ " already exist");
+			if (!outFile.delete())
+				throw new IllegalArgumentException("File " + outFile
+						+ " already exist and cannot be deleted");
 		}
 
 	}
@@ -40,7 +42,7 @@ public class CH {
 	private boolean alternative = false;
 	private File inFile;
 	private File outFile;
-	private Set<Point> points;
+	private List<Point> points;
 	private List<Point> result;
 
 	private void readFile() {
@@ -51,7 +53,7 @@ public class CH {
 			// input is valid, offcourse.
 			reader.readLine();
 			String pair = null;
-			points = new HashSet<CH.Point>();
+			Set<CH.Point> pointset = new HashSet<CH.Point>();
 			while ((pair = reader.readLine()) != null) {
 				String[] parts = pair.split(" ");
 				if (parts.length != 2)
@@ -61,15 +63,17 @@ public class CH {
 					double x = Double.parseDouble(parts[0]);
 					double y = Double.parseDouble(parts[1]);
 					Point p = new Point(x, y);
-					points.add(p);
+					pointset.add(p);
 				} catch (NumberFormatException e) {
 					throw new RuntimeException("File " + inFile
 							+ " is of wrong format at line " + pair
 							+ " - bad number format");
 				}
 			}
-			if (points.size() == 0)
+			if (pointset.size() == 0)
 				throw new RuntimeException("No data in file " + inFile);
+			points = new ArrayList<CH.Point>();
+			points.addAll(pointset);
 			System.out.println("Read " + points.size() + " points.");
 		} catch (IOException e) {
 			throw new RuntimeException("Problem reading file " + inFile, e);
@@ -190,9 +194,18 @@ public class CH {
 		if (alternative)
 			System.out.println("Using non algorthm taken from the net");
 		readFile();
-		long now = System.currentTimeMillis();
-		scan();
-		long duration = System.currentTimeMillis() - now;
+		long duration, now;
+		if (!alternative) {
+			now = System.currentTimeMillis();
+			scan();
+			duration = System.currentTimeMillis() - now;
+		} else {
+			preAlternativeScan();
+			now = System.currentTimeMillis();
+			alternativeScan();
+			duration = System.currentTimeMillis() - now;
+			postAlternativeScan();
+		}
 		writeFile();
 		System.out.println("Took me " + duration + "ms to calculcate it.");
 
@@ -253,4 +266,96 @@ public class CH {
 		}
 	}
 
+	/**********************************************************************************/
+	// Alternative implementation - taken from
+	// http://www.algorithmist.com/index.php/Monotone_Chain_Convex_Hull.java
+	AltPoint[] altPoints;
+	AltPoint[] altResult;
+
+	public void preAlternativeScan() {
+		altPoints = new AltPoint[points.size()];
+		for (int i = 0; i < points.size(); i++) {
+			altPoints[i] = new AltPoint(points.get(i).getX(), points.get(i)
+					.getY());
+		}
+	}
+
+	public void alternativeScan() {
+		altResult = findHull(altPoints);
+	}
+
+	public void postAlternativeScan() {
+		result = new ArrayList<CH.Point>();
+		for (AltPoint p : altResult) {
+			result.add(new Point(p.x, p.y));
+		}
+	}
+
+	// http://www.dreamincode.net/code/snippet4178.htm
+	class AltPoint implements Comparable<AltPoint> {
+		double x, y;
+
+		AltPoint(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		// sort first on x then on y
+		public int compareTo(AltPoint other) {
+			if (x == other.x)
+				return Double.compare(y, other.y);
+			else
+				return Double.compare(x, other.x);
+		}
+
+		// cross product of two vectors
+		public double cross(AltPoint p) {
+			return x * p.y - y * p.x;
+		}
+
+		// subtraction of two points
+		public AltPoint sub(AltPoint p) {
+			return new AltPoint(x - p.x, y - p.y);
+		}
+
+		public String toString() {
+			return "Point[x=" + x + ",y=" + y + "]";
+		}
+	}
+
+	// Each point passed in via the "points" array should be unique.
+	// If duplicates are passed in the returned polygon might not be a convex
+	// hull.
+	public AltPoint[] findHull(AltPoint[] points) {
+		int n = points.length;
+		Arrays.sort(points);
+		AltPoint[] ans = new AltPoint[2 * n]; // In between we may have a 2n
+												// points
+		int k = 0;
+		int start = 0; // start is the first insertion point
+
+		for (int i = 0; i < n; i++) // Finding lower layer of hull
+		{
+			AltPoint p = points[i];
+			while (k - start >= 2
+					&& p.sub(ans[k - 1]).cross(p.sub(ans[k - 2])) > 0)
+				k--;
+			ans[k++] = p;
+		}
+
+		k--; // drop off last point from lower layer
+		start = k;
+
+		for (int i = n - 1; i >= 0; i--) // Finding top layer from hull
+		{
+			AltPoint p = points[i];
+			while (k - start >= 2
+					&& p.sub(ans[k - 1]).cross(p.sub(ans[k - 2])) > 0)
+				k--;
+			ans[k++] = p;
+		}
+		k--; // drop off last point from top layer
+
+		return Arrays.copyOf(ans, k); // convex hull is of size k
+	}
 }
