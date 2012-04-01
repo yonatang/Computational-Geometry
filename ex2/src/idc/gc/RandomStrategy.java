@@ -8,7 +8,7 @@ public class RandomStrategy implements Strategy {
 
 	private Random rnd = new Random();
 	private Benchmarker b = new Benchmarker();
-	private final int TRIES = 11150;
+	private final int TRIES = 10000;
 
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
@@ -19,8 +19,8 @@ public class RandomStrategy implements Strategy {
 			Set<Circle> results = new HashSet<Circle>();
 			for (int i = 0; i < n; i++) {
 				double r = rnd.nextDouble() * 50;
-				double x = r + rnd.nextDouble() * (100 - r);
-				double y = r + rnd.nextDouble() * (100 - r);
+				double x = r + rnd.nextDouble() * (100 - r*2);
+				double y = r + rnd.nextDouble() * (100 - r*2);
 				results.add(new Circle(new Point(x, y), r));
 			}
 			int score = b.score(points, results);

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.JFrame;
+
 public class Main {
 
 	private Benchmarker b=new Benchmarker();
@@ -35,6 +37,13 @@ public class Main {
 			System.out.println(c);
 		}
 		System.out.println("Score: "+b.score(points, circles));
+		
+		JFrame frame=new JFrame("Result");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.setSize(410, 410);
+		frame.getContentPane().add(new GraphicComponent(points, circles));
+		frame.setVisible(true);
 	}
 	
 	/**
@@ -44,7 +53,8 @@ public class Main {
 //		new Main(args).run();
 		String file;
 		file="samples/bm_grid100_.txt";
-		file="samples/bm_grid1000_.txt";
+//		file="samples/bm_grid1000_.txt";
+//		file="samples/bm_random_1000_1.txt";
 		new Main(file).run();
 
 	}
