@@ -18,9 +18,9 @@ public class RandomStrategy implements Strategy {
 		while (tryNum-- > 0) {
 			Set<Circle> results = new HashSet<Circle>();
 			for (int i = 0; i < n; i++) {
-				double r = rnd.nextDouble() * 50;
-				double x = r + rnd.nextDouble() * (100 - r*2);
-				double y = r + rnd.nextDouble() * (100 - r*2);
+				double r = rnd.nextDouble() * StrategyData.FIELD_SIZE / 2;
+				double x = r + rnd.nextDouble() * (StrategyData.FIELD_SIZE - r * 2);
+				double y = r + rnd.nextDouble() * (StrategyData.FIELD_SIZE - r * 2);
 				results.add(new Circle(new Point(x, y), r));
 			}
 			int score = b.score(points, results);
