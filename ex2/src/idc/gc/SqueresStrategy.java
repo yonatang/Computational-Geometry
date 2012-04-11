@@ -1,52 +1,83 @@
 package idc.gc;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SqueresStrategy implements Strategy {
 
-	private Set<Squere> squeres=new HashSet<Squere>();
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
-		final Squere ZERO_SQUERE=new Squere(new Point(0, 0), StrategyData.FIELD_SIZE);
-		
+		final Squere ZERO_SQUERE = new Squere(new Point(-0.1, -0.1), StrategyData.FIELD_SIZE + 0.1);
+		Set<Squere> squeres = new HashSet<Squere>();
+
 		squeres.add(ZERO_SQUERE);
-		
-		// TODO Auto-generated method stub
-		return null;
+
+		for (int i = 0; i < n; i++) {
+			Set<Point> largestSet = findLargestIntersect(squeres, points);
+			System.out.println(i + " Largest set size " + largestSet.size());
+			if (largestSet == null || largestSet.size() == 0)
+				break;
+
+			List<Point> ch = CH.findHull(largestSet);
+			double sum = 0;
+			for (int j = 0; j < ch.size() - 1; j++) {
+				Point thisPoint = ch.get(j);
+				Point nextPoint = ch.get(j + 1);
+				sum += thisPoint.getX() * nextPoint.getY() - thisPoint.getY() - nextPoint.getX();
+			}
+			sum=Math.abs(sum*0.5);
+			System.out.println(i+" CH: "+ch);
+			System.out.println(i+" largest set CH area "+sum);
+
+			double edge = Math.min(Math.sqrt(sum),StrategyData.FIELD_SIZE/2);
+			System.out.println(i + " next squere edge is " + edge);
+			Point bestPoint = null;
+			int min = Integer.MAX_VALUE;
+
+			for (Point p : largestSet) {
+				Squere s = new Squere(p.leftUpEps(), edge+0.2);
+				if (squeres.contains(s))
+					continue;
+				squeres.add(s);
+				Set<Point> canidate = findLargestIntersect(squeres, points);
+				if (canidate.size() < min) {
+					bestPoint = p;
+					min = canidate.size();
+				}
+				squeres.remove(s);
+			}
+			if (bestPoint != null){
+				Squere newSquere=new Squere(bestPoint.leftUpEps(), edge+0.2);
+				System.out.println("Adding squere "+newSquere);
+				squeres.add(newSquere);
+			}
+		}
+		squeres.remove(ZERO_SQUERE);
+		System.out.println("Got " + squeres.size() + " squeres:");
+		Set<Circle> result = new HashSet<Circle>();
+
+		for (Squere s : squeres) {
+			System.out.println(s);
+			result.add(s.boundingCircle());
+		}
+		return result;
 	}
-	
-//	private Polygon findLargestIntersect(Set<Squere> squeres,Set<Point> points){
-//		Squere[] cArr = new Squere[squeres.size()];
-//		{
-//			int i = 0;
-//			for (Squere c : squeres) {
-//				cArr[i] = c;
-//				i++;
-//			}
-//		}
-//		HashMap<String, Set<Point>> results = new HashMap<String, Set<Point>>();
-//		for (Point p : points) {
-//			StringBuilder sb = new StringBuilder();
-//			sb.append(';');
-//			for (int i = 0; i < cArr.length; i++) {
-//				//TODO - create a shape, and implement Contains(Point) method, than divider will be generic
-//				double dist=dist(cArr[i].getP(), p);
-//				if (dist < cArr[i].getR()) {
-//					sb.append(i).append(';');
-//				}
-//			}
-//			String circleStr = sb.toString();
-//			if (results.containsKey(circleStr)) {
-//				results.get(circleStr).add(p);
-//			} else {
-//				Set<Point> part=new HashSet<Point>();
-//				part.add(p);
-//				results.put(circleStr, part);
-//			}
-//		}
-//		return results.values();
-//	}
+
+	private Set<Point> findLargestIntersect(Set<Squere> squeres, Set<Point> points) {
+		Benchmarker b = new Benchmarker();
+		Collection<Set<Point>> setOfSets = b.divider(points, squeres);
+
+		int max = Integer.MIN_VALUE;
+		Set<Point> result = null;
+		for (Set<Point> pointSet : setOfSets) {
+			if (pointSet.size() > max) {
+				result = pointSet;
+				max = pointSet.size();
+			}
+		}
+		return result;
+	}
 
 }

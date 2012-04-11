@@ -7,12 +7,6 @@ import java.util.Set;
 
 public class Benchmarker {
 
-	private static double dist(Point p1, Point p2) {
-		double x = p1.getX() - p2.getX();
-		double y = p1.getY() - p2.getY();
-		return Math.sqrt(x * x + y * y);
-	}
-
 	private class MutableInteger {
 
 		public MutableInteger(int value) {
@@ -46,8 +40,7 @@ public class Benchmarker {
 			StringBuilder sb = new StringBuilder();
 			sb.append(';');
 			for (int i = 0; i < cArr.length; i++) {
-				double dist=dist(cArr[i].getP(), p);
-				if (dist < cArr[i].getR()) {
+				if (cArr[i].contains(p)) {
 					sb.append(i).append(';');
 				}
 			}
@@ -67,12 +60,12 @@ public class Benchmarker {
 		return max;
 	}
 	
-	public Collection<Set<Point>> divider(Set<Point> points, Set<Circle> circles){
-		Circle[] cArr = new Circle[circles.size()];
+	public Collection<Set<Point>> divider(Set<Point> points, Set<? extends Shape> shapes){
+		Shape[] shapeArr = new Shape[shapes.size()];
 		{
 			int i = 0;
-			for (Circle c : circles) {
-				cArr[i] = c;
+			for (Shape shape : shapes) {
+				shapeArr[i] = shape;
 				i++;
 			}
 		}
@@ -80,19 +73,18 @@ public class Benchmarker {
 		for (Point p : points) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(';');
-			for (int i = 0; i < cArr.length; i++) {
-				double dist=dist(cArr[i].getP(), p);
-				if (dist < cArr[i].getR()) {
+			for (int i = 0; i < shapeArr.length; i++) {
+				if (shapeArr[i].contains(p)) {
 					sb.append(i).append(';');
 				}
 			}
-			String circleStr = sb.toString();
-			if (results.containsKey(circleStr)) {
-				results.get(circleStr).add(p);
+			String shapeStr = sb.toString();
+			if (results.containsKey(shapeStr)) {
+				results.get(shapeStr).add(p);
 			} else {
 				Set<Point> part=new HashSet<Point>();
 				part.add(p);
-				results.put(circleStr, part);
+				results.put(shapeStr, part);
 			}
 		}
 		return results.values();

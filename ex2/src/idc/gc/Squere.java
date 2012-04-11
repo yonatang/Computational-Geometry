@@ -1,13 +1,14 @@
 package idc.gc;
 
-public class Squere {
+public class Squere implements Shape {
 
 	private Point topLeft;
-	
+
 	private double edge;
 
 	public Squere(Point topLeft, double edge) {
-		super();
+		if (topLeft == null)
+			throw new NullPointerException("Point must not be null");
 		this.topLeft = topLeft;
 		this.edge = edge;
 	}
@@ -62,6 +63,16 @@ public class Squere {
 			return false;
 		return true;
 	}
-	
-	
+
+	@Override
+	public boolean contains(Point p) {
+		return (p.getX() > topLeft.getX()) && (p.getY() > topLeft.getY()) && (p.getX() < topLeft.getX() + edge)
+				&& (p.getY() < topLeft.getY() + edge);
+	}
+
+	public Circle boundingCircle() {
+		Point center = new Point(topLeft.getX() + edge / 2, topLeft.getY() + edge / 2);
+		return new Circle(center, center.distanceTo(topLeft) + 0.1);
+	}
+
 }
