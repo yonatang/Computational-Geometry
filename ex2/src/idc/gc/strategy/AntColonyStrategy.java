@@ -12,29 +12,34 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class AnyColonyStrategy2 implements Strategy {
+public class AntColonyStrategy implements Strategy {
 
 	private final Random RND = new Random();
 
-//	private final double DECEY_RATE = 2;
-//	private final double SUCCESS_RATE=2;
-//	private final double FAIL_RATE=4;
-//	private final double MIN_SCENT = 0.0001;
-//	private final double MAX_SCENT = 10000;
-//	private final long DURATION=TimeUnit.SECONDS.toMillis(30);
+	// private final double DECEY_RATE = 2;
+	// private final double SUCCESS_RATE=2;
+	// private final double FAIL_RATE=4;
+	// private final double MIN_SCENT = 0.0001;
+	// private final double MAX_SCENT = 10000;
+	// private final long DURATION=TimeUnit.SECONDS.toMillis(30);
 
 	private double deceyRate = 2;
-	private double successRate=10;
-	private double failRate=4;
+	private double successRate = 2;
+	private double failRate = 2;
 	private double minScent = 1;
 	private double maxScent = 100;
-	private final long DURATION=TimeUnit.SECONDS.toMillis(30);
+	private boolean silent = false;
+	private final long DURATION = TimeUnit.SECONDS.toMillis(40);
 
-	
+	protected int getExp(int inputSize, int n) {
+		return inputSize * 10;
+	}
+
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
-		System.out.println("Executing on "+points.size()+" points with "+n+" circles");
-		int exp=points.size()/10*n;
+		if (!silent)
+			System.out.println("Executing on " + points.size() + " points with " + n + " circles");
+		int exp = getExp(points.size(), n);
 		Phermons ph = new Phermons();
 		Set<Circle> circles = new HashSet<Circle>();
 		Benchmarker b = new Benchmarker();
@@ -47,47 +52,39 @@ public class AnyColonyStrategy2 implements Strategy {
 		}
 		int lastScore = b.score(points, circles);
 		int notImproved = 0;
-		int iterations = 0;
-		int bestScore=Integer.MAX_VALUE;
-		Set<Circle> bestSet=null;
-		final long timeout=System.currentTimeMillis()+DURATION;
-		while (System.currentTimeMillis()<timeout) {
+		int bestScore = Integer.MAX_VALUE;
+		Set<Circle> bestSet = null;
+		final long timeout = System.currentTimeMillis() + DURATION;
+		while (System.currentTimeMillis() < timeout) {
 			notImproved++;
-			iterations++;
 			CircleAction action = ph.followScent();
 			double step = RND.nextGaussian() * 10;
-//			System.out.print(action + ", step: " + step);
 			action.doAction(step);
 			int score = b.score(points, circles);
-//			System.out.println(", score: " + score);
 			double scent = ph.getScent(action);
 			if (score < lastScore) {
 				ph.updateScent(action, scent * successRate);
-				
+
 			} else if (score > lastScore) {
 				ph.updateScent(action, scent / failRate);
 			}
 			lastScore = score;
-			if (score<bestScore){
-				bestSet=copyResult(circles);
-				bestScore=score;
-				System.out.println("Improved after "+notImproved);
+			if (score < bestScore) {
+				bestSet = copyResult(circles);
+				bestScore = score;
 				notImproved = 0;
+				//?
 			}
 			ph.deceyScent();
-			if (iterations % 1000 == 0) {
-				System.out.println("Iteration " + iterations + " score is " + bestScore);
-
-			}
-			if (notImproved > exp*100)
+			if (notImproved > exp)
 				break;
 		}
 		return bestSet;
 	}
 
-	private Set<Circle> copyResult(Set<Circle> circles){
-		HashSet<Circle> result=new HashSet<Circle>();
-		for (Circle c:circles){
+	private Set<Circle> copyResult(Set<Circle> circles) {
+		HashSet<Circle> result = new HashSet<Circle>();
+		for (Circle c : circles) {
 			result.add(c.deepClone());
 		}
 		return result;
@@ -129,32 +126,32 @@ public class AnyColonyStrategy2 implements Strategy {
 			switch (getAction()) {
 			case MOVE_UP:
 				p.setY(p.getY() - step);
-				if (p.getY()<c.getR()){
+				if (p.getY() < c.getR()) {
 					p.setY(c.getR());
 				}
 				break;
 			case MOVE_DOWN:
 				p.setY(p.getY() + step);
-				if (p.getY()+c.getR()>StrategyData.FIELD_SIZE){
-					p.setY(StrategyData.FIELD_SIZE-c.getR());
+				if (p.getY() + c.getR() > StrategyData.FIELD_SIZE) {
+					p.setY(StrategyData.FIELD_SIZE - c.getR());
 				}
 				break;
 			case MOVE_LEFT:
 				p.setX(p.getX() - step);
-				if (p.getX()<c.getR()){
+				if (p.getX() < c.getR()) {
 					p.setX(c.getR());
 				}
 				break;
 			case MOVE_RIGHT:
 				p.setX(p.getX() + step);
-				if (p.getX()+c.getR()>StrategyData.FIELD_SIZE){
-					p.setX(StrategyData.FIELD_SIZE-c.getR());
+				if (p.getX() + c.getR() > StrategyData.FIELD_SIZE) {
+					p.setX(StrategyData.FIELD_SIZE - c.getR());
 				}
 				break;
 			case INC:
 				c.setR(c.getR() + step);
-				if (c.getR()*2>StrategyData.FIELD_SIZE){
-					c.setR(StrategyData.FIELD_SIZE/2);
+				if (c.getR() * 2 > StrategyData.FIELD_SIZE) {
+					c.setR(StrategyData.FIELD_SIZE / 2);
 				}
 				break;
 			case DEC:
@@ -211,8 +208,24 @@ public class AnyColonyStrategy2 implements Strategy {
 			System.out.println(phermons);
 			throw new IllegalStateException("Reached end. Weird.");
 		}
+		
+		public Circle getSmallestCircle(){
+			Set<Circle> circles=new HashSet<Circle>();
+			for (CircleAction ca:phermons.keySet()){
+				circles.add(ca.getCircle());
+			}
+			Circle result=null;
+			double min=Integer.MAX_VALUE;
+			for (Circle c:circles){
+				if (c.getR()<min){
+					min=c.getR();
+					result=c;
+				}
+			}
+			return result;
+		}
 	}
-	
+
 	public double getDeceyRate() {
 		return deceyRate;
 	}
@@ -251,6 +264,14 @@ public class AnyColonyStrategy2 implements Strategy {
 
 	public void setMaxScent(double maxScent) {
 		this.maxScent = maxScent;
-	}	
+	}
+
+	public boolean isSilent() {
+		return silent;
+	}
+
+	public void setSilent(boolean silent) {
+		this.silent = silent;
+	}
 
 }

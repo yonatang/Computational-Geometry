@@ -2,7 +2,7 @@ package idc.gc;
 
 import idc.gc.dt.Circle;
 import idc.gc.dt.Point;
-import idc.gc.strategy.AnyColonyStrategy2;
+import idc.gc.strategy.AntColonyStrategy;
 import idc.gc.strategy.Strategy;
 
 import java.io.BufferedReader;
@@ -28,8 +28,7 @@ public class Main {
 	public void run()throws IOException{
 //		Strategy str=new RandomStrategy();
 //		Strategy str=new SqueresStrategy();
-//		Strategy str=new AntColonyStrategy();
-		Strategy str=new AnyColonyStrategy2();
+		Strategy str=new AntColonyStrategy();
 		FileReader fr=new FileReader(input);
 		System.out.println("Reading file "+input);
 		BufferedReader br=new BufferedReader(fr);
@@ -40,7 +39,7 @@ public class Main {
 			points.add(new Point(Double.parseDouble(parts[0]),Double.parseDouble(parts[1])));
 		}
 		
-		Set<Circle> circles=str.execute(points,10);
+		Set<Circle> circles=str.execute(points,20);
 		for (Circle c:circles){
 			System.out.println(c);
 		}
@@ -59,11 +58,11 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
-//		new Main(args).run();
 		String file;
 //		file="samples/bm_grid100_.txt";
-		file="samples/bm_grid1000_.txt";
-//		file="samples/bm_random_1000_1.txt";
+//		file="samples/bm_grid1000_.txt";
+		file="samples/bm_grid10000_.txt";
+//		file="samples/bm_random_10000_0.txt";
 		new Main(file).run();
 
 	}
