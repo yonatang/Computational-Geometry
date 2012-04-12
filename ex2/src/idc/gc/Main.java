@@ -1,5 +1,10 @@
 package idc.gc;
 
+import idc.gc.dt.Circle;
+import idc.gc.dt.Point;
+import idc.gc.strategy.AnyColonyStrategy2;
+import idc.gc.strategy.Strategy;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -22,7 +27,9 @@ public class Main {
 	}
 	public void run()throws IOException{
 //		Strategy str=new RandomStrategy();
-		Strategy str=new SqueresStrategy();
+//		Strategy str=new SqueresStrategy();
+//		Strategy str=new AntColonyStrategy();
+		Strategy str=new AnyColonyStrategy2();
 		FileReader fr=new FileReader(input);
 		System.out.println("Reading file "+input);
 		BufferedReader br=new BufferedReader(fr);
@@ -33,13 +40,14 @@ public class Main {
 			points.add(new Point(Double.parseDouble(parts[0]),Double.parseDouble(parts[1])));
 		}
 		
-		Set<Circle> circles=str.execute(points,12);
+		Set<Circle> circles=str.execute(points,10);
 		for (Circle c:circles){
 			System.out.println(c);
 		}
-		System.out.println("Score: "+b.score(points, circles));
+		int score=b.score(points, circles);
+		System.out.println("Score: "+score);
 		
-		JFrame frame=new JFrame("Result");
+		JFrame frame=new JFrame("Score for '"+str.getName()+"': "+score+" / "+points.size());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.setSize(410, 410);
@@ -54,8 +62,8 @@ public class Main {
 //		new Main(args).run();
 		String file;
 //		file="samples/bm_grid100_.txt";
-//		file="samples/bm_grid1000_.txt";
-		file="samples/bm_random_1000_1.txt";
+		file="samples/bm_grid1000_.txt";
+//		file="samples/bm_random_1000_1.txt";
 		new Main(file).run();
 
 	}

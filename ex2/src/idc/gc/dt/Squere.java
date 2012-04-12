@@ -1,4 +1,5 @@
-package idc.gc;
+package idc.gc.dt;
+
 
 public class Squere implements Shape {
 

@@ -1,5 +1,7 @@
 package idc.gc;
 
+import idc.gc.dt.Point;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;

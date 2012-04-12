@@ -1,5 +1,8 @@
 package idc.gc;
 
+import idc.gc.dt.Point;
+import idc.gc.dt.Squere;
+
 import org.junit.Assert;
 import org.junit.Test;
 

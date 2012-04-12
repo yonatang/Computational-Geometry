@@ -1,4 +1,4 @@
-package idc.gc;
+package idc.gc.strategy;
 
 public class StrategyData {
 

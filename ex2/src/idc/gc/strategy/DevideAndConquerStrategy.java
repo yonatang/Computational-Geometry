@@ -1,14 +1,21 @@
-package idc.gc;
+package idc.gc.strategy;
+
+import idc.gc.Benchmarker;
+import idc.gc.CH;
+import idc.gc.dt.Circle;
+import idc.gc.dt.Point;
+import idc.gc.dt.Squere;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SqueresStrategy implements Strategy {
+public class DevideAndConquerStrategy implements Strategy {
 
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
+		System.out.println("Executing on "+points.size()+" points with "+n+" circles");
 		final Squere ZERO_SQUERE = new Squere(new Point(-0.1, -0.1), StrategyData.FIELD_SIZE + 0.1);
 		Set<Squere> squeres = new HashSet<Squere>();
 
@@ -78,6 +85,11 @@ public class SqueresStrategy implements Strategy {
 			}
 		}
 		return result;
+	}
+	
+	@Override
+	public String getName() {
+		return "Divide and Conquere";
 	}
 
 }

@@ -1,4 +1,4 @@
-package idc.gc;
+package idc.gc.dt;
 
 public interface Shape {
 

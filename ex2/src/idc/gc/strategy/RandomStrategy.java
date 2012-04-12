@@ -1,21 +1,27 @@
-package idc.gc;
+package idc.gc.strategy;
+
+import idc.gc.Benchmarker;
+import idc.gc.dt.Circle;
+import idc.gc.dt.Point;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class RandomStrategy implements Strategy {
 
 	private Random rnd = new Random();
 	private Benchmarker b = new Benchmarker();
-	private final int TRIES = 10000;
+	private final long DURATION=TimeUnit.SECONDS.toMillis(30);
 
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
+		System.out.println("Executing on "+points.size()+" points with "+n+" circles");
 		int best = Integer.MAX_VALUE;
-		int tryNum = TRIES;
 		Set<Circle> bestResults = null;
-		while (tryNum-- > 0) {
+		final long timeout=System.currentTimeMillis()+DURATION;
+		while (System.currentTimeMillis()<timeout) {
 			Set<Circle> results = new HashSet<Circle>();
 			for (int i = 0; i < n; i++) {
 				double r = rnd.nextDouble() * StrategyData.FIELD_SIZE / 2;
@@ -31,6 +37,10 @@ public class RandomStrategy implements Strategy {
 		}
 
 		return bestResults;
+	}
+	
+	public String getName(){
+		return "Trivial Radnom Madness";
 	}
 
 }

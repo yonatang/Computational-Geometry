@@ -1,4 +1,5 @@
-package idc.gc;
+package idc.gc.dt;
+
 
 public class Circle implements Shape {
 
@@ -37,6 +38,10 @@ public class Circle implements Shape {
 	@Override
 	public boolean contains(Point p) {
 		return getP().distanceTo(p) < r;
+	}
+	
+	public Circle deepClone(){
+		return new Circle(getP().deepClone(), getR());
 	}
 
 }

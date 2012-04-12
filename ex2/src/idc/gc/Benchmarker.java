@@ -1,5 +1,9 @@
 package idc.gc;
 
+import idc.gc.dt.Circle;
+import idc.gc.dt.Point;
+import idc.gc.dt.Shape;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,8 +63,34 @@ public class Benchmarker {
 		}
 		return max;
 	}
-	
-	public Collection<Set<Point>> divider(Set<Point> points, Set<? extends Shape> shapes){
+
+	public Set<Point> minGroup(Set<Point> points, Set<? extends Shape> shapes) {
+		Collection<Set<Point>> setOfPoints = divider(points, shapes);
+		int min = Integer.MAX_VALUE;
+		Set<Point> result = null;
+		for (Set<Point> set : setOfPoints) {
+			if (set.size() < min) {
+				result = set;
+				min = set.size();
+			}
+		}
+		return result;
+	}
+
+	public Set<Point> maxGroup(Set<Point> points, Set<? extends Shape> shapes) {
+		Collection<Set<Point>> setOfPoints = divider(points, shapes);
+		int max = Integer.MIN_VALUE;
+		Set<Point> result = null;
+		for (Set<Point> set : setOfPoints) {
+			if (set.size()> max) {
+				result = set;
+				max= set.size();
+			}
+		}
+		return result;
+	}
+
+	public Collection<Set<Point>> divider(Set<Point> points, Set<? extends Shape> shapes) {
 		Shape[] shapeArr = new Shape[shapes.size()];
 		{
 			int i = 0;
@@ -82,7 +112,7 @@ public class Benchmarker {
 			if (results.containsKey(shapeStr)) {
 				results.get(shapeStr).add(p);
 			} else {
-				Set<Point> part=new HashSet<Point>();
+				Set<Point> part = new HashSet<Point>();
 				part.add(p);
 				results.put(shapeStr, part);
 			}

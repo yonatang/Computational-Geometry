@@ -1,4 +1,4 @@
-package idc.gc;
+package idc.gc.dt;
 
 public class Point {
 
@@ -77,6 +77,10 @@ public class Point {
 		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
 			return false;
 		return true;
+	}
+	
+	public Point deepClone(){
+		return new Point(getX(), getY());
 	}
 
 }

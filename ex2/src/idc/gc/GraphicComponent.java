@@ -1,5 +1,8 @@
 package idc.gc;
 
+import idc.gc.dt.Circle;
+import idc.gc.dt.Point;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
