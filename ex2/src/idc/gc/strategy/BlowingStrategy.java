@@ -52,8 +52,6 @@ public class BlowingStrategy implements Strategy {
 			boolean improved = false;
 			while (true) {
 				Circle c = Utils.smallest(workingSet, Circle.RADUIS_COMP);
-				System.out.println("Working on " + c);
-				// while (true) {
 				Circle backup = c.deepClone();
 				int score = b.score(points, circles);
 				if (c.getR() > 100) {
@@ -64,14 +62,10 @@ public class BlowingStrategy implements Strategy {
 				int newScore = b.score(points, circles);
 				if (newScore > score) {
 					c.setR(backup.getR());
-					System.out.println("Removing c " + c);
-					System.out.println(workingSet.contains(c));
 					workingSet.remove(c);
-					// break;
 				} else if (newScore < score) {
 					improved = true;
 				}
-				// }
 				if (workingSet.isEmpty())
 					break;
 			}
