@@ -1,0 +1,208 @@
+Step 1
+Executing on 961 points with 2 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 2, score: 283, duration: 78
+Executing on 961 points with 4 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 4, score: 196, duration: 37
+Executing on 961 points with 5 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 5, score: 147, duration: 62
+Executing on 961 points with 7 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 7, score: 103, duration: 149
+Executing on 961 points with 8 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 8, score: 82, duration: 102
+Executing on 961 points with 12 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 12, score: 38, duration: 305
+Executing on 961 points with 16 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 16, score: 28, duration: 368
+Executing on 961 points with 19 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 19, score: 20, duration: 930
+Executing on 961 points with 20 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 20, score: 19, duration: 580
+Executing on 961 points with 21 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 21, score: 18, duration: 944
+Executing on 961 points with 23 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 23, score: 30, duration: 1642
+Executing on 961 points with 32 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 32, score: 14, duration: 3994
+Executing on 961 points with 55 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 55, score: 9, duration: 7999
+Executing on 961 points with 56 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 56, score: 7, duration: 8750
+Executing on 961 points with 57 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 57, score: 10, duration: 5231
+Executing on 961 points with 58 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 58, score: 10, duration: 11486
+Executing on 961 points with 63 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 63, score: 7, duration: 7321
+Total score: 1021
+Total duration: 49978
+
+Step 10
+Executing on 961 points with 2 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 2, score: 376, duration: 3
+Executing on 961 points with 4 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 4, score: 184, duration: 6
+Executing on 961 points with 5 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 5, score: 155, duration: 8
+Executing on 961 points with 7 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 7, score: 105, duration: 16
+Executing on 961 points with 8 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 8, score: 92, duration: 19
+Executing on 961 points with 12 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 12, score: 41, duration: 39
+Executing on 961 points with 16 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 16, score: 30, duration: 72
+Executing on 961 points with 19 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 19, score: 23, duration: 149
+Executing on 961 points with 20 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 20, score: 22, duration: 126
+Executing on 961 points with 21 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 21, score: 21, duration: 141
+Executing on 961 points with 23 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 23, score: 25, duration: 209
+Executing on 961 points with 32 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 32, score: 13, duration: 530
+Executing on 961 points with 55 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 55, score: 6, duration: 1155
+Executing on 961 points with 56 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 56, score: 8, duration: 1051
+Executing on 961 points with 57 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 57, score: 8, duration: 1370
+Executing on 961 points with 58 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 58, score: 8, duration: 1404
+Executing on 961 points with 63 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 63, score: 7, duration: 1410
+Total score: 1124
+Total duration: 7708
+
+
+====
+
+Log step
+
+Executing on 961 points with 2 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 2, score: 283, duration: 68
+Executing on 961 points with 3 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 3, score: 176, duration: 15
+Executing on 961 points with 4 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 4, score: 184, duration: 17
+Executing on 961 points with 5 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 5, score: 117, duration: 24
+Executing on 961 points with 6 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 6, score: 98, duration: 31
+Executing on 961 points with 7 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 7, score: 86, duration: 117
+Executing on 961 points with 8 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 8, score: 88, duration: 55
+Executing on 961 points with 9 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 9, score: 46, duration: 72
+Executing on 961 points with 10 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 10, score: 74, duration: 106
+Executing on 961 points with 11 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 11, score: 55, duration: 129
+Executing on 961 points with 12 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 12, score: 39, duration: 162
+Executing on 961 points with 13 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 13, score: 36, duration: 186
+Executing on 961 points with 14 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 14, score: 37, duration: 213
+Executing on 961 points with 15 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 15, score: 28, duration: 189
+Executing on 961 points with 16 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 16, score: 32, duration: 192
+Executing on 961 points with 17 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 17, score: 28, duration: 254
+Executing on 961 points with 18 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 18, score: 24, duration: 327
+Executing on 961 points with 19 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 19, score: 20, duration: 436
+Executing on 961 points with 20 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 20, score: 21, duration: 583
+Executing on 961 points with 21 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 21, score: 18, duration: 422
+Executing on 961 points with 22 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 22, score: 25, duration: 665
+Executing on 961 points with 23 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 23, score: 24, duration: 626
+Executing on 961 points with 24 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 24, score: 18, duration: 509
+Executing on 961 points with 25 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 25, score: 15, duration: 684
+Executing on 961 points with 26 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 26, score: 22, duration: 1039
+Executing on 961 points with 27 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 27, score: 14, duration: 647
+Executing on 961 points with 28 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 28, score: 15, duration: 770
+Executing on 961 points with 29 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 29, score: 15, duration: 990
+Executing on 961 points with 30 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 30, score: 13, duration: 794
+Executing on 961 points with 31 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 31, score: 12, duration: 1212
+Executing on 961 points with 32 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 32, score: 14, duration: 1148
+Executing on 961 points with 33 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 33, score: 11, duration: 1261
+Executing on 961 points with 34 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 34, score: 16, duration: 1081
+Executing on 961 points with 35 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 35, score: 11, duration: 1411
+Executing on 961 points with 36 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 36, score: 12, duration: 1816
+Executing on 961 points with 37 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 37, score: 12, duration: 1559
+Executing on 961 points with 38 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 38, score: 15, duration: 2145
+Executing on 961 points with 39 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 39, score: 10, duration: 2132
+Executing on 961 points with 40 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 40, score: 10, duration: 2058
+Executing on 961 points with 41 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 41, score: 10, duration: 2064
+Executing on 961 points with 42 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 42, score: 10, duration: 2146
+Executing on 961 points with 43 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 43, score: 10, duration: 2030
+Executing on 961 points with 44 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 44, score: 11, duration: 2254
+Executing on 961 points with 45 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 45, score: 8, duration: 2523
+Executing on 961 points with 46 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 46, score: 10, duration: 2107
+Executing on 961 points with 47 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 47, score: 10, duration: 2448
+Executing on 961 points with 48 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 48, score: 8, duration: 2487
+Executing on 961 points with 49 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 49, score: 9, duration: 3261
+Executing on 961 points with 50 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 50, score: 8, duration: 3976
+Executing on 961 points with 51 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 51, score: 9, duration: 2844
+Executing on 961 points with 52 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 52, score: 7, duration: 3368
+Executing on 961 points with 53 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 53, score: 7, duration: 4061
+Executing on 961 points with 54 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 54, score: 8, duration: 3441
+Executing on 961 points with 55 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 55, score: 6, duration: 3912
+Executing on 961 points with 56 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 56, score: 7, duration: 3755
+Executing on 961 points with 57 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 57, score: 7, duration: 3601
+Executing on 961 points with 58 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 58, score: 9, duration: 3775
+Executing on 961 points with 59 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 59, score: 7, duration: 3690
+Executing on 961 points with 60 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 60, score: 6, duration: 3952
+Executing on 961 points with 61 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 61, score: 7, duration: 4254
+Executing on 961 points with 62 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 62, score: 8, duration: 3958
+Executing on 961 points with 63 circles
+File: samples\bm_grid1000_.txt, points: 961, n: 63, score: 6, duration: 5194
+Total score: 1962
+Total duration: 101246
+

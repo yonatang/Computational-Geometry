@@ -32,13 +32,9 @@ public class Graphics implements Bus {
 		frame.setSize(410, 410);
 		BorderLayout bl = new BorderLayout();
 		frame.setLayout(bl);
-		// Container c = frame.getContentPane();
-		// c.setLayout(bl);
 		sizeMessagePanel = new TextComponent(this);
 		frame.add(new CanvasComponent(this, points, circles), BorderLayout.CENTER);
 		frame.add(sizeMessagePanel, BorderLayout.SOUTH);
-		// c.add(new GraphicComponent(points, circles), BorderLayout.CENTER);
-		// c.add(new TextComponent(), BorderLayout.SOUTH);
 		frame.setVisible(true);
 	}
 }

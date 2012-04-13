@@ -115,6 +115,11 @@ public class CanvasComponent extends JComponent {
 			int x = (int) (c.getP().getX() * xScale) + 5;
 			int y = (int) (c.getP().getY() * yScale) + 5;
 			g.drawOval(x - rX, y - rY, rX * 2, rY * 2);
+			int cX=(int)(c.getP().getX() * xScale);
+			int cY=(int)(c.getP().getY()* yScale);
+			
+			g.drawLine(cX-2, cY, cX+2, cY);
+			g.drawLine(cX, cY-2, cX, cY+2);
 		}
 	}
 }
