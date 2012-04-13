@@ -94,13 +94,15 @@ public class CanvasComponent extends JComponent {
 			g.drawRect(x, y, 1, 1);
 			if (rescale)
 				rectsMap.put(new Rectangle(x - 5, y - 5, 10, 10), pointSetSizes.get(p));
-			if (smallestSet.contains(p)) {
+			int setSize = pointSetSizes.get(p);
+
+			if (setSize == smallestSet.size()) {
 				g.setColor(Color.RED);
 				g.drawRect(x, y, 2, 2);
 				g.drawRect(x - 1, y - 1, 3, 3);
 				g.setColor(Color.RED);
 			}
-			if (largestSet.contains(p)) {
+			if (setSize == largestSet.size()) {
 				g.setColor(Color.BLUE);
 				g.drawRect(x, y, 2, 2);
 				g.setColor(Color.RED);

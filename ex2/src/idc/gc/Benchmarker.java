@@ -5,11 +5,26 @@ import idc.gc.dt.Point;
 import idc.gc.dt.Shape;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Benchmarker {
+
+	public static final Comparator<? extends Collection<?>> COL_SIZE = new Comparator<Collection<?>>() {
+
+		@Override
+		public int compare(Collection<?> o1, Collection<?> o2) {
+			if (o1 == null && o2 == null)
+				return 0;
+			if (o1 == null)
+				return -1;
+			if (o2 == null)
+				return 1;
+			return o1.size() - o2.size();
+		}
+	};
 
 	private class MutableInteger {
 
@@ -85,28 +100,36 @@ public class Benchmarker {
 
 	public Set<Point> minGroup(Set<Point> points, Set<? extends Shape> shapes) {
 		Collection<Set<Point>> setOfPoints = divider(points, shapes);
-		int min = Integer.MAX_VALUE;
-		Set<Point> result = null;
-		for (Set<Point> set : setOfPoints) {
-			if (set.size() < min) {
-				result = set;
-				min = set.size();
+		return Utils.smallest(setOfPoints, new Comparator<Set<Point>>() {
+
+			@Override
+			public int compare(Set<Point> o1, Set<Point> o2) {
+				if (o1 == null && o2 == null)
+					return 0;
+				if (o1 == null)
+					return -1;
+				if (o2 == null)
+					return 1;
+				return o1.size() - o2.size();
 			}
-		}
-		return result;
+		});
 	}
 
 	public Set<Point> maxGroup(Set<Point> points, Set<? extends Shape> shapes) {
 		Collection<Set<Point>> setOfPoints = divider(points, shapes);
-		int max = Integer.MIN_VALUE;
-		Set<Point> result = null;
-		for (Set<Point> set : setOfPoints) {
-			if (set.size() > max) {
-				result = set;
-				max = set.size();
+		return Utils.largest(setOfPoints, new Comparator<Set<Point>>() {
+
+			@Override
+			public int compare(Set<Point> o1, Set<Point> o2) {
+				if (o1 == null && o2 == null)
+					return 0;
+				if (o1 == null)
+					return -1;
+				if (o2 == null)
+					return 1;
+				return o1.size() - o2.size();
 			}
-		}
-		return result;
+		});
 	}
 
 	public Collection<Set<Point>> divider(Set<Point> points, Set<? extends Shape> shapes) {
