@@ -4,6 +4,7 @@ import idc.gc.dt.Circle;
 import idc.gc.dt.Point;
 import idc.gc.graphics.Graphics;
 import idc.gc.strategy.AntColonyStrategy;
+import idc.gc.strategy.BlowingStrategy;
 import idc.gc.strategy.DivideAndConquerStrategy;
 import idc.gc.strategy.RandomStrategy;
 import idc.gc.strategy.Strategy;
@@ -55,6 +56,8 @@ public class Main {
 					strategy = 1;
 				} else if (args[i].equalsIgnoreCase("-dnc")) {
 					strategy = 2;
+				} else if (args[i].equalsIgnoreCase("-blow")) {
+					strategy = 3;
 				} else {
 					help();
 					System.exit(0);
@@ -79,6 +82,9 @@ public class Main {
 			break;
 		case 2:
 			str = new DivideAndConquerStrategy();
+			break;
+		case 3:
+			str = new BlowingStrategy();
 			break;
 		default:
 			str = new AntColonyStrategy();
@@ -119,7 +125,7 @@ public class Main {
 
 	public static void help() {
 		System.out.println("Usage:");
-		System.out.println("n in_file out_file [-no_graph] [-random | -dnc]");
+		System.out.println("n in_file out_file [-no_graph] [-random | -dnc | -blow]");
 		System.out.println("\tn\t\tNumber of circles. 0> n >64");
 		System.out.println("\tin_file\t\tInput file");
 		System.out.println("\tout_file\tOutput file");

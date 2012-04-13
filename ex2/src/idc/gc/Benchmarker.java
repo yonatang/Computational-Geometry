@@ -29,6 +29,26 @@ public class Benchmarker {
 
 	}
 
+	public <T extends Shape> Set<T> findIncludingShapes(Point point, Set<T> shapes) {
+		Set<T> result = new HashSet<T>();
+		for (T shape : shapes) {
+			if (shape.contains(point)) {
+				result.add(shape);
+			}
+		}
+		return result;
+	}
+
+	public <T extends Shape> Set<T> findExcludingShapes(Point point, Set<T> shapes) {
+		Set<T> result = new HashSet<T>();
+		for (T shape : shapes) {
+			if (!shape.contains(point)) {
+				result.add(shape);
+			}
+		}
+		return result;
+	}
+
 	public int score(Set<Point> points, Set<Circle> circles) {
 		Circle[] cArr = new Circle[circles.size()];
 		{
@@ -41,11 +61,11 @@ public class Benchmarker {
 
 		HashMap<Long, MutableInteger> results = new HashMap<Long, Benchmarker.MutableInteger>();
 		for (Point p : points) {
-			long l=1;
+			long l = 1;
 			for (int i = 0; i < cArr.length; i++) {
-				l *=2;
+				l *= 2;
 				if (cArr[i].contains(p)) {
-					l+=1;
+					l += 1;
 				}
 			}
 			if (results.containsKey(l)) {
@@ -81,9 +101,9 @@ public class Benchmarker {
 		int max = Integer.MIN_VALUE;
 		Set<Point> result = null;
 		for (Set<Point> set : setOfPoints) {
-			if (set.size()> max) {
+			if (set.size() > max) {
 				result = set;
-				max= set.size();
+				max = set.size();
 			}
 		}
 		return result;
@@ -100,11 +120,11 @@ public class Benchmarker {
 		}
 		HashMap<Long, Set<Point>> results = new HashMap<Long, Set<Point>>();
 		for (Point p : points) {
-			long l=1;
+			long l = 1;
 			for (int i = 0; i < shapeArr.length; i++) {
-				l *=2;
+				l *= 2;
 				if (shapeArr[i].contains(p)) {
-					l +=1;
+					l += 1;
 				}
 			}
 			if (results.containsKey(l)) {
