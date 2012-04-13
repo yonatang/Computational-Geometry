@@ -1,5 +1,6 @@
-package idc.gc;
+package idc.gc.graphics;
 
+import idc.gc.Benchmarker;
 import idc.gc.dt.Circle;
 import idc.gc.dt.Point;
 
@@ -14,10 +15,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JComponent;
-import javax.swing.ToolTipManager;
 
 @SuppressWarnings("serial")
-public class GraphicComponent extends JComponent {
+public class CanvasComponent extends JComponent {
 
 	private Set<Point> points;
 	private Set<Circle> circles;
@@ -25,9 +25,11 @@ public class GraphicComponent extends JComponent {
 	private Set<Point> smallestSet;
 	private Map<Point, Integer> pointSetSizes = new HashMap<Point, Integer>();
 	private Map<Rectangle, Integer> rectsMap = new HashMap<Rectangle, Integer>();
+	private Bus bus;
 
-	public GraphicComponent(Set<Point> points, Set<Circle> circles) {
+	public CanvasComponent(Bus bus, Set<Point> points, Set<Circle> circles) {
 		super();
+		this.bus = bus;
 		this.points = points;
 		this.circles = circles;
 		Benchmarker b = new Benchmarker();
@@ -54,24 +56,24 @@ public class GraphicComponent extends JComponent {
 				boolean found = false;
 				for (Rectangle r : rectsMap.keySet()) {
 					if (r.contains(e.getPoint())) {
+						CanvasComponent.this.bus.showSize(rectsMap.get(r));
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					setToolTipText("");
+					CanvasComponent.this.bus.showSize(-1);
 				}
-				ToolTipManager.sharedInstance().mouseMoved(e);
 			}
 		});
-
 	}
 
 	private int lastXSize = 0;
 	private int lastYSize = 0;
 
 	public void paint(Graphics g) {
-		Rectangle rect = g.getClipBounds();
+		super.paint(g);
+		g.draw3DRect(0, 0, getWidth() - 1, getHeight() - 1, true);
 		boolean rescale = false;
 
 		if (getHeight() != lastXSize || getWidth() != lastYSize) {
@@ -79,20 +81,19 @@ public class GraphicComponent extends JComponent {
 			lastXSize = getHeight();
 			lastYSize = getWidth();
 		}
-		double xScale = (rect.getWidth() - 5.0) / 100.0;
-		double yScale = (rect.getHeight() - 5.0) / 100.0;
+		double xScale = (getWidth() - 10.0) / 100.0;
+		double yScale = (getHeight() - 10.0) / 100.0;
 
 		g.setColor(Color.RED);
 		if (rescale)
 			rectsMap.clear();
-		
+
 		for (Point p : points) {
 			int x = (int) (p.getX() * xScale) + 5;
 			int y = (int) (p.getY() * yScale) + 5;
 			g.drawRect(x, y, 1, 1);
 			if (rescale)
 				rectsMap.put(new Rectangle(x - 5, y - 5, 10, 10), pointSetSizes.get(p));
-			g.drawRect(x - 5, y - 5, 10, 10);
 			if (smallestSet.contains(p)) {
 				g.setColor(Color.RED);
 				g.drawRect(x, y, 2, 2);

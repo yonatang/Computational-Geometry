@@ -2,6 +2,7 @@ package idc.gc;
 
 import idc.gc.dt.Circle;
 import idc.gc.dt.Point;
+import idc.gc.graphics.Graphics;
 import idc.gc.strategy.AntColonyStrategy;
 import idc.gc.strategy.DivideAndConquerStrategy;
 import idc.gc.strategy.RandomStrategy;
@@ -14,8 +15,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.swing.JFrame;
 
 public class Main {
 	private static final String NEW_LINE = System.getProperty("line.separator");
@@ -97,7 +96,7 @@ public class Main {
 		fr.close();
 
 		long now = System.currentTimeMillis();
-		System.out.println("Using '"+str.getName()+"'");
+		System.out.println("Using '" + str.getName() + "'");
 		Set<Circle> circles = str.execute(points, n);
 		long duration = System.currentTimeMillis() - now;
 
@@ -114,12 +113,7 @@ public class Main {
 		System.out.println("Score: " + score);
 
 		if (!noGraph) {
-			JFrame frame = new JFrame("Score for '" + str.getName() + "': " + score + " / " + points.size());
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			frame.setSize(410, 410);
-			frame.getContentPane().add(new GraphicComponent(points, circles));
-			frame.setVisible(true);
+			new Graphics(points, circles, "Score for '" + str.getName() + "': " + score + " / " + points.size()).show();
 		}
 	}
 
