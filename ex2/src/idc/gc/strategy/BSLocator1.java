@@ -11,22 +11,23 @@ public class BSLocator1 extends BSLocator {
 
 	private List<Point> locatons;
 	private Iterator<Point> iter;
-	public BSLocator1(int n){
+
+	public BSLocator1(int n) {
 		super(n);
-		locatons=new ArrayList<Point>();
+		locatons = new ArrayList<Point>();
 		int[] div = Utils.bestDividion(n);
 		for (int i = 0; i < div.length; i++) {
-			double xStep = StrategyData.FIELD_SIZE / div.length;
-			double yStep = StrategyData.FIELD_SIZE / div[i];
+			double xStep = StrategyData.FIELD_SIZE / (div.length +1);
+			double yStep = StrategyData.FIELD_SIZE / (div[i] +1);
 
 			for (int j = 0; j < div[i]; j++) {
-				locatons.add(new Point(xStep / 2 + i * xStep, yStep / 2 + j * yStep));
+				locatons.add(new Point(xStep  + i * xStep, yStep  + j * yStep));
 			}
 		}
-		iter=locatons.iterator();
-		
+		iter = locatons.iterator();
+
 	}
-	
+
 	@Override
 	public boolean hasNext() {
 		return iter.hasNext();

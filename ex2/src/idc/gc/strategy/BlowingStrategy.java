@@ -23,33 +23,60 @@ public class BlowingStrategy implements Strategy {
 		if (!silent)
 			System.out.println("Executing on " + points.size() + " points with " + n + " circles");
 
-		
 		Set<Circle> circles = new HashSet<Circle>();
 		Benchmarker b = new Benchmarker();
-		n = 6;
+		n = 11;
 		BSLocator locator = new BSLocator1(n);
 		while (locator.hasNext()) {
 			Circle c = new Circle(locator.next(), 5);
 			circles.add(c);
 		}
-		
-		
+		 circles.clear();
+		 circles.add(new Circle(new Point(25,25),5));
+		 circles.add(new Circle(new Point(25,75),5));
+		 circles.add(new Circle(new Point(50,25),5));
+		 circles.add(new Circle(new Point(50,75),5));
+		 circles.add(new Circle(new Point(75,25),5));
+		 circles.add(new Circle(new Point(75,75),5));
+		 
+		 circles.add(new Circle(new Point(25,50),5));
+		 circles.add(new Circle(new Point(37.5,50),5));
+		 circles.add(new Circle(new Point(50,50),5));
+		 circles.add(new Circle(new Point(62.5,50),5));
+		 circles.add(new Circle(new Point(75,50),5));
+
 //		circles.clear();
-//		circles.add(new Circle(new Point(33,33),5));
-//		circles.add(new Circle(new Point(66,66),5));
-//		circles.add(new Circle(new Point(33,66),5));
-//		circles.add(new Circle(new Point(66,33),5));
-//		circles.add(new Circle(new Point(50,33),5));
-//		circles.add(new Circle(new Point(50,66),5));
-//		
-//		circles.clear();
-//		circles.add(new Circle(new Point(33,33),5));
-//		circles.add(new Circle(new Point(66,66),5));
-//		circles.add(new Circle(new Point(33,66),5));
-//		circles.add(new Circle(new Point(66,33),5));
-//		circles.add(new Circle(new Point(50,50),5));
-//		circles.add(new Circle(new Point(50,50),5));
-		
+//
+//		 circles.add(new Circle(new Point(25,50),5));
+//		 circles.add(new Circle(new Point(50,50),5));
+//		 circles.add(new Circle(new Point(75,50),5));
+//
+//		 circles.add(new Circle(new Point(25,25),5));
+//		 circles.add(new Circle(new Point(41.6,25),5));
+//		 circles.add(new Circle(new Point(58.2,25),5));
+//		 circles.add(new Circle(new Point(75,25),5));
+//		 
+//		 circles.add(new Circle(new Point(25,75),5));
+//		 circles.add(new Circle(new Point(41.6,75),5));
+//		 circles.add(new Circle(new Point(58.2,75),5));
+//		 circles.add(new Circle(new Point(75,75),5));
+
+//		 circles.add(new Circle(new Point(66,33),5));
+//		 circles.add(new Circle(new Point(50,50),5));
+//		 circles.add(new Circle(new Point(50,33),5));
+//		 circles.add(new Circle(new Point(50,66),5));
+//		 circles.add(new Circle(new Point(33,50),5));
+//		 circles.add(new Circle(new Point(66,50),5));
+		//
+//		 circles.clear();
+//		 circles.add(new Circle(new Point(33,33),5));
+//		 circles.add(new Circle(new Point(66,66),5));
+//		 circles.add(new Circle(new Point(33,66),5));
+//		 circles.add(new Circle(new Point(66,33),5));
+//		 circles.add(new Circle(new Point(50,33),5));
+//		 circles.add(new Circle(new Point(50,66),5));
+//		 circles.add(new Circle(new Point(50,50),5));
+
 		final double maxRaduisSize = Math.sqrt(2) * StrategyData.FIELD_SIZE;
 		while (true) {
 			Set<Point> maxGroup = b.maxGroup(points, circles);
@@ -119,4 +146,3 @@ public class BlowingStrategy implements Strategy {
 	}
 
 }
-
