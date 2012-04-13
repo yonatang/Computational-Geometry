@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DevideAndConquerStrategy implements Strategy {
+public class DivideAndConquerStrategy implements Strategy {
 
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
@@ -23,7 +23,6 @@ public class DevideAndConquerStrategy implements Strategy {
 
 		for (int i = 0; i < n; i++) {
 			Set<Point> largestSet = findLargestIntersect(squeres, points);
-			System.out.println(i + " Largest set size " + largestSet.size());
 			if (largestSet == null || largestSet.size() == 0)
 				break;
 
@@ -35,11 +34,8 @@ public class DevideAndConquerStrategy implements Strategy {
 				sum += thisPoint.getX() * nextPoint.getY() - thisPoint.getY() - nextPoint.getX();
 			}
 			sum=Math.abs(sum*0.5);
-			System.out.println(i+" CH: "+ch);
-			System.out.println(i+" largest set CH area "+sum);
 
 			double edge = Math.min(Math.sqrt(sum),StrategyData.FIELD_SIZE/2);
-			System.out.println(i + " next squere edge is " + edge);
 			Point bestPoint = null;
 			int min = Integer.MAX_VALUE;
 
@@ -57,16 +53,13 @@ public class DevideAndConquerStrategy implements Strategy {
 			}
 			if (bestPoint != null){
 				Squere newSquere=new Squere(bestPoint.leftUpEps(), edge+0.2);
-				System.out.println("Adding squere "+newSquere);
 				squeres.add(newSquere);
 			}
 		}
 		squeres.remove(ZERO_SQUERE);
-		System.out.println("Got " + squeres.size() + " squeres:");
 		Set<Circle> result = new HashSet<Circle>();
 
 		for (Squere s : squeres) {
-			System.out.println(s);
 			result.add(s.boundingCircle());
 		}
 		return result;
@@ -89,7 +82,7 @@ public class DevideAndConquerStrategy implements Strategy {
 	
 	@Override
 	public String getName() {
-		return "Divide and Conquere";
+		return "Divide and Conquer";
 	}
 
 }

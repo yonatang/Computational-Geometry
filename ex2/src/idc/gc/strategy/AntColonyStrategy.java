@@ -16,13 +16,6 @@ public class AntColonyStrategy implements Strategy {
 
 	private final Random RND = new Random();
 
-	// private final double DECEY_RATE = 2;
-	// private final double SUCCESS_RATE=2;
-	// private final double FAIL_RATE=4;
-	// private final double MIN_SCENT = 0.0001;
-	// private final double MAX_SCENT = 10000;
-	// private final long DURATION=TimeUnit.SECONDS.toMillis(30);
-
 	private double deceyRate = 2;
 	private double successRate = 2;
 	private double failRate = 2;
@@ -68,12 +61,16 @@ public class AntColonyStrategy implements Strategy {
 			} else if (score > lastScore) {
 				ph.updateScent(action, scent / failRate);
 			}
+
 			lastScore = score;
 			if (score < bestScore) {
+				Circle smallest = ph.getSmallestCircle();
+				Set<Point> largestSet = b.maxGroup(points, circles);
+				smallest.setP(largestSet.iterator().next().deepClone());
+				smallest.setR(10);
 				bestSet = copyResult(circles);
 				bestScore = score;
 				notImproved = 0;
-				//?
 			}
 			ph.deceyScent();
 			if (notImproved > exp)
@@ -208,18 +205,18 @@ public class AntColonyStrategy implements Strategy {
 			System.out.println(phermons);
 			throw new IllegalStateException("Reached end. Weird.");
 		}
-		
-		public Circle getSmallestCircle(){
-			Set<Circle> circles=new HashSet<Circle>();
-			for (CircleAction ca:phermons.keySet()){
+
+		public Circle getSmallestCircle() {
+			Set<Circle> circles = new HashSet<Circle>();
+			for (CircleAction ca : phermons.keySet()) {
 				circles.add(ca.getCircle());
 			}
-			Circle result=null;
-			double min=Integer.MAX_VALUE;
-			for (Circle c:circles){
-				if (c.getR()<min){
-					min=c.getR();
-					result=c;
+			Circle result = null;
+			double min = Integer.MAX_VALUE;
+			for (Circle c : circles) {
+				if (c.getR() < min) {
+					min = c.getR();
+					result = c;
 				}
 			}
 			return result;

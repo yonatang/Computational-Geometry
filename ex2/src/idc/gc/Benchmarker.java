@@ -39,20 +39,19 @@ public class Benchmarker {
 			}
 		}
 
-		HashMap<String, MutableInteger> results = new HashMap<String, Benchmarker.MutableInteger>();
+		HashMap<Long, MutableInteger> results = new HashMap<Long, Benchmarker.MutableInteger>();
 		for (Point p : points) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(';');
+			long l=1;
 			for (int i = 0; i < cArr.length; i++) {
+				l *=2;
 				if (cArr[i].contains(p)) {
-					sb.append(i).append(';');
+					l+=1;
 				}
 			}
-			String circleStr = sb.toString();
-			if (results.containsKey(circleStr)) {
-				results.get(circleStr).inc();
+			if (results.containsKey(l)) {
+				results.get(l).inc();
 			} else {
-				results.put(circleStr, new MutableInteger(1));
+				results.put(l, new MutableInteger(1));
 			}
 		}
 		int max = Integer.MIN_VALUE;
@@ -99,22 +98,21 @@ public class Benchmarker {
 				i++;
 			}
 		}
-		HashMap<String, Set<Point>> results = new HashMap<String, Set<Point>>();
+		HashMap<Long, Set<Point>> results = new HashMap<Long, Set<Point>>();
 		for (Point p : points) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(';');
+			long l=1;
 			for (int i = 0; i < shapeArr.length; i++) {
+				l *=2;
 				if (shapeArr[i].contains(p)) {
-					sb.append(i).append(';');
+					l +=1;
 				}
 			}
-			String shapeStr = sb.toString();
-			if (results.containsKey(shapeStr)) {
-				results.get(shapeStr).add(p);
+			if (results.containsKey(l)) {
+				results.get(l).add(p);
 			} else {
 				Set<Point> part = new HashSet<Point>();
 				part.add(p);
-				results.put(shapeStr, part);
+				results.put(l, part);
 			}
 		}
 		return results.values();

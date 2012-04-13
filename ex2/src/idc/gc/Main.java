@@ -3,11 +3,14 @@ package idc.gc;
 import idc.gc.dt.Circle;
 import idc.gc.dt.Point;
 import idc.gc.strategy.AntColonyStrategy;
+import idc.gc.strategy.DivideAndConquerStrategy;
+import idc.gc.strategy.RandomStrategy;
 import idc.gc.strategy.Strategy;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,55 +18,128 @@ import java.util.Set;
 import javax.swing.JFrame;
 
 public class Main {
-
-	private Benchmarker b=new Benchmarker();
+	private static final String NEW_LINE = System.getProperty("line.separator");
+	private Benchmarker b = new Benchmarker();
 	private File input;
-	public Main(String in){
-		input=new File(in);
+	private File output;
+	private int n;
+	private int strategy = 0;
+	private boolean noGraph = false;
+
+	public Main(String in) {
+		input = new File(in);
 	}
+
 	public Main(String[] args) {
-		input=new File(args[0]);
-//		File output=new File("output.txt");
-	}
-	public void run()throws IOException{
-//		Strategy str=new RandomStrategy();
-//		Strategy str=new SqueresStrategy();
-		Strategy str=new AntColonyStrategy();
-		FileReader fr=new FileReader(input);
-		System.out.println("Reading file "+input);
-		BufferedReader br=new BufferedReader(fr);
-		String line=null;
-		Set<Point> points=new HashSet<Point>();
-		while ((line=br.readLine())!=null){
-			String[] parts=line.split(", ");
-			points.add(new Point(Double.parseDouble(parts[0]),Double.parseDouble(parts[1])));
+		String inputFile;
+		String outputFile;
+
+		try {
+			if (args.length < 3) {
+				help();
+				System.exit(0);
+				return;
+			}
+			n = Integer.parseInt(args[0]);
+			if (n < 0 || n > 63) {
+				help();
+				System.exit(0);
+				return;
+			}
+			inputFile = args[1];
+			outputFile = args[2];
+
+			for (int i = 3; i < args.length; i++) {
+				if (args[i].equalsIgnoreCase("-no_graph")) {
+					noGraph = true;
+				} else if (args[i].equalsIgnoreCase("-random")) {
+					strategy = 1;
+				} else if (args[i].equalsIgnoreCase("-dnc")) {
+					strategy = 2;
+				} else {
+					help();
+					System.exit(0);
+					return;
+				}
+			}
+		} catch (Exception e) {
+			help();
+			System.exit(0);
+			return;
 		}
-		
-		Set<Circle> circles=str.execute(points,20);
-		for (Circle c:circles){
+		input = new File(inputFile);
+		output = new File(outputFile);
+	}
+
+	public void run() throws IOException {
+		// Strategy str=new RandomStrategy();
+		Strategy str;
+		switch (strategy) {
+		case 1:
+			str = new RandomStrategy();
+			break;
+		case 2:
+			str = new DivideAndConquerStrategy();
+			break;
+		default:
+			str = new AntColonyStrategy();
+			break;
+		}
+		FileReader fr = new FileReader(input);
+		System.out.println("Reading file " + input);
+		BufferedReader br = new BufferedReader(fr);
+		String line = null;
+		Set<Point> points = new HashSet<Point>();
+		while ((line = br.readLine()) != null) {
+			String[] parts = line.split(", ");
+			points.add(new Point(Double.parseDouble(parts[0]), Double.parseDouble(parts[1])));
+		}
+		fr.close();
+
+		long now = System.currentTimeMillis();
+		System.out.println("Using '"+str.getName()+"'");
+		Set<Circle> circles = str.execute(points, n);
+		long duration = System.currentTimeMillis() - now;
+
+		FileWriter fw = new FileWriter(output);
+		for (Circle c : circles) {
 			System.out.println(c);
+			fw.write(c.getP().getX() + ", " + c.getP().getY() + ", " + c.getR());
+			fw.write(NEW_LINE);
 		}
-		int score=b.score(points, circles);
-		System.out.println("Score: "+score);
-		
-		JFrame frame=new JFrame("Score for '"+str.getName()+"': "+score+" / "+points.size());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		frame.setSize(410, 410);
-		frame.getContentPane().add(new GraphicComponent(points, circles));
-		frame.setVisible(true);
+		fw.close();
+
+		System.out.println("Took " + duration + "ms");
+		int score = b.score(points, circles);
+		System.out.println("Score: " + score);
+
+		if (!noGraph) {
+			JFrame frame = new JFrame("Score for '" + str.getName() + "': " + score + " / " + points.size());
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			frame.setSize(410, 410);
+			frame.getContentPane().add(new GraphicComponent(points, circles));
+			frame.setVisible(true);
+		}
 	}
-	
+
+	public static void help() {
+		System.out.println("Usage:");
+		System.out.println("n in_file out_file [-no_graph] [-random | -dnc]");
+		System.out.println("\tn\t\tNumber of circles. 0> n >64");
+		System.out.println("\tin_file\t\tInput file");
+		System.out.println("\tout_file\tOutput file");
+		System.out.println("\t-no_graph\tDo not produce graphical output at the end of the run");
+		System.out.println("\t-random\t\tUse the Naive Random algorithm");
+		System.out.println("\t-dnc\t\tUse Divide and Conquer algorithm");
+		System.out.println("\tOtherwise, uses Ant Colony algorithm");
+	}
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
-		String file;
-//		file="samples/bm_grid100_.txt";
-//		file="samples/bm_grid1000_.txt";
-		file="samples/bm_grid10000_.txt";
-//		file="samples/bm_random_10000_0.txt";
-		new Main(file).run();
+		new Main(args).run();
 
 	}
 

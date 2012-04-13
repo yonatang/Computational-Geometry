@@ -44,4 +44,36 @@ public class Circle implements Shape {
 		return new Circle(getP().deepClone(), getR());
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((p == null) ? 0 : p.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(r);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Circle other = (Circle) obj;
+		if (p == null) {
+			if (other.p != null)
+				return false;
+		} else if (!p.equals(other.p))
+			return false;
+		if (Double.doubleToLongBits(r) != Double.doubleToLongBits(other.r))
+			return false;
+		return true;
+	}
+	
+	
+
 }
