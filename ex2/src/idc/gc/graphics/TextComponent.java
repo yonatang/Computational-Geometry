@@ -13,11 +13,13 @@ public class TextComponent extends JComponent {
 	}
 
 	String displayText = "";
+	double x, y;
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.drawString(displayText, 10, 14);
+		g.drawString(displayText, 125, 14);
+		g.drawString(String.format("Location: %5.2f, %5.2f", x,y), 10, 14);
 	}
 
 	public void showSize(int size) {
@@ -27,5 +29,11 @@ public class TextComponent extends JComponent {
 			displayText = "";
 		}
 		repaint();
+	}
+
+	public void showSize(double x, double y) {
+		this.x=Math.max(0, Math.min(x, 100));
+		this.y=Math.max(0, Math.min(y, 100));
+
 	}
 }

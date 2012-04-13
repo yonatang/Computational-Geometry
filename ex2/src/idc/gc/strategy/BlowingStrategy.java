@@ -16,22 +16,40 @@ public class BlowingStrategy implements Strategy {
 
 	private boolean logStep = false;
 
-	private int stepSize = 9;
+	private int stepSize = 2;
 
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
 		if (!silent)
 			System.out.println("Executing on " + points.size() + " points with " + n + " circles");
 
-		n = 1;
+		
 		Set<Circle> circles = new HashSet<Circle>();
 		Benchmarker b = new Benchmarker();
-
+		n = 6;
 		BSLocator locator = new BSLocator1(n);
 		while (locator.hasNext()) {
 			Circle c = new Circle(locator.next(), 5);
 			circles.add(c);
 		}
+		
+		
+//		circles.clear();
+//		circles.add(new Circle(new Point(33,33),5));
+//		circles.add(new Circle(new Point(66,66),5));
+//		circles.add(new Circle(new Point(33,66),5));
+//		circles.add(new Circle(new Point(66,33),5));
+//		circles.add(new Circle(new Point(50,33),5));
+//		circles.add(new Circle(new Point(50,66),5));
+//		
+//		circles.clear();
+//		circles.add(new Circle(new Point(33,33),5));
+//		circles.add(new Circle(new Point(66,66),5));
+//		circles.add(new Circle(new Point(33,66),5));
+//		circles.add(new Circle(new Point(66,33),5));
+//		circles.add(new Circle(new Point(50,50),5));
+//		circles.add(new Circle(new Point(50,50),5));
+		
 		final double maxRaduisSize = Math.sqrt(2) * StrategyData.FIELD_SIZE;
 		while (true) {
 			Set<Point> maxGroup = b.maxGroup(points, circles);
@@ -101,3 +119,4 @@ public class BlowingStrategy implements Strategy {
 	}
 
 }
+

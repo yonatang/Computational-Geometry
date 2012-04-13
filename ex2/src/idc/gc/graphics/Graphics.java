@@ -20,6 +20,11 @@ public class Graphics implements Bus {
 		sizeMessagePanel.showSize(size);
 	}
 
+	@Override
+	public void showCords(double x, double y) {
+		sizeMessagePanel.showSize(x, y);
+	}
+
 	public Graphics(Set<Point> points, Set<Circle> circles, String title) {
 		this.points = points;
 		this.circles = circles;

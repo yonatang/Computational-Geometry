@@ -57,6 +57,8 @@ public class CanvasComponent extends JComponent {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
+				double xScale = (getWidth() - 10.0) / 100.0;
+				double yScale = (getHeight() - 10.0) / 100.0;
 				boolean found = false;
 				for (Rectangle r : rectsMap.keySet()) {
 					if (r.contains(e.getPoint())) {
@@ -70,6 +72,9 @@ public class CanvasComponent extends JComponent {
 					choosenSet = null;
 					CanvasComponent.this.bus.showSize(-1);
 				}
+				double vX=(e.getPoint().getX()-5)/xScale;
+				double vY=(e.getPoint().getY()-5)/yScale;
+				CanvasComponent.this.bus.showCords(vX, vY);
 
 				found = false;
 				for (Rectangle r : rectToCircle.keySet()) {
