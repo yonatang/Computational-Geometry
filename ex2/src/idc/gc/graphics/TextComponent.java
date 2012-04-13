@@ -17,7 +17,7 @@ public class TextComponent extends JComponent {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.drawString(displayText, 10, 10);
+		g.drawString(displayText, 10, 14);
 	}
 
 	public void showSize(int size) {

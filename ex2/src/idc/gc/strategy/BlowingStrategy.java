@@ -8,37 +8,31 @@ import idc.gc.dt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 public class BlowingStrategy implements Strategy {
 
-	private final Random RND = new Random();
-
 	private boolean silent = false;
-	
-	private boolean logStep=false;
 
-	private int stepSize = 10;
+	private boolean logStep = false;
+
+	private int stepSize = 9;
 
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
 		if (!silent)
 			System.out.println("Executing on " + points.size() + " points with " + n + " circles");
 
+		n = 1;
 		Set<Circle> circles = new HashSet<Circle>();
 		Benchmarker b = new Benchmarker();
 
-		int[] div = Utils.bestDividion(n);
-		for (int i = 0; i < div.length; i++) {
-			double xStep = StrategyData.FIELD_SIZE / div.length;
-			double yStep = StrategyData.FIELD_SIZE / div[i];
-
-			for (int j = 0; j < div[i]; j++) {
-				Circle c = new Circle(new Point(xStep / 2 + i * xStep, yStep / 2 + j * yStep), 5);
-				circles.add(c);
-			}
+		BSLocator locator = new BSLocator1(n);
+		while (locator.hasNext()) {
+			Circle c = new Circle(locator.next(), 5);
+			circles.add(c);
 		}
+		final double maxRaduisSize = Math.sqrt(2) * StrategyData.FIELD_SIZE;
 		while (true) {
 			Set<Point> maxGroup = b.maxGroup(points, circles);
 			if (maxGroup.isEmpty())
@@ -47,36 +41,37 @@ public class BlowingStrategy implements Strategy {
 			Set<Circle> workingSet = b.findExcludingShapes(rep, circles);
 			boolean improved = false;
 			Map<Circle, Integer> steps = new HashMap<Circle, Integer>();
-			if (logStep)
-			{
+			if (logStep) {
 				for (Circle c : workingSet) {
 					steps.put(c, stepSize);
 				}
 			}
 			while (true) {
+				if (workingSet.isEmpty())
+					break;
 				Circle c = Utils.smallest(workingSet, Circle.RADUIS_COMP);
 				int score = b.score(points, circles);
-				if (c.getR() > 100) {
+				if (c.getR() > maxRaduisSize) {
 					workingSet.remove(c);
 					break;
 				}
 				int thisStepSize;
-				if (logStep){
+				if (logStep) {
 					thisStepSize = steps.get(c);
 				} else {
-					thisStepSize =stepSize;
+					thisStepSize = stepSize;
 				}
 				c.setR(c.getR() + thisStepSize);
-				
+
 				int newScore = b.score(points, circles);
 				if (newScore > score) {
-					if (logStep){
-					c.setR(c.getR() - thisStepSize);
-					if (thisStepSize == 1) {
-						workingSet.remove(c);
-					} else {
-						steps.put(c, Math.max(thisStepSize / 2, 1));
-					}
+					if (logStep) {
+						c.setR(c.getR() - thisStepSize);
+						if (thisStepSize == 1) {
+							workingSet.remove(c);
+						} else {
+							steps.put(c, Math.max(thisStepSize / 2, 1));
+						}
 					} else {
 						c.setR(c.getR() - thisStepSize);
 						workingSet.remove(c);
@@ -84,8 +79,6 @@ public class BlowingStrategy implements Strategy {
 				} else if (newScore < score) {
 					improved = true;
 				}
-				if (workingSet.isEmpty())
-					break;
 			}
 			if (!improved)
 				break;

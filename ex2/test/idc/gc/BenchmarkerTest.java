@@ -55,4 +55,5 @@ public class BenchmarkerTest {
 		points.add(new Point(5.1, 5));
 		Assert.assertEquals(2, b.score(points, circles));
 	}
+	
 }
