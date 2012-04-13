@@ -11,6 +11,7 @@ import idc.gc.strategy.Strategy;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -90,16 +91,9 @@ public class Main {
 			str = new AntColonyStrategy();
 			break;
 		}
-		FileReader fr = new FileReader(input);
+
 		System.out.println("Reading file " + input);
-		BufferedReader br = new BufferedReader(fr);
-		String line = null;
-		Set<Point> points = new HashSet<Point>();
-		while ((line = br.readLine()) != null) {
-			String[] parts = line.split(", ");
-			points.add(new Point(Double.parseDouble(parts[0]), Double.parseDouble(parts[1])));
-		}
-		fr.close();
+		Set<Point> points = readFile(input);
 
 		long now = System.currentTimeMillis();
 		System.out.println("Using '" + str.getName() + "'");
@@ -121,6 +115,19 @@ public class Main {
 		if (!noGraph) {
 			new Graphics(points, circles, "Score for '" + str.getName() + "': " + score + " / " + points.size()).show();
 		}
+	}
+
+	public static Set<Point> readFile(File input) throws FileNotFoundException, IOException {
+		FileReader fr = new FileReader(input);
+		BufferedReader br = new BufferedReader(fr);
+		String line = null;
+		Set<Point> points = new HashSet<Point>();
+		while ((line = br.readLine()) != null) {
+			String[] parts = line.split(", ");
+			points.add(new Point(Double.parseDouble(parts[0]), Double.parseDouble(parts[1])));
+		}
+		fr.close();
+		return points;
 	}
 
 	public static void help() {
