@@ -113,7 +113,8 @@ public class Main {
 		System.out.println("Score: " + score);
 
 		if (!noGraph) {
-			new Graphics(points, circles, "Score for '" + str.getName() + "': " + score + " / " + points.size()).show();
+			new Graphics(points, circles, "Score for '" + str.getName() + "' with " + n + " circles: " + score + " / " + points.size())
+					.show();
 		}
 	}
 
