@@ -33,7 +33,6 @@ public class Board {
 		for (int i = 0; i < newRow.length; i++) {
 			newRow[i].setY(first + i * step);
 		}
-		System.out.println(Arrays.toString(newRow));
 		board[rowIdx] = newRow;
 	}
 
