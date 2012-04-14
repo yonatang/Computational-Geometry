@@ -42,7 +42,7 @@ public class Main {
 				return;
 			}
 			n = Integer.parseInt(args[0]);
-			if (n < 0 || n > 63) {
+			if (n < 1 || n > 63) {
 				help();
 				System.exit(0);
 				return;
@@ -134,7 +134,7 @@ public class Main {
 	public static void help() {
 		System.out.println("Usage:");
 		System.out.println("n in_file out_file [-no_graph] [-random | -dnc | -ant]");
-		System.out.println("\tn\t\tNumber of circles. 0> n >64");
+		System.out.println("\tn\t\tNumber of circles. 0 < n < 64");
 		System.out.println("\tin_file\t\tInput file");
 		System.out.println("\tout_file\tOutput file");
 		System.out.println("\t-no_graph\tDo not produce graphical output at the end of the run");
