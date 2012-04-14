@@ -29,7 +29,6 @@ public class Board {
 		newRow[row.length] = row[0].deepClone();
 		double first = row[0].getY();
 		double step = (max - min) / (newRow.length - 1);
-		System.out.println(Arrays.toString(row));
 		for (int i = 0; i < newRow.length; i++) {
 			newRow[i].setY(first + i * step);
 		}
