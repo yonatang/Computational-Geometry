@@ -5,18 +5,16 @@ import idc.gc.Utils;
 import idc.gc.dt.Circle;
 import idc.gc.dt.Point;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class BlowingStrategy implements Strategy {
 
 	private boolean silent = false;
 
-	private boolean logStep = false;
-
 	private int stepSize = 9;
+
+	private double maxRaduisSize = Math.sqrt(2) * StrategyData.FIELD_SIZE;
 
 	@Override
 	public Set<Circle> execute(Set<Point> points, int n) {
@@ -31,7 +29,6 @@ public class BlowingStrategy implements Strategy {
 			circles.add(c);
 		}
 
-		final double maxRaduisSize = Math.sqrt(2) * StrategyData.FIELD_SIZE;
 		while (true) {
 			Set<Point> maxGroup = b.maxGroup(points, circles);
 			if (maxGroup.isEmpty())
@@ -39,12 +36,6 @@ public class BlowingStrategy implements Strategy {
 			Point rep = maxGroup.iterator().next();
 			Set<Circle> workingSet = b.findExcludingShapes(rep, circles);
 			boolean improved = false;
-			Map<Circle, Integer> steps = new HashMap<Circle, Integer>();
-			if (logStep) {
-				for (Circle c : workingSet) {
-					steps.put(c, stepSize);
-				}
-			}
 			while (true) {
 				if (workingSet.isEmpty())
 					break;
@@ -54,27 +45,12 @@ public class BlowingStrategy implements Strategy {
 					workingSet.remove(c);
 					break;
 				}
-				int thisStepSize;
-				if (logStep) {
-					thisStepSize = steps.get(c);
-				} else {
-					thisStepSize = stepSize;
-				}
-				c.setR(c.getR() + thisStepSize);
+				c.setR(c.getR() + stepSize);
 
 				int newScore = b.score(points, circles);
 				if (newScore > score) {
-					if (logStep) {
-						c.setR(c.getR() - thisStepSize);
-						if (thisStepSize == 1) {
-							workingSet.remove(c);
-						} else {
-							steps.put(c, Math.max(thisStepSize / 2, 1));
-						}
-					} else {
-						c.setR(c.getR() - thisStepSize);
-						workingSet.remove(c);
-					}
+					c.setR(c.getR() - stepSize);
+					workingSet.remove(c);
 				} else if (newScore < score) {
 					improved = true;
 				}
