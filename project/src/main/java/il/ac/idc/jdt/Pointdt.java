@@ -7,7 +7,7 @@ import java.util.Comparator;
  * (pointLineTest).
  */
 public class Pointdt {
-	double x, y, z;
+	private double x, y, z;
 
 	/**
 	 * Default Constructor. <br />
@@ -245,45 +245,45 @@ class Compare implements Comparator<Pointdt> {
 			Pointdt d1 = (Pointdt) o1;
 			Pointdt d2 = (Pointdt) o2;
 			if (_flag == 0) {
-				if (d1.x > d2.x)
+				if (d1.x() > d2.x())
 					return 1;
-				if (d1.x < d2.x)
+				if (d1.x() < d2.x())
 					return -1;
 				// x1 == x2
-				if (d1.y > d2.y)
+				if (d1.y() > d2.y())
 					return 1;
-				if (d1.y < d2.y)
+				if (d1.y() < d2.y())
 					return -1;
 			} else if (_flag == 1) {
-				if (d1.x > d2.x)
+				if (d1.x() > d2.x())
 					return -1;
-				if (d1.x < d2.x)
+				if (d1.x() < d2.x())
 					return 1;
 				// x1 == x2
-				if (d1.y > d2.y)
+				if (d1.y() > d2.y())
 					return -1;
-				if (d1.y < d2.y)
+				if (d1.y() < d2.y())
 					return 1;
 			} else if (_flag == 2) {
-				if (d1.y > d2.y)
+				if (d1.y() > d2.y())
 					return 1;
-				if (d1.y < d2.y)
+				if (d1.y() < d2.y())
 					return -1;
 				// y1 == y2
-				if (d1.x > d2.x)
+				if (d1.x() > d2.x())
 					return 1;
-				if (d1.x < d2.x)
+				if (d1.x() < d2.x())
 					return -1;
 
 			} else if (_flag == 3) {
-				if (d1.y > d2.y)
+				if (d1.y() > d2.y())
 					return -1;
-				if (d1.y < d2.y)
+				if (d1.y() < d2.y())
 					return 1;
 				// y1 == y2
-				if (d1.x > d2.x)
+				if (d1.x() > d2.x())
 					return -1;
-				if (d1.x < d2.x)
+				if (d1.x() < d2.x())
 					return 1;
 			}
 		} else {

@@ -56,7 +56,7 @@ public class DelaunayTriangulation {
 	private Triangle startTriangle;
 
 	// the triangle the convex hull starts from
-	public Triangle startTriangleHull;
+	private Triangle startTriangleHull;
 
 	private int nPoints = 0; // number of points
 	// additional data 4/8/05 used by the iterators
@@ -675,7 +675,7 @@ public class DelaunayTriangulation {
 			int index = 0;
 			while (itn.hasNext()) {
 				Triangle tmp = itn.next();
-				vertices[index++] = tmp.circumcircle().Center();
+				vertices[index++] = tmp.circumcircle().center();
 			}
 
 			return vertices;
@@ -738,7 +738,7 @@ public class DelaunayTriangulation {
 			// the cell line is a line originating from the circumcircle to
 			// infinity
 			// x = 500.0 is used as a large enough value
-			Pointdt circumcircle = neighbor.circumcircle().Center();
+			Pointdt circumcircle = neighbor.circumcircle().center();
 			double xCellLine = (circumcircle.x() + (500.0 * sign));
 			double yCellLine = perpDelta * (xCellLine - circumcircle.x()) + circumcircle.y();
 
@@ -1339,17 +1339,17 @@ public class DelaunayTriangulation {
 			bbMax = new Pointdt(p);
 		} else {
 			if (x < bbMin.x())
-				bbMin.x = x;
+				bbMin.setX(x);
 			else if (x > bbMax.x())
-				bbMax.x = x;
-			if (y < bbMin.y)
-				bbMin.y = y;
+				bbMax.setX(x);
+			if (y < bbMin.y())
+				bbMin.setY(y);
 			else if (y > bbMax.y())
-				bbMax.y = y;
-			if (z < bbMin.z)
-				bbMin.z = z;
+				bbMax.setY(y);
+			if (z < bbMin.z())
+				bbMin.setZ(z);
 			else if (z > bbMax.z())
-				bbMax.z = z;
+				bbMax.setZ(z);
 		}
 	}
 

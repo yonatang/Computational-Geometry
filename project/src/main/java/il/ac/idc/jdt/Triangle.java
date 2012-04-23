@@ -193,13 +193,14 @@ public class Triangle {
 
 	Circle circumcircle() {
 
-		double u = ((a.x - b.x) * (a.x + b.x) + (a.y - b.y) * (a.y + b.y)) / 2.0f;
-		double v = ((b.x - c.x) * (b.x + c.x) + (b.y - c.y) * (b.y + c.y)) / 2.0f;
-		double den = (a.x - b.x) * (b.y - c.y) - (b.x - c.x) * (a.y - b.y);
+		double u = ((a.x() - b.x()) * (a.x() + b.x()) + (a.y() - b.y()) * (a.y() + b.y())) / 2.0f;
+		double v = ((b.x() - c.x()) * (b.x() + c.x()) + (b.y() - c.y()) * (b.y() + c.y())) / 2.0f;
+		double den = (a.x() - b.x()) * (b.y() - c.y()) - (b.x() - c.x()) * (a.y() - b.y());
 		if (den == 0) // oops, degenerate case
 			circum = new Circle(a, Double.POSITIVE_INFINITY);
 		else {
-			Pointdt cen = new Pointdt((u * (b.y - c.y) - v * (a.y - b.y)) / den, (v * (a.x - b.x) - u * (b.x - c.x))
+			Pointdt cen = new Pointdt((u * (b.y() - c.y()) - v * (a.y() - b.y())) / den, (v * (a.x() - b.x()) - u
+					* (b.x() - c.x()))
 					/ den);
 			circum = new Circle(cen, cen.distance2(a));
 		}
@@ -208,7 +209,7 @@ public class Triangle {
 
 	boolean circumcircle_contains(Pointdt p) {
 
-		return circum.Radius() > circum.Center().distance2(p);
+		return circum.radius() > circum.center().distance2(p);
 	}
 
 	public String toString() {
@@ -230,7 +231,7 @@ public class Triangle {
 	 */
 	public boolean contains(Pointdt p) {
 		boolean ans = false;
-		if (this.halfplane | p == null)
+		if (this.halfplane || p == null)
 			return false;
 
 		if (isCorner(p)) {
@@ -259,7 +260,7 @@ public class Triangle {
 	 */
 	public boolean contains_BoundaryIsOutside(Pointdt p) {
 		boolean ans = false;
-		if (this.halfplane | p == null)
+		if (this.halfplane || p == null)
 			return false;
 
 		if (isCorner(p)) {
@@ -287,7 +288,8 @@ public class Triangle {
 	 *         By Eyal Roth & Doron Ganel.
 	 */
 	public boolean isCorner(Pointdt p) {
-		return (p.x == a.x & p.y == a.y) | (p.x == b.x & p.y == b.y) | (p.x == c.x & p.y == c.y);
+		return (p.x() == a.x() && p.y() == a.y()) || (p.x() == b.x() && p.y() == b.y())
+				|| (p.x() == c.x() && p.y() == c.y());
 	}
 
 	// Doron
@@ -321,18 +323,18 @@ public class Triangle {
 		if (q == null || this.halfplane)
 			throw new RuntimeException("*** ERR wrong parameters, can't approximate the z value ..***: " + q);
 		/* incase the query point is on one of the points */
-		if (q.x == a.x & q.y == a.y)
-			return a.z;
-		if (q.x == b.x & q.y == b.y)
-			return b.z;
-		if (q.x == c.x & q.y == c.y)
-			return c.z;
+		if (q.x() == a.x() && q.y() == a.y())
+			return a.z();
+		if (q.x() == b.x() && q.y() == b.y())
+			return b.z();
+		if (q.x() == c.x() && q.y() == c.y())
+			return c.z();
 
 		/*
 		 * plane: aX + bY + c = Z: 2D line: y= mX + k
 		 */
-		double X = 0, x0 = q.x, x1 = a.x, x2 = b.x, x3 = c.x;
-		double Y = 0, y0 = q.y, y1 = a.y, y2 = b.y, y3 = c.y;
+		double X = 0, x0 = q.x(), x1 = a.x(), x2 = b.x(), x3 = c.x();
+		double Y = 0, y0 = q.y(), y1 = a.y(), y2 = b.y(), y3 = c.y();
 		double Z = 0, m01 = 0, k01 = 0, m23 = 0, k23 = 0;
 
 		// 0 - regular, 1-horisintal , 2-vertical.
@@ -374,13 +376,13 @@ public class Triangle {
 		} else {
 			r = (x2 - X) / (x2 - x3);
 		}
-		Z = b.z + (c.z - b.z) * r;
+		Z = b.z() + (c.z() - b.z()) * r;
 		if (flag01 == 2) {
 			r = (y1 - y0) / (y1 - Y);
 		} else {
 			r = (x1 - x0) / (x1 - X);
 		}
-		double qZ = a.z + (Z - a.z) * r;
+		double qZ = a.z() + (Z - a.z()) * r;
 		return qZ;
 	}
 
@@ -410,6 +412,6 @@ public class Triangle {
 	 */
 	public Pointdt z(Pointdt q) {
 		double z = z_value(q);
-		return new Pointdt(q.x, q.y, z);
+		return new Pointdt(q.x(), q.y(), z);
 	}
 }
