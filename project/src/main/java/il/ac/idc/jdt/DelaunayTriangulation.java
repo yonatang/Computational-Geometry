@@ -60,18 +60,18 @@ public class DelaunayTriangulation {
 
 	private int nPoints = 0; // number of points
 	// additional data 4/8/05 used by the iterators
-	private Set<Pointdt> _vertices;
-	private Vector<Triangle> _triangles;
+	private Set<Pointdt> vertices;
+	private Vector<Triangle> triangles;
 
 	// The triangles that were deleted in the last deletePoint iteration.
 	private Vector<Triangle> deletedTriangles;
 	// The triangles that were added in the last deletePoint iteration.
 	private Vector<Triangle> addedTriangles;
 
-	private int _modCount = 0, _modCount2 = 0;
+	private int modCount = 0, modCount2 = 0;
 
 	// the Bounding Box, {{x0,y0,z0} , {x1,y1,z1}}
-	private Pointdt _bb_min, _bb_max;
+	private Pointdt bbMin, bbMax;
 
 	/**
 	 * Index for faster point location searches
@@ -94,12 +94,12 @@ public class DelaunayTriangulation {
 	 * points are ignored.
 	 */
 	public DelaunayTriangulation(Pointdt[] ps) {
-		_modCount = 0;
-		_modCount2 = 0;
-		_bb_min = null;
-		_bb_max = null;
-		this._vertices = new TreeSet<Pointdt>(Pointdt.getComparator());
-		_triangles = new Vector<Triangle>();
+		modCount = 0;
+		modCount2 = 0;
+		bbMin = null;
+		bbMax = null;
+		this.vertices = new TreeSet<Pointdt>(Pointdt.getComparator());
+		triangles = new Vector<Triangle>();
 		deletedTriangles = null;
 		addedTriangles = new Vector<Triangle>();
 		allCollinear = true;
@@ -143,10 +143,10 @@ public class DelaunayTriangulation {
 	 *         ignore - set size).
 	 */
 	public int size() {
-		if (_vertices == null) {
+		if (vertices == null) {
 			return 0;
 		}
-		return _vertices.size();
+		return vertices.size();
 	}
 
 	/**
@@ -155,14 +155,14 @@ public class DelaunayTriangulation {
 	 */
 	public int trianglesSize() {
 		this.initTriangles();
-		return _triangles.size();
+		return triangles.size();
 	}
 
 	/**
 	 * returns the changes counter for this triangulation
 	 */
 	public int getModeCounter() {
-		return this._modCount;
+		return this.modCount;
 	}
 
 	/**
@@ -173,18 +173,18 @@ public class DelaunayTriangulation {
 	 *            new vertex to be inserted the triangulation.
 	 */
 	public void insertPoint(Pointdt p) {
-		if (this._vertices.contains(p))
+		if (this.vertices.contains(p))
 			return;
-		_modCount++;
+		modCount++;
 		updateBoundingBox(p);
-		this._vertices.add(p);
+		this.vertices.add(p);
 		Triangle t = insertPointSimple(p);
 		if (t == null) //
 			return;
 		Triangle tt = t;
 		currT = t; // recall the last point for - fast (last) update iterator.
 		do {
-			flip(tt, _modCount);
+			flip(tt, modCount);
 			tt = tt.canext;
 		} while (tt != t && !tt.halfplane);
 
@@ -235,9 +235,9 @@ public class DelaunayTriangulation {
 				break;
 			}
 		}
-		_triangles.removeAll(deletedTriangles);
-		_triangles.addAll(addedTriangles);
-		_vertices.remove(pointToDelete);
+		triangles.removeAll(deletedTriangles);
+		triangles.addAll(addedTriangles);
+		vertices.remove(pointToDelete);
 		nPoints = nPoints + addedTriangles.size() - deletedTriangles.size();
 		addedTriangles.removeAllElements();
 		deletedTriangles.removeAllElements();
@@ -713,38 +713,38 @@ public class DelaunayTriangulation {
 				third = neighbor.p3();
 
 			// delta (slope) of half plane edge
-			double halfplane_delta = (halfplane.p1().y() - halfplane.p2().y())
+			double halfplaneDelta = (halfplane.p1().y() - halfplane.p2().y())
 					/ (halfplane.p1().x() - halfplane.p2().x());
 
 			// delta of line perpendicular to current half plane edge
-			double perp_delta = (1.0 / halfplane_delta) * (-1.0);
+			double perpDelta = (1.0 / halfplaneDelta) * (-1.0);
 
 			// determine orientation: find if the third point of the triangle
 			// lies above or below the half plane
 			// works by finding the matching y value on the half plane line
 			// equation
 			// for the same x value as the third point
-			double y_orient = halfplane_delta * (third.x() - halfplane.p1().x()) + halfplane.p1().y();
+			double yOrient = halfplaneDelta * (third.x() - halfplane.p1().x()) + halfplane.p1().y();
 			boolean above = true;
-			if (y_orient > third.y())
+			if (yOrient > third.y())
 				above = false;
 
 			// based on orientation, determine cell line direction
 			// (towards right or left side of window)
 			double sign = 1.0;
-			if ((perp_delta < 0 && !above) || (perp_delta > 0 && above))
+			if ((perpDelta < 0 && !above) || (perpDelta > 0 && above))
 				sign = -1.0;
 
 			// the cell line is a line originating from the circumcircle to
 			// infinity
 			// x = 500.0 is used as a large enough value
 			Pointdt circumcircle = neighbor.circumcircle().Center();
-			double x_cell_line = (circumcircle.x() + (500.0 * sign));
-			double y_cell_line = perp_delta * (x_cell_line - circumcircle.x()) + circumcircle.y();
+			double xCellLine = (circumcircle.x() + (500.0 * sign));
+			double yCellLine = perpDelta * (xCellLine - circumcircle.x()) + circumcircle.y();
 
 			Pointdt[] result = new Pointdt[2];
 			result[0] = circumcircle;
-			result[1] = new Pointdt(x_cell_line, y_cell_line);
+			result[1] = new Pointdt(xCellLine, yCellLine);
 
 			return result;
 		}
@@ -761,7 +761,7 @@ public class DelaunayTriangulation {
 		Vector<Triangle> tmp = new Vector<Triangle>();
 		if (this.trianglesSize() > 1) {
 			Triangle t = currT;
-			allTriangles(t, tmp, this._modCount);
+			allTriangles(t, tmp, this.modCount);
 		}
 		return tmp.iterator();
 	}
@@ -1042,9 +1042,9 @@ public class DelaunayTriangulation {
 	 * 
 	 * @return the number of vertices in the convex hull.
 	 */
-	public int CH_size() {
+	public int getConvexHullSize() {
 		int ans = 0;
-		Iterator<Pointdt> it = this.CH_vertices_Iterator();
+		Iterator<Pointdt> it = this.getConvexHullVerticesIterator();
 		while (it.hasNext()) {
 			ans++;
 			it.next();
@@ -1334,22 +1334,22 @@ public class DelaunayTriangulation {
 
 	private void updateBoundingBox(Pointdt p) {
 		double x = p.x(), y = p.y(), z = p.z();
-		if (_bb_min == null) {
-			_bb_min = new Pointdt(p);
-			_bb_max = new Pointdt(p);
+		if (bbMin == null) {
+			bbMin = new Pointdt(p);
+			bbMax = new Pointdt(p);
 		} else {
-			if (x < _bb_min.x())
-				_bb_min.x = x;
-			else if (x > _bb_max.x())
-				_bb_max.x = x;
-			if (y < _bb_min.y)
-				_bb_min.y = y;
-			else if (y > _bb_max.y())
-				_bb_max.y = y;
-			if (z < _bb_min.z)
-				_bb_min.z = z;
-			else if (z > _bb_max.z())
-				_bb_max.z = z;
+			if (x < bbMin.x())
+				bbMin.x = x;
+			else if (x > bbMax.x())
+				bbMax.x = x;
+			if (y < bbMin.y)
+				bbMin.y = y;
+			else if (y > bbMax.y())
+				bbMax.y = y;
+			if (z < bbMin.z)
+				bbMin.z = z;
+			else if (z > bbMax.z())
+				bbMax.z = z;
 		}
 	}
 
@@ -1357,7 +1357,7 @@ public class DelaunayTriangulation {
 	 * @return The bounding rectange between the minimum and maximum coordinates
 	 */
 	public BoundingBox getBoundingBox() {
-		return new BoundingBox(_bb_min, _bb_max);
+		return new BoundingBox(bbMin, bbMax);
 	}
 
 	/**
@@ -1365,7 +1365,7 @@ public class DelaunayTriangulation {
 	 * {{x0,y0,z0}}
 	 */
 	public Pointdt minBoundingBox() {
-		return _bb_min;
+		return bbMin;
 	}
 
 	/**
@@ -1373,7 +1373,7 @@ public class DelaunayTriangulation {
 	 * {{x1,y1,z1}}
 	 */
 	public Pointdt maxBoundingBox() {
-		return _bb_max;
+		return bbMax;
 	}
 
 	/**
@@ -1384,9 +1384,9 @@ public class DelaunayTriangulation {
 	 */
 	public Iterator<Triangle> trianglesIterator() {
 		if (this.size() <= 2)
-			_triangles = new Vector<Triangle>();
+			triangles = new Vector<Triangle>();
 		initTriangles();
-		return _triangles.iterator();
+		return triangles.iterator();
 	}
 
 	/**
@@ -1394,12 +1394,12 @@ public class DelaunayTriangulation {
 	 * 
 	 * @return iterator to the set of all the points on the XY-convex hull.
 	 */
-	public Iterator<Pointdt> CH_vertices_Iterator() {
+	public Iterator<Pointdt> getConvexHullVerticesIterator() {
 		Vector<Pointdt> ans = new Vector<Pointdt>();
 		Triangle curr = this.startTriangleHull;
 		boolean cont = true;
-		double x0 = _bb_min.x(), x1 = _bb_max.x();
-		double y0 = _bb_min.y(), y1 = _bb_max.y();
+		double x0 = bbMin.x(), x1 = bbMax.x();
+		double y0 = bbMin.y(), y1 = bbMax.y();
 		boolean sx, sy;
 		while (cont) {
 			sx = curr.p1().x() == x0 || curr.p1().x() == x1;
@@ -1421,22 +1421,22 @@ public class DelaunayTriangulation {
 	 * @return iterator to the set of points compusing this triangulation.
 	 */
 	public Iterator<Pointdt> verticesIterator() {
-		return this._vertices.iterator();
+		return this.vertices.iterator();
 	}
 
 	private void initTriangles() {
-		if (_modCount == _modCount2)
+		if (modCount == modCount2)
 			return;
 		if (this.size() > 2) {
-			_modCount2 = _modCount;
+			modCount2 = modCount;
 			Vector<Triangle> front = new Vector<Triangle>();
-			_triangles = new Vector<Triangle>();
+			triangles = new Vector<Triangle>();
 			front.add(this.startTriangle);
 			while (front.size() > 0) {
 				Triangle t = front.remove(0);
 				if (t._mark == false) {
 					t._mark = true;
-					_triangles.add(t);
+					triangles.add(t);
 					if (t.abnext != null && !t.abnext._mark) {
 						front.add(t.abnext);
 					}
@@ -1449,8 +1449,8 @@ public class DelaunayTriangulation {
 				}
 			}
 			// _triNum = _triangles.size();
-			for (int i = 0; i < _triangles.size(); i++) {
-				_triangles.elementAt(i)._mark = false;
+			for (int i = 0; i < triangles.size(); i++) {
+				triangles.elementAt(i)._mark = false;
 			}
 		}
 	}
@@ -1463,14 +1463,14 @@ public class DelaunayTriangulation {
 	 * @param yCellCount
 	 *            number of grid cells in a column
 	 */
-	public void IndexData(int xCellCount, int yCellCount) {
+	public void indexData(int xCellCount, int yCellCount) {
 		gridIndex = new GridIndex(this, xCellCount, yCellCount);
 	}
 
 	/**
 	 * Remove any existing spatial indexing
 	 */
-	public void RemoveIndex() {
+	public void removeIndex() {
 		gridIndex = null;
 	}
 }

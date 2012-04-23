@@ -172,8 +172,8 @@ public class IOParsers {
 		FileWriter fw = new FileWriter(tsinFile);
 		PrintWriter os = new PrintWriter(fw);
 		// prints the tsin file header:
-		os.println(dto.CH_size());
-		Iterator<Pointdt> it = dto.CH_vertices_Iterator();
+		os.println(dto.getConvexHullSize());
+		Iterator<Pointdt> it = dto.getConvexHullVerticesIterator();
 		while (it.hasNext()) {
 			os.println(it.next().toFileXY());
 		}
