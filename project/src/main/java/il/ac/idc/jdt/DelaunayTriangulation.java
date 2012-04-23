@@ -1,11 +1,7 @@
 package il.ac.idc.jdt;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -90,7 +86,7 @@ public class DelaunayTriangulation {
 	}
 
 	public DelaunayTriangulation(InputStream stream) throws IOException, UnsupportedFormatException {
-		this(InputParser.read(stream));
+		this(IOParsers.read(stream));
 	}
 
 	/**
@@ -137,7 +133,7 @@ public class DelaunayTriangulation {
 	 * 
 	 */
 	public DelaunayTriangulation(String file) throws IOException, UnsupportedFormatException {
-		this(InputParser.read(file));
+		this(IOParsers.read(file));
 	}
 
 	/**
@@ -271,7 +267,6 @@ public class DelaunayTriangulation {
 			Pointdt p3 = triangle.p3();
 
 			double d3 = p3.distance(pointToDelete);
-			Pointdt p;
 			if (d1 <= d2 && d1 <= d3) {
 				return p1;
 			} else if (d2 <= d1 && d2 <= d3) {
@@ -644,11 +639,11 @@ public class DelaunayTriangulation {
 		Pointdt p2 = triangle.p2();
 		Pointdt p3 = triangle.p3();
 
-		if ((p1.pointLineTest(point, p3) == point.LEFT) && (p2.pointLineTest(point, p3) == point.RIGHT))
+		if ((p1.pointLineTest(point, p3) == Pointdt.LEFT) && (p2.pointLineTest(point, p3) == Pointdt.RIGHT))
 			return p3;
-		if ((p3.pointLineTest(point, p2) == point.LEFT) && (p1.pointLineTest(point, p2) == point.RIGHT))
+		if ((p3.pointLineTest(point, p2) == Pointdt.LEFT) && (p1.pointLineTest(point, p2) == Pointdt.RIGHT))
 			return p2;
-		if ((p2.pointLineTest(point, p1) == point.LEFT) && (p3.pointLineTest(point, p1) == point.RIGHT))
+		if ((p2.pointLineTest(point, p1) == Pointdt.LEFT) && (p3.pointLineTest(point, p1) == Pointdt.RIGHT))
 			return p1;
 		return null;
 	}
@@ -1003,7 +998,6 @@ public class DelaunayTriangulation {
 	}
 
 	private void flip(Triangle t, int mc) {
-
 		Triangle u = t.abnext, v;
 		t._mc = mc;
 		if (u.halfplane || !u.circumcircle_contains(t.c))
@@ -1041,72 +1035,6 @@ public class DelaunayTriangulation {
 	}
 
 	/**
-	 * write all the vertices of this triangulation to a text file of the
-	 * following format <br>
-	 * #vertices (n) <br>
-	 * x1 y1 z1 <br>
-	 * ... <br>
-	 * xn yn zn <br>
-	 */
-	public void write_tsin(String tsinFile) throws Exception {
-		FileWriter fw = new FileWriter(tsinFile);
-		PrintWriter os = new PrintWriter(fw);
-		// prints the tsin file header:
-		int len = this._vertices.size();
-		os.println(len);
-		Iterator<Pointdt> it = this._vertices.iterator();
-		while (it.hasNext()) {
-			os.println(it.next().toFile());
-		}
-		os.close();
-		fw.close();
-	}
-
-	/**
-	 * this method write the triangulation as an SMF file (OFF like format)
-	 * 
-	 * 
-	 * @param smfFile
-	 *            - file name
-	 * @throws Exception
-	 */
-	public void write_smf(String smfFile) throws Exception {
-		int len = this._vertices.size();
-		Pointdt[] ans = new Pointdt[len];
-		Iterator<Pointdt> it = this._vertices.iterator();
-		Comparator<Pointdt> comp = Pointdt.getComparator();
-		for (int i = 0; i < len; i++) {
-			ans[i] = it.next();
-		}
-		Arrays.sort(ans, comp);
-
-		FileWriter fw = new FileWriter(smfFile);
-		PrintWriter os = new PrintWriter(fw);
-		// prints the tsin file header:
-		os.println("begin");
-
-		for (int i = 0; i < len; i++) {
-			os.println("v " + ans[i].toFile());
-		}
-		int t = 0, i1 = -1, i2 = -1, i3 = -1;
-		for (Iterator<Triangle> dt = this.trianglesIterator(); dt.hasNext();) {
-			Triangle curr = dt.next();
-			t++;
-			if (!curr.halfplane) {
-				i1 = Arrays.binarySearch(ans, curr.a, comp);
-				i2 = Arrays.binarySearch(ans, curr.b, comp);
-				i3 = Arrays.binarySearch(ans, curr.c, comp);
-				if (i1 < 0 || i2 < 0 || i3 < 0)
-					throw new RuntimeException("wrong triangulation inner bug - cant write as an SMF file!");
-				os.println("f " + (i1 + 1) + " " + (i2 + 1) + " " + (i3 + 1));
-			}
-		}
-		os.println("end");
-		os.close();
-		fw.close();
-	}
-
-	/**
 	 * compute the number of vertices in the convex hull. <br />
 	 * NOTE: has a 'bug-like' behavor: <br />
 	 * in cases of colinear - not on a asix parallel rectangle, colinear points
@@ -1122,19 +1050,6 @@ public class DelaunayTriangulation {
 			it.next();
 		}
 		return ans;
-	}
-
-	public void write_CH(String tsinFile) throws Exception {
-		FileWriter fw = new FileWriter(tsinFile);
-		PrintWriter os = new PrintWriter(fw);
-		// prints the tsin file header:
-		os.println(CH_size());
-		Iterator<Pointdt> it = this.CH_vertices_Iterator();
-		while (it.hasNext()) {
-			os.println(it.next().toFileXY());
-		}
-		os.close();
-		fw.close();
 	}
 
 	/**
@@ -1234,16 +1149,6 @@ public class DelaunayTriangulation {
 	 * Receives a point and returns all the points of the triangles that shares
 	 * point as a corner (Connected vertices to this point).
 	 * 
-	 * By Doron Ganel & Eyal Roth
-	 */
-	private Vector<Pointdt> findConnectedVertices(Pointdt point) {
-		return findConnectedVertices(point, false);
-	}
-
-	/*
-	 * Receives a point and returns all the points of the triangles that shares
-	 * point as a corner (Connected vertices to this point).
-	 * 
 	 * Set saveTriangles to true if you wish to save the triangles that were
 	 * found.
 	 * 
@@ -1295,14 +1200,6 @@ public class DelaunayTriangulation {
 		}
 
 		return pointsVec;
-	}
-
-	private boolean onPerimeter(Vector<Triangle> triangles) {
-		for (Triangle t : triangles) {
-			if (t.isHalfplane())
-				return true;
-		}
-		return false;
 	}
 
 	// Walks on a consistent side of triangles until a cycle is achieved.

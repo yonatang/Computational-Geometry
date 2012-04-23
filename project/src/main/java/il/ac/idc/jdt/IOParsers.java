@@ -20,7 +20,7 @@ import java.util.Vector;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class InputParser {
+public class IOParsers {
 
 	public static Pointdt[] read(File file) throws IOException {
 		return read(new FileInputStream(file));
@@ -166,6 +166,19 @@ public class InputParser {
 		} finally {
 			IOUtils.closeQuietly(os);
 		}
+	}
+
+	public static void exportCHTsin(DelaunayTriangulation dto, String tsinFile) throws IOException {
+		FileWriter fw = new FileWriter(tsinFile);
+		PrintWriter os = new PrintWriter(fw);
+		// prints the tsin file header:
+		os.println(dto.CH_size());
+		Iterator<Pointdt> it = dto.CH_vertices_Iterator();
+		while (it.hasNext()) {
+			os.println(it.next().toFileXY());
+		}
+		os.close();
+		fw.close();
 
 	}
 

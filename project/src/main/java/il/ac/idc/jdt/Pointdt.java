@@ -136,23 +136,10 @@ public class Pointdt {
 	// pointLineTest
 	// ===============
 	// simple geometry to make things easy!
-	/** �����a----+----b������ */
 	public final static int ONSEGMENT = 0;
-
-	/**
-	 * + <br>
-	 * �����a---------b������
-	 * */
 	public final static int LEFT = 1;
-
-	/**
-	 * �����a---------b������ <br>
-	 * +
-	 * */
 	public final static int RIGHT = 2;
-	/** ��+��a---------b������ */
 	public final static int INFRONTOFA = 3;
-	/** ������a---------b���+��� */
 	public final static int BEHINDB = 4;
 	public final static int ERROR = 5;
 
@@ -244,7 +231,7 @@ public class Pointdt {
 	}
 }
 
-class Compare implements Comparator {
+class Compare implements Comparator<Pointdt> {
 	private int _flag;
 
 	public Compare(int i) {
@@ -252,7 +239,7 @@ class Compare implements Comparator {
 	}
 
 	/** compare between two points. */
-	public int compare(Object o1, Object o2) {
+	public int compare(Pointdt o1, Pointdt o2) {
 		int ans = 0;
 		if (o1 != null && o2 != null && o1 instanceof Pointdt && o2 instanceof Pointdt) {
 			Pointdt d1 = (Pointdt) o1;

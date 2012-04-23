@@ -14,18 +14,6 @@ import org.testng.annotations.Test;
 @Test
 public class SmokeTest {
 
-	public void shouldS() throws Exception {
-		String data = "il_1000.smf";
-		DelaunayTriangulation dt = new DelaunayTriangulation(this.getClass().getResourceAsStream("/inputs/" + data));
-		File f = new File("test1.smf");
-
-		InputParser.exportSmf(dt, f);
-		assertThat(
-				data + " trangulation is correct for smf",
-				IOUtils.contentEquals(FileUtils.openInputStream(f),
-						this.getClass().getResourceAsStream("/outputs/" + data + "_result.smf")));
-	}
-
 	public void shouldRunOnExampleData() throws Exception {
 		for (String data : Arrays.asList("t1_1000.tsin", "t1_5000.tsin", "il_1000.smf", "t1_5000.smf",
 				"terra_13000.smf", "terra_13000.tsin")) {
@@ -34,12 +22,12 @@ public class SmokeTest {
 			File tsinTemp = File.createTempFile("jdt-", ".tsin");
 
 			try {
-				InputParser.exportSmf(dt, smfTemp);
+				IOParsers.exportSmf(dt, smfTemp);
 				assertThat(
 						data + " trangulation is correct for smf",
 						IOUtils.contentEquals(FileUtils.openInputStream(smfTemp),
 								this.getClass().getResourceAsStream("/outputs/" + data + "_result.smf")));
-				InputParser.exportTsin(dt, tsinTemp);
+				IOParsers.exportTsin(dt, tsinTemp);
 				assertThat(
 						data + " trangulation is correct tsin",
 						IOUtils.contentEquals(FileUtils.openInputStream(tsinTemp),
