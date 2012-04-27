@@ -8,14 +8,34 @@ package il.ac.idc.jdt;
 public class Triangle {
 	private Point a, b, c;
 	private Triangle abnext, bcnext, canext;
-	Circle circum;
-	int _mc = 0; // modcounter for triangulation fast update.
+	private Circle circum;
+	private int _mc = 0; // modcounter for triangulation fast update.
 
-	boolean halfplane = false; // true iff it is an infinite face.
+	private boolean halfplane = false; // true iff it is an infinite face.
 	// public boolean visitflag;
-	boolean _mark = false; // tag - for bfs algorithms
+	private boolean _mark = false; // tag - for bfs algorithms
 	// private static boolean visitValue=false;
 	public static int _counter = 0, _c2 = 0;
+
+	public boolean isMark() {
+		return _mark;
+	}
+
+	public void setMark(boolean mark) {
+		this._mark = mark;
+	}
+
+	public int getMc() {
+		return _mc;
+	}
+
+	public void setHalfplane(boolean halfplane) {
+		this.halfplane = halfplane;
+	}
+
+	public void setMc(int mc) {
+		this._mc = mc;
+	}
 
 	public Triangle getAbnext() {
 		return abnext;

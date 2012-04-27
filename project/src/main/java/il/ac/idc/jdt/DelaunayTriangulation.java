@@ -186,7 +186,7 @@ public class DelaunayTriangulation {
 		do {
 			flip(tt, modCount);
 			tt = tt.getCanext();
-		} while (tt != t && !tt.halfplane);
+		} while (tt != t && !tt.isHalfplane());
 
 		// Update index with changed triangles
 		if (gridIndex != null)
@@ -768,7 +768,7 @@ public class DelaunayTriangulation {
 	}
 
 	private void allTriangles(Triangle curr, Vector<Triangle> front, int mc) {
-		if (curr != null && curr._mc == mc && !front.contains(curr)) {
+		if (curr != null && curr.getMc() == mc && !front.contains(curr)) {
 			front.add(curr);
 			allTriangles(curr.getAbnext(), front, mc);
 			allTriangles(curr.getBcnext(), front, mc);
@@ -780,7 +780,7 @@ public class DelaunayTriangulation {
 		nPoints++;
 		if (!allCollinear) {
 			Triangle t = find(startTriangle, p);
-			if (t.halfplane)
+			if (t.isHalfplane())
 				startTriangle = extendOutside(t, p);
 			else
 				startTriangle = extendInside(t, p);
@@ -925,11 +925,11 @@ public class DelaunayTriangulation {
 
 	private Triangle treatDegeneracyInside(Triangle t, Point p) {
 
-		if (t.getAbnext().halfplane && p.pointLineTest(t.getB(), t.getA()) == Point.ONSEGMENT)
+		if (t.getAbnext().isHalfplane() && p.pointLineTest(t.getB(), t.getA()) == Point.ONSEGMENT)
 			return extendOutside(t.getAbnext(), p);
-		if (t.getBcnext().halfplane && p.pointLineTest(t.getC(), t.getB()) == Point.ONSEGMENT)
+		if (t.getBcnext().isHalfplane() && p.pointLineTest(t.getC(), t.getB()) == Point.ONSEGMENT)
 			return extendOutside(t.getBcnext(), p);
-		if (t.getCanext().halfplane && p.pointLineTest(t.getA(), t.getC()) == Point.ONSEGMENT)
+		if (t.getCanext().isHalfplane() && p.pointLineTest(t.getA(), t.getC()) == Point.ONSEGMENT)
 			return extendOutside(t.getCanext(), p);
 		return null;
 	}
@@ -962,7 +962,7 @@ public class DelaunayTriangulation {
 
 	private Triangle extendcounterclock(Triangle t, Point p) {
 
-		t.halfplane = false;
+		t.setHalfplane(false);
 		t.setC(p);
 		t.circumcircle();
 
@@ -981,7 +981,7 @@ public class DelaunayTriangulation {
 
 	private Triangle extendclock(Triangle t, Point p) {
 
-		t.halfplane = false;
+		t.setHalfplane(false);
 		t.setC(p);
 		t.circumcircle();
 
@@ -1001,8 +1001,8 @@ public class DelaunayTriangulation {
 	private void flip(Triangle t, int mc) {
 		Triangle u = t.getAbnext();
 		Triangle v;
-		t._mc = mc;
-		if (u.halfplane || !u.circumcircle_contains(t.getC()))
+		t.setMc(mc);
+		if (u.isHalfplane() || !u.circumcircle_contains(t.getC()))
 			return;
 
 		if (t.getA() == u.getA()) {
@@ -1021,7 +1021,7 @@ public class DelaunayTriangulation {
 			throw new RuntimeException("Error in flip.");
 		}
 
-		v._mc = mc;
+		v.setMc(mc);
 		v.setBcnext(t.getBcnext());
 		v.getAbnext().switchneighbors(u, v);
 		v.getBcnext().switchneighbors(t, v);
@@ -1101,9 +1101,9 @@ public class DelaunayTriangulation {
 		if (p == null)
 			return null;
 		Triangle next_t;
-		if (curr.halfplane) {
+		if (curr.isHalfplane()) {
 			next_t = findnext2(p, curr);
-			if (next_t == null || next_t.halfplane)
+			if (next_t == null || next_t.isHalfplane())
 				return curr;
 			curr = next_t;
 		}
@@ -1111,7 +1111,7 @@ public class DelaunayTriangulation {
 			next_t = findnext1(p, curr);
 			if (next_t == null)
 				return curr;
-			if (next_t.halfplane)
+			if (next_t.isHalfplane())
 				return next_t;
 			curr = next_t;
 		}
@@ -1121,11 +1121,11 @@ public class DelaunayTriangulation {
 	 * assumes v is NOT an halfplane! returns the next triangle for find.
 	 */
 	private static Triangle findnext1(Point p, Triangle v) {
-		if (p.pointLineTest(v.getA(), v.getB()) == Point.RIGHT && !v.getAbnext().halfplane)
+		if (p.pointLineTest(v.getA(), v.getB()) == Point.RIGHT && !v.getAbnext().isHalfplane())
 			return v.getAbnext();
-		if (p.pointLineTest(v.getB(), v.getC()) == Point.RIGHT && !v.getBcnext().halfplane)
+		if (p.pointLineTest(v.getB(), v.getC()) == Point.RIGHT && !v.getBcnext().isHalfplane())
 			return v.getBcnext();
-		if (p.pointLineTest(v.getC(), v.getA()) == Point.RIGHT && !v.getCanext().halfplane)
+		if (p.pointLineTest(v.getC(), v.getA()) == Point.RIGHT && !v.getCanext().isHalfplane())
 			return v.getCanext();
 		if (p.pointLineTest(v.getA(), v.getB()) == Point.RIGHT)
 			return v.getAbnext();
@@ -1138,11 +1138,11 @@ public class DelaunayTriangulation {
 
 	/** assumes v is an halfplane! - returns another (none halfplane) triangle */
 	private static Triangle findnext2(Point p, Triangle v) {
-		if (v.getAbnext() != null && !v.getAbnext().halfplane)
+		if (v.getAbnext() != null && !v.getAbnext().isHalfplane())
 			return v.getAbnext();
-		if (v.getBcnext() != null && !v.getBcnext().halfplane)
+		if (v.getBcnext() != null && !v.getBcnext().isHalfplane())
 			return v.getBcnext();
-		if (v.getCanext() != null && !v.getCanext().halfplane)
+		if (v.getCanext() != null && !v.getCanext().isHalfplane())
 			return v.getCanext();
 		return null;
 	}
@@ -1291,7 +1291,7 @@ public class DelaunayTriangulation {
 
 	public boolean contains(Point p) {
 		Triangle tt = find(p);
-		return !tt.halfplane;
+		return !tt.isHalfplane();
 	}
 
 	/**
@@ -1409,7 +1409,7 @@ public class DelaunayTriangulation {
 			if ((sx & sy) | (!sx & !sy)) {
 				ans.add(curr.p1());
 			}
-			if (curr.getBcnext() != null && curr.getBcnext().halfplane)
+			if (curr.getBcnext() != null && curr.getBcnext().isHalfplane())
 				curr = curr.getBcnext();
 			if (curr == this.startTriangleHull)
 				cont = false;
@@ -1436,23 +1436,23 @@ public class DelaunayTriangulation {
 			front.add(this.startTriangle);
 			while (front.size() > 0) {
 				Triangle t = front.remove(0);
-				if (t._mark == false) {
-					t._mark = true;
+				if (t.isMark() == false) {
+					t.setMark(true);
 					triangles.add(t);
-					if (t.getAbnext() != null && !t.getAbnext()._mark) {
+					if (t.getAbnext() != null && !t.getAbnext().isMark()) {
 						front.add(t.getAbnext());
 					}
-					if (t.getBcnext() != null && !t.getBcnext()._mark) {
+					if (t.getBcnext() != null && !t.getBcnext().isMark()) {
 						front.add(t.getBcnext());
 					}
-					if (t.getCanext() != null && !t.getCanext()._mark) {
+					if (t.getCanext() != null && !t.getCanext().isMark()) {
 						front.add(t.getCanext());
 					}
 				}
 			}
 			// _triNum = _triangles.size();
 			for (int i = 0; i < triangles.size(); i++) {
-				triangles.elementAt(i)._mark = false;
+				triangles.elementAt(i).setMark(false);
 			}
 		}
 	}

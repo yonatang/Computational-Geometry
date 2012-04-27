@@ -114,7 +114,7 @@ public class IOParsers {
 			int i1 = -1, i2 = -1, i3 = -1;
 			for (Iterator<Triangle> dt = dto.trianglesIterator(); dt.hasNext();) {
 				Triangle curr = dt.next();
-				if (!curr.halfplane) {
+				if (!curr.isHalfplane()) {
 					i1 = Arrays.binarySearch(ans, curr.getA(), comp);
 					i2 = Arrays.binarySearch(ans, curr.getB(), comp);
 					i3 = Arrays.binarySearch(ans, curr.getC(), comp);
