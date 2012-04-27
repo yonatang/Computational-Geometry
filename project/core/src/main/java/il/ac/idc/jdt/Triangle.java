@@ -36,7 +36,10 @@ public class Triangle {
 	public void setMc(int mc) {
 		this._mc = mc;
 	}
-
+	
+	/**
+	 * returns the consecutive triangle which shares this triangle p1,p2 edge.
+	 */
 	public Triangle getAbnext() {
 		return abnext;
 	}
@@ -45,6 +48,9 @@ public class Triangle {
 		this.abnext = abnext;
 	}
 
+	/**
+	 * returns the consecutive triangle which shares this triangle p2,p3 edge.
+	 */
 	public Triangle getBcnext() {
 		return bcnext;
 	}
@@ -57,28 +63,19 @@ public class Triangle {
 		return canext;
 	}
 
+	/**
+	 * returns the consecutive triangle which shares this triangle p3,p1 edge.
+	 */
 	public void setCanext(Triangle canext) {
 		this.canext = canext;
-	}
-
-	public Point getA() {
-		return a;
 	}
 
 	public void setA(Point a) {
 		this.a = a;
 	}
 
-	public Point getB() {
-		return b;
-	}
-
 	public void setB(Point b) {
 		this.b = b;
-	}
-
-	public Point getC() {
-		return c;
 	}
 
 	public void setC(Point c) {
@@ -162,27 +159,6 @@ public class Triangle {
 	}
 
 	/**
-	 * returns the consecutive triangle which shares this triangle p1,p2 edge.
-	 */
-	public Triangle next_12() {
-		return this.abnext;
-	}
-
-	/**
-	 * returns the consecutive triangle which shares this triangle p2,p3 edge.
-	 */
-	public Triangle next_23() {
-		return this.bcnext;
-	}
-
-	/**
-	 * returns the consecutive triangle which shares this triangle p3,p1 edge.
-	 */
-	public Triangle next_31() {
-		return this.canext;
-	}
-
-	/**
 	 * @return The bounding rectange between the minimum and maximum coordinates
 	 *         of the triangle
 	 */
@@ -193,13 +169,13 @@ public class Triangle {
 		return new BoundingBox(lowerLeft, upperRight);
 	}
 
-	void switchneighbors(Triangle Old, Triangle New) {
-		if (abnext == Old)
-			abnext = New;
-		else if (bcnext == Old)
-			bcnext = New;
-		else if (canext == Old)
-			canext = New;
+	void switchneighbors(Triangle oldTriangle, Triangle newTriangle) {
+		if (abnext == oldTriangle)
+			abnext = newTriangle;
+		else if (bcnext == oldTriangle)
+			bcnext = newTriangle;
+		else if (canext == oldTriangle)
+			canext = newTriangle;
 		else
 			System.out.println("Error, switchneighbors can't find Old.");
 	}

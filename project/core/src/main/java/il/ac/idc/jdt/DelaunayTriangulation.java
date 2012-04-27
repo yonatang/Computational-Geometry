@@ -363,48 +363,48 @@ public class DelaunayTriangulation {
 		// triangle
 		// setting the neighbor of the added triangle
 		if (pointToDelete.equals(delA)) {
-			deletedTriangle.next_23().switchneighbors(deletedTriangle, addedTriangle);
+			deletedTriangle.getBcnext().switchneighbors(deletedTriangle, addedTriangle);
 			// AB-BC || BA-BC
 			if ((addA.equals(delB) && addB.equals(delC)) || (addB.equals(delB) && addA.equals(delC))) {
-				addedTriangle.setAbnext(deletedTriangle.next_23());
+				addedTriangle.setAbnext(deletedTriangle.getBcnext());
 			}
 			// AC-BC || CA-BC
 			else if ((addA.equals(delB) && addC.equals(delC)) || (addC.equals(delB) && addA.equals(delC))) {
-				addedTriangle.setCanext(deletedTriangle.next_23());
+				addedTriangle.setCanext(deletedTriangle.getBcnext());
 			}
 			// BC-BC || CB-BC
 			else {
-				addedTriangle.setBcnext(deletedTriangle.next_23());
+				addedTriangle.setBcnext(deletedTriangle.getBcnext());
 			}
 		} else if (pointToDelete.equals(delB)) {
-			deletedTriangle.next_31().switchneighbors(deletedTriangle, addedTriangle);
+			deletedTriangle.getCanext().switchneighbors(deletedTriangle, addedTriangle);
 			// AB-AC || BA-AC
 			if ((addA.equals(delA) && addB.equals(delC)) || (addB.equals(delA) && addA.equals(delC))) {
-				addedTriangle.setAbnext(deletedTriangle.next_31());
+				addedTriangle.setAbnext(deletedTriangle.getCanext());
 			}
 			// AC-AC || CA-AC
 			else if ((addA.equals(delA) && addC.equals(delC)) || (addC.equals(delA) && addA.equals(delC))) {
-				addedTriangle.setCanext(deletedTriangle.next_31());
+				addedTriangle.setCanext(deletedTriangle.getCanext());
 			}
 			// BC-AC || CB-AC
 			else {
-				addedTriangle.setBcnext(deletedTriangle.next_31());
+				addedTriangle.setBcnext(deletedTriangle.getCanext());
 			}
 		}
 		// equals c
 		else {
-			deletedTriangle.next_12().switchneighbors(deletedTriangle, addedTriangle);
+			deletedTriangle.getAbnext().switchneighbors(deletedTriangle, addedTriangle);
 			// AB-AB || BA-AB
 			if ((addA.equals(delA) && addB.equals(delB)) || (addB.equals(delA) && addA.equals(delB))) {
-				addedTriangle.setAbnext(deletedTriangle.next_12());
+				addedTriangle.setAbnext(deletedTriangle.getAbnext());
 			}
 			// AC-AB || CA-AB
 			else if ((addA.equals(delA) && addC.equals(delB)) || (addC.equals(delA) && addA.equals(delB))) {
-				addedTriangle.setCanext(deletedTriangle.next_12());
+				addedTriangle.setCanext(deletedTriangle.getAbnext());
 			}
 			// BC-AB || CB-AB
 			else {
-				addedTriangle.setBcnext(deletedTriangle.next_12());
+				addedTriangle.setBcnext(deletedTriangle.getAbnext());
 			}
 		}
 	}
@@ -695,12 +695,12 @@ public class DelaunayTriangulation {
 			Triangle neighbor = null;
 
 			// find the neighbor triangle
-			if (!halfplane.next_12().isHalfplane()) {
-				neighbor = halfplane.next_12();
-			} else if (!halfplane.next_23().isHalfplane()) {
-				neighbor = halfplane.next_23();
-			} else if (!halfplane.next_23().isHalfplane()) {
-				neighbor = halfplane.next_31();
+			if (!halfplane.getAbnext().isHalfplane()) {
+				neighbor = halfplane.getAbnext();
+			} else if (!halfplane.getBcnext().isHalfplane()) {
+				neighbor = halfplane.getBcnext();
+			} else if (!halfplane.getBcnext().isHalfplane()) {
+				neighbor = halfplane.getCanext();
 			}
 
 			// find third point of neighbor triangle
@@ -853,10 +853,10 @@ public class DelaunayTriangulation {
 			break;
 		case Point.ONSEGMENT:
 			u = firstT;
-			while (p.isGreater(u.getA()))
+			while (p.isGreater(u.p1()))
 				u = u.getCanext();
-			t = new Triangle(p, u.getB());
-			tp = new Triangle(u.getB(), p);
+			t = new Triangle(p, u.p2());
+			tp = new Triangle(u.p2(), p);
 			u.setB(p);
 			u.getAbnext().setA(p);
 			t.setAbnext(tp);
@@ -894,8 +894,8 @@ public class DelaunayTriangulation {
 		t.setCanext(firstT);
 		firstT.setCanext(t);
 		t.setBcnext(firstT);
-		firstP = firstT.getB();
-		lastP = lastT.getA();
+		firstP = firstT.p2();
+		lastP = lastT.p1();
 		startTriangleHull = firstT;
 	}
 
@@ -906,8 +906,8 @@ public class DelaunayTriangulation {
 		if (h1 != null)
 			return h1;
 
-		h1 = new Triangle(t.getC(), t.getA(), p);
-		h2 = new Triangle(t.getB(), t.getC(), p);
+		h1 = new Triangle(t.p3(), t.p1(), p);
+		h2 = new Triangle(t.p2(), t.p3(), p);
 		t.setC(p);
 		t.circumcircle();
 		h1.setAbnext(t.getCanext());
@@ -925,20 +925,20 @@ public class DelaunayTriangulation {
 
 	private Triangle treatDegeneracyInside(Triangle t, Point p) {
 
-		if (t.getAbnext().isHalfplane() && p.pointLineTest(t.getB(), t.getA()) == Point.ONSEGMENT)
+		if (t.getAbnext().isHalfplane() && p.pointLineTest(t.p2(), t.p1()) == Point.ONSEGMENT)
 			return extendOutside(t.getAbnext(), p);
-		if (t.getBcnext().isHalfplane() && p.pointLineTest(t.getC(), t.getB()) == Point.ONSEGMENT)
+		if (t.getBcnext().isHalfplane() && p.pointLineTest(t.p3(), t.p2()) == Point.ONSEGMENT)
 			return extendOutside(t.getBcnext(), p);
-		if (t.getCanext().isHalfplane() && p.pointLineTest(t.getA(), t.getC()) == Point.ONSEGMENT)
+		if (t.getCanext().isHalfplane() && p.pointLineTest(t.p1(), t.p3()) == Point.ONSEGMENT)
 			return extendOutside(t.getCanext(), p);
 		return null;
 	}
 
 	private Triangle extendOutside(Triangle t, Point p) {
 
-		if (p.pointLineTest(t.getA(), t.getB()) == Point.ONSEGMENT) {
-			Triangle dg = new Triangle(t.getA(), t.getB(), p);
-			Triangle hp = new Triangle(p, t.getB());
+		if (p.pointLineTest(t.p1(), t.p2()) == Point.ONSEGMENT) {
+			Triangle dg = new Triangle(t.p1(), t.p2(), p);
+			Triangle hp = new Triangle(p, t.p2());
 			t.setB(p);
 			dg.setAbnext(t.getAbnext());
 			dg.getAbnext().switchneighbors(t, dg);
@@ -968,8 +968,8 @@ public class DelaunayTriangulation {
 
 		Triangle tca = t.getCanext();
 
-		if (p.pointLineTest(tca.getA(), tca.getB()) >= Point.RIGHT) {
-			Triangle nT = new Triangle(t.getA(), p);
+		if (p.pointLineTest(tca.p1(), tca.p2()) >= Point.RIGHT) {
+			Triangle nT = new Triangle(t.p1(), p);
 			nT.setAbnext(t);
 			t.setCanext(nT);
 			nT.setCanext(tca);
@@ -987,8 +987,8 @@ public class DelaunayTriangulation {
 
 		Triangle tbc = t.getBcnext();
 
-		if (p.pointLineTest(tbc.getA(), tbc.getB()) >= Point.RIGHT) {
-			Triangle nT = new Triangle(p, t.getB());
+		if (p.pointLineTest(tbc.p1(), tbc.p2()) >= Point.RIGHT) {
+			Triangle nT = new Triangle(p, t.p2());
 			nT.setAbnext(t);
 			t.setBcnext(nT);
 			nT.setBcnext(tbc);
@@ -1002,19 +1002,19 @@ public class DelaunayTriangulation {
 		Triangle u = t.getAbnext();
 		Triangle v;
 		t.setMc(mc);
-		if (u.isHalfplane() || !u.circumcircle_contains(t.getC()))
+		if (u.isHalfplane() || !u.circumcircle_contains(t.p3()))
 			return;
 
-		if (t.getA() == u.getA()) {
-			v = new Triangle(u.getB(), t.getB(), t.getC());
+		if (t.p1() == u.p1()) {
+			v = new Triangle(u.p2(), t.p2(), t.p3());
 			v.setAbnext(u.getBcnext());
 			t.setAbnext(u.getAbnext());
-		} else if (t.getA() == u.getB()) {
-			v = new Triangle(u.getC(), t.getB(), t.getC());
+		} else if (t.p1() == u.p2()) {
+			v = new Triangle(u.p3(), t.p2(), t.p3());
 			v.setAbnext(u.getCanext());
 			t.setAbnext(u.getBcnext());
-		} else if (t.getA() == u.getC()) {
-			v = new Triangle(u.getA(), t.getB(), t.getC());
+		} else if (t.p1() == u.p3()) {
+			v = new Triangle(u.p1(), t.p2(), t.p3());
 			v.setAbnext(u.getAbnext());
 			t.setAbnext(u.getCanext());
 		} else {
@@ -1027,7 +1027,7 @@ public class DelaunayTriangulation {
 		v.getBcnext().switchneighbors(t, v);
 		t.setBcnext(v);
 		v.setCanext(t);
-		t.setB(v.getA());
+		t.setB(v.p1());
 		t.getAbnext().switchneighbors(u, t);
 		t.circumcircle();
 
@@ -1121,17 +1121,17 @@ public class DelaunayTriangulation {
 	 * assumes v is NOT an halfplane! returns the next triangle for find.
 	 */
 	private static Triangle findnext1(Point p, Triangle v) {
-		if (p.pointLineTest(v.getA(), v.getB()) == Point.RIGHT && !v.getAbnext().isHalfplane())
+		if (p.pointLineTest(v.p1(), v.p2()) == Point.RIGHT && !v.getAbnext().isHalfplane())
 			return v.getAbnext();
-		if (p.pointLineTest(v.getB(), v.getC()) == Point.RIGHT && !v.getBcnext().isHalfplane())
+		if (p.pointLineTest(v.p2(), v.p3()) == Point.RIGHT && !v.getBcnext().isHalfplane())
 			return v.getBcnext();
-		if (p.pointLineTest(v.getC(), v.getA()) == Point.RIGHT && !v.getCanext().isHalfplane())
+		if (p.pointLineTest(v.p3(), v.p1()) == Point.RIGHT && !v.getCanext().isHalfplane())
 			return v.getCanext();
-		if (p.pointLineTest(v.getA(), v.getB()) == Point.RIGHT)
+		if (p.pointLineTest(v.p1(), v.p2()) == Point.RIGHT)
 			return v.getAbnext();
-		if (p.pointLineTest(v.getB(), v.getC()) == Point.RIGHT)
+		if (p.pointLineTest(v.p2(), v.p3()) == Point.RIGHT)
 			return v.getBcnext();
-		if (p.pointLineTest(v.getC(), v.getA()) == Point.RIGHT)
+		if (p.pointLineTest(v.p3(), v.p1()) == Point.RIGHT)
 			return v.getCanext();
 		return null;
 	}
