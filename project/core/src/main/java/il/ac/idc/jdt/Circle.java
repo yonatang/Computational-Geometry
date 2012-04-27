@@ -10,8 +10,8 @@ package il.ac.idc.jdt;
  */
 public class Circle {
 
-	private Point c;
-	private double r;
+	private Point center;
+	private double radius;
 
 	/**
 	 * Constructor. <br />
@@ -23,8 +23,8 @@ public class Circle {
 	 *            Radius of the circle.
 	 */
 	public Circle(Point c, double r) {
-		this.c = c;
-		this.r = r;
+		this.center = c;
+		this.radius = r;
 	}
 
 	/**
@@ -35,13 +35,13 @@ public class Circle {
 	 *            Circle to clone.
 	 */
 	public Circle(Circle circ) {
-		this.c = circ.c;
-		this.r = circ.r;
+		this.center = circ.center;
+		this.radius = circ.radius;
 	}
 
 	@Override
 	public String toString() {
-		return "Circle [c=" + c + ", r=" + r + "]";
+		return "Circle [center=" + center + ", raduis=" + radius + "]";
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class Circle {
 	 * @return the center of the circle.
 	 */
 	public Point center() {
-		return this.c;
+		return this.center;
 	}
 
 	/**
@@ -59,6 +59,37 @@ public class Circle {
 	 * @return the radius of the circle.
 	 */
 	public double radius() {
-		return this.r;
+		return this.radius;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((center == null) ? 0 : center.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(radius);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Circle other = (Circle) obj;
+		if (center == null) {
+			if (other.center != null)
+				return false;
+		} else if (!center.equals(other.center))
+			return false;
+		if (Double.doubleToLongBits(radius) != Double.doubleToLongBits(other.radius))
+			return false;
+		return true;
+	}
+	
 }

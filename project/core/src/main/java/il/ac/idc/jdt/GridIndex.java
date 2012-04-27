@@ -36,12 +36,12 @@ public class GridIndex {
 	/**
 	 * Horizontal geographic size of a cell index
 	 */
-	private double x_size;
+	private double xSize;
 
 	/**
 	 * Vertical geographic size of a cell inedx
 	 */
-	private double y_size;
+	private double ySize;
 
 	/**
 	 * The indexed geographic size
@@ -107,8 +107,8 @@ public class GridIndex {
 	private void init(DelaunayTriangulation delaunay, int xCellCount, int yCellCount, BoundingBox region) {
 		indexDelaunay = delaunay;
 		indexRegion = region;
-		x_size = region.getWidth() / yCellCount;
-		y_size = region.getHeight() / xCellCount;
+		xSize = region.getWidth() / yCellCount;
+		ySize = region.getHeight() / xCellCount;
 
 		// The grid will hold a trinagle for each cell, so a point (x,y) will
 		// lie
@@ -128,9 +128,9 @@ public class GridIndex {
 	 * @return a triangle at the same cell of the point
 	 */
 	public Triangle findCellTriangleOf(Point point) {
-		int x_index = (int) ((point.x() - indexRegion.minX()) / x_size);
-		int y_index = (int) ((point.y() - indexRegion.minY()) / y_size);
-		return grid[x_index][y_index];
+		int xIndex = (int) ((point.getX() - indexRegion.minX()) / xSize);
+		int yIndex = (int) ((point.getY() - indexRegion.minY()) / ySize);
+		return grid[xIndex][yIndex];
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class GridIndex {
 		// Bad news - the updated region lies outside the indexed region.
 		// The whole index must be recalculated
 		if (!indexRegion.contains(updatedRegion)) {
-			init(indexDelaunay, (int) (indexRegion.getWidth() / x_size), (int) (indexRegion.getHeight() / y_size),
+			init(indexDelaunay, (int) (indexRegion.getWidth() / xSize), (int) (indexRegion.getHeight() / ySize),
 					indexRegion.unionWith(updatedRegion));
 		} else {
 			// Find the cell region to be updated
@@ -242,8 +242,8 @@ public class GridIndex {
 	 * @return cell covering the coordinate
 	 */
 	private PointInt getCellOf(Point coordinate) {
-		int xCell = (int) ((coordinate.x() - indexRegion.minX()) / x_size);
-		int yCell = (int) ((coordinate.y() - indexRegion.minY()) / y_size);
+		int xCell = (int) ((coordinate.getX() - indexRegion.minX()) / xSize);
+		int yCell = (int) ((coordinate.getY() - indexRegion.minY()) / ySize);
 		return new PointInt(xCell, yCell);
 	}
 
@@ -257,8 +257,8 @@ public class GridIndex {
 	 * @return Point at the center of the cell at (x_index, y_index)
 	 */
 	private Point middleOfCell(int x_index, int y_index) {
-		double middleXCell = indexRegion.minX() + x_index * x_size + x_size / 2;
-		double middleYCell = indexRegion.minY() + y_index * y_size + y_size / 2;
+		double middleXCell = indexRegion.minX() + x_index * xSize + xSize / 2;
+		double middleYCell = indexRegion.minY() + y_index * ySize + ySize / 2;
 		return new Point(middleXCell, middleYCell);
 	}
 }

@@ -1,91 +1,26 @@
 package il.ac.idc.jdt;
 
 /**
- * This class represents a 3D triangle in a Triangulation!
+ * This class performs a 3D triangulation for each point inserted or deleted
  * 
  */
-
 public class Triangle {
 	private Point a, b, c;
-	private Triangle abnext, bcnext, canext;
+	private Triangle abTriangle, bcTriangle, caTriangle;
 	private Circle circum;
-	private int _mc = 0; // modcounter for triangulation fast update.
 
-	private boolean halfplane = false; // true iff it is an infinite face.
-	private boolean _mark = false; // tag - for bfs algorithms
-	public static int _counter = 0, _c2 = 0;
+	private int mc = 0;
 
-	public boolean isMark() {
-		return _mark;
-	}
+	// true iff it is an infinite face.
+	private boolean halfplane = false;
 
-	public void setMark(boolean mark) {
-		this._mark = mark;
-	}
+	// tag - for bfs algorithms
+	private boolean mark = false;
 
-	public int getMc() {
-		return _mc;
-	}
-
-	public void setHalfplane(boolean halfplane) {
-		this.halfplane = halfplane;
-	}
-
-	public void setMc(int mc) {
-		this._mc = mc;
-	}
-	
-	/**
-	 * returns the consecutive triangle which shares this triangle p1,p2 edge.
-	 */
-	public Triangle getAbnext() {
-		return abnext;
-	}
-
-	public void setAbnext(Triangle abnext) {
-		this.abnext = abnext;
-	}
-
-	/**
-	 * returns the consecutive triangle which shares this triangle p2,p3 edge.
-	 */
-	public Triangle getBcnext() {
-		return bcnext;
-	}
-
-	public void setBcnext(Triangle bcnext) {
-		this.bcnext = bcnext;
-	}
-
-	public Triangle getCanext() {
-		return canext;
-	}
-
-	/**
-	 * returns the consecutive triangle which shares this triangle p3,p1 edge.
-	 */
-	public void setCanext(Triangle canext) {
-		this.canext = canext;
-	}
-
-	public void setA(Point a) {
-		this.a = a;
-	}
-
-	public void setB(Point b) {
-		this.b = b;
-	}
-
-	public void setC(Point c) {
-		this.c = c;
-	}
-
-	// public int _id;
 	/**
 	 * constructs a triangle form 3 point - store it in counterclockwised order.
 	 */
 	public Triangle(Point A, Point B, Point C) {
-		// visitflag=visitValue;
 		a = A;
 		int res = C.pointLineTest(A, B);
 		if ((res <= Point.LEFT) || (res == Point.INFRONTOFA) || (res == Point.BEHINDB)) {
@@ -98,9 +33,6 @@ public class Triangle {
 			c = B;
 		}
 		circumcircle();
-		// _id = _counter++;
-		// _counter++;_c2++;
-		// if(_counter%10000 ==0) System.out.println("Triangle: "+_counter);
 	}
 
 	/**
@@ -110,50 +42,9 @@ public class Triangle {
 	 * @param B
 	 */
 	public Triangle(Point A, Point B) {
-		// visitflag=visitValue;
 		a = A;
 		b = B;
 		halfplane = true;
-		// _id = _counter++;
-	}
-
-	/*
-	 * protected void finalize() throws Throwable{ super.finalize(); _counter--;
-	 * }
-	 */
-
-	/**
-	 * remove all pointers (for debug)
-	 */
-	// public void clear() {
-	// this.abnext = null; this.bcnext=null; this.canext=null;}
-
-	/**
-	 * returns true iff this triangle is actually a half plane.
-	 */
-	public boolean isHalfplane() {
-		return this.halfplane;
-	}
-
-	/**
-	 * returns the first vertex of this triangle.
-	 */
-	public Point p1() {
-		return a;
-	}
-
-	/**
-	 * returns the second vertex of this triangle.
-	 */
-	public Point p2() {
-		return b;
-	}
-
-	/**
-	 * returns the 3th vertex of this triangle.
-	 */
-	public Point p3() {
-		return c;
 	}
 
 	/**
@@ -162,29 +53,29 @@ public class Triangle {
 	 */
 	public BoundingBox getBoundingBox() {
 		Point lowerLeft, upperRight;
-		lowerLeft = new Point(Math.min(a.x(), Math.min(b.x(), c.x())), Math.min(a.y(), Math.min(b.y(), c.y())));
-		upperRight = new Point(Math.max(a.x(), Math.max(b.x(), c.x())), Math.max(a.y(), Math.max(b.y(), c.y())));
+		lowerLeft = new Point(Math.min(a.getX(), Math.min(b.getX(), c.getX())), Math.min(a.getY(), Math.min(b.getY(), c.getY())));
+		upperRight = new Point(Math.max(a.getX(), Math.max(b.getX(), c.getX())), Math.max(a.getY(), Math.max(b.getY(), c.getY())));
 		return new BoundingBox(lowerLeft, upperRight);
 	}
 
 	void switchneighbors(Triangle oldTriangle, Triangle newTriangle) {
-		if (abnext == oldTriangle)
-			abnext = newTriangle;
-		else if (bcnext == oldTriangle)
-			bcnext = newTriangle;
-		else if (canext == oldTriangle)
-			canext = newTriangle;
+		if (abTriangle == oldTriangle)
+			abTriangle = newTriangle;
+		else if (bcTriangle == oldTriangle)
+			bcTriangle = newTriangle;
+		else if (caTriangle == oldTriangle)
+			caTriangle = newTriangle;
 		else
 			System.out.println("Error, switchneighbors can't find Old.");
 	}
 
 	Triangle neighbor(Point p) {
 		if (a == p)
-			return canext;
+			return caTriangle;
 		if (b == p)
-			return abnext;
+			return abTriangle;
 		if (c == p)
-			return bcnext;
+			return bcTriangle;
 		System.out.println("Error, neighbors can't find p: " + p);
 		return null;
 	}
@@ -206,13 +97,13 @@ public class Triangle {
 		Triangle neighbor = null;
 
 		if (a.equals(p)) {
-			neighbor = canext;
+			neighbor = caTriangle;
 		}
 		if (b.equals(p)) {
-			neighbor = abnext;
+			neighbor = abTriangle;
 		}
 		if (c.equals(p)) {
-			neighbor = bcnext;
+			neighbor = bcTriangle;
 		}
 
 		// Udi Schneider: Added a condition check for isHalfPlane. If the
@@ -220,13 +111,13 @@ public class Triangle {
 		// neighbor is a half plane, we also want to move to the next neighbor
 		if (neighbor.equals(prevTriangle) || neighbor.isHalfplane()) {
 			if (a.equals(p)) {
-				neighbor = abnext;
+				neighbor = abTriangle;
 			}
 			if (b.equals(p)) {
-				neighbor = bcnext;
+				neighbor = bcTriangle;
 			}
 			if (c.equals(p)) {
-				neighbor = canext;
+				neighbor = caTriangle;
 			}
 		}
 
@@ -235,14 +126,14 @@ public class Triangle {
 
 	Circle circumcircle() {
 
-		double u = ((a.x() - b.x()) * (a.x() + b.x()) + (a.y() - b.y()) * (a.y() + b.y())) / 2.0f;
-		double v = ((b.x() - c.x()) * (b.x() + c.x()) + (b.y() - c.y()) * (b.y() + c.y())) / 2.0f;
-		double den = (a.x() - b.x()) * (b.y() - c.y()) - (b.x() - c.x()) * (a.y() - b.y());
+		double u = ((a.getX() - b.getX()) * (a.getX() + b.getX()) + (a.getY() - b.getY()) * (a.getY() + b.getY())) / 2.0f;
+		double v = ((b.getX() - c.getX()) * (b.getX() + c.getX()) + (b.getY() - c.getY()) * (b.getY() + c.getY())) / 2.0f;
+		double den = (a.getX() - b.getX()) * (b.getY() - c.getY()) - (b.getX() - c.getX()) * (a.getY() - b.getY());
 		if (den == 0) // oops, degenerate case
 			circum = new Circle(a, Double.POSITIVE_INFINITY);
 		else {
-			Point cen = new Point((u * (b.y() - c.y()) - v * (a.y() - b.y())) / den, (v * (a.x() - b.x()) - u
-					* (b.x() - c.x()))
+			Point cen = new Point((u * (b.getY() - c.getY()) - v * (a.getY() - b.getY())) / den, (v * (a.getX() - b.getX()) - u
+					* (b.getX() - c.getX()))
 					/ den);
 			circum = new Circle(cen, cen.distance2(a));
 		}
@@ -330,16 +221,16 @@ public class Triangle {
 	 *         By Eyal Roth & Doron Ganel.
 	 */
 	public boolean isCorner(Point p) {
-		return (p.x() == a.x() && p.y() == a.y()) || (p.x() == b.x() && p.y() == b.y())
-				|| (p.x() == c.x() && p.y() == c.y());
+		return (p.getX() == a.getX() && p.getY() == a.getY()) || (p.getX() == b.getX() && p.getY() == b.getY())
+				|| (p.getX() == c.getX() && p.getY() == c.getY());
 	}
 
 	// Doron
 	public boolean fallInsideCircumcircle(Point[] arrayPoints) {
 		boolean isInside = false;
-		Point p1 = this.p1();
-		Point p2 = this.p2();
-		Point p3 = this.p3();
+		Point p1 = this.getA();
+		Point p2 = this.getB();
+		Point p3 = this.getC();
 		int i = 0;
 		while (!isInside && i < arrayPoints.length) {
 			Point p = arrayPoints[i];
@@ -361,22 +252,22 @@ public class Triangle {
 	 *            query point (its Z value is ignored).
 	 * @return the Z value of this plane implies by this triangle 3 points.
 	 */
-	public double z_value(Point q) {
+	public double zValue(Point q) {
 		if (q == null || this.halfplane)
 			throw new RuntimeException("*** ERR wrong parameters, can't approximate the z value ..***: " + q);
 		/* incase the query point is on one of the points */
-		if (q.x() == a.x() && q.y() == a.y())
-			return a.z();
-		if (q.x() == b.x() && q.y() == b.y())
-			return b.z();
-		if (q.x() == c.x() && q.y() == c.y())
-			return c.z();
+		if (q.getX() == a.getX() && q.getY() == a.getY())
+			return a.getZ();
+		if (q.getX() == b.getX() && q.getY() == b.getY())
+			return b.getZ();
+		if (q.getX() == c.getX() && q.getY() == c.getY())
+			return c.getZ();
 
 		/*
 		 * plane: aX + bY + c = Z: 2D line: y= mX + k
 		 */
-		double X = 0, x0 = q.x(), x1 = a.x(), x2 = b.x(), x3 = c.x();
-		double Y = 0, y0 = q.y(), y1 = a.y(), y2 = b.y(), y3 = c.y();
+		double X = 0, x0 = q.getX(), x1 = a.getX(), x2 = b.getX(), x3 = c.getX();
+		double Y = 0, y0 = q.getY(), y1 = a.getY(), y2 = b.getY(), y3 = c.getY();
 		double Z = 0, m01 = 0, k01 = 0, m23 = 0, k23 = 0;
 
 		// 0 - regular, 1-horisintal , 2-vertical.
@@ -418,13 +309,13 @@ public class Triangle {
 		} else {
 			r = (x2 - X) / (x2 - x3);
 		}
-		Z = b.z() + (c.z() - b.z()) * r;
+		Z = b.getZ() + (c.getZ() - b.getZ()) * r;
 		if (flag01 == 2) {
 			r = (y1 - y0) / (y1 - Y);
 		} else {
 			r = (x1 - x0) / (x1 - X);
 		}
-		double qZ = a.z() + (Z - a.z()) * r;
+		double qZ = a.getZ() + (Z - a.getZ()) * r;
 		return qZ;
 	}
 
@@ -439,8 +330,8 @@ public class Triangle {
 	 * @return z (height) value approximation given by the triangle it falls in.
 	 * 
 	 */
-	public double z(double x, double y) {
-		return z_value(new Point(x, y));
+	public double getZ(double x, double y) {
+		return zValue(new Point(x, y));
 	}
 
 	/**
@@ -452,8 +343,106 @@ public class Triangle {
 	 * @return q with updated Z value.
 	 * 
 	 */
-	public Point z(Point q) {
-		double z = z_value(q);
-		return new Point(q.x(), q.y(), z);
+	public Point getZ(Point q) {
+		double z = zValue(q);
+		return new Point(q.getX(), q.getY(), z);
+	}
+	
+	public boolean isMark() {
+		return mark;
+	}
+
+	public void setMark(boolean mark) {
+		this.mark = mark;
+	}
+
+	/**
+	 * Modification counter for triangulation fast update
+	 * 
+	 * @return
+	 */
+	public int getMc() {
+		return mc;
+	}
+
+	/**
+	 * returns true iff this triangle is actually a half plane.
+	 */
+	public boolean isHalfplane() {
+		return this.halfplane;
+	}
+
+	public void setHalfplane(boolean halfplane) {
+		this.halfplane = halfplane;
+	}
+
+	public void setMc(int mc) {
+		this.mc = mc;
+	}
+
+	/**
+	 * returns the consecutive triangle which shares this triangle a,b edge.
+	 */
+	public Triangle getAbTriangle() {
+		return abTriangle;
+	}
+
+	public void setAbTriangle(Triangle abTriangle) {
+		this.abTriangle = abTriangle;
+	}
+
+	/**
+	 * returns the consecutive triangle which shares this triangle b,c edge.
+	 */
+	public Triangle getBcTriangle() {
+		return bcTriangle;
+	}
+
+	public void setBcTriangle(Triangle bcTriangle) {
+		this.bcTriangle = bcTriangle;
+	}
+
+	/**
+	 * returns the consecutive triangle which shares this triangle c,a edge.
+	 */
+	public Triangle getCaTriangle() {
+		return caTriangle;
+	}
+
+	public void setCanext(Triangle canext) {
+		this.caTriangle = canext;
+	}
+
+	/**
+	 * returns the first vertex of this triangle.
+	 */
+	public Point getA() {
+		return a;
+	}
+
+	public void setA(Point a) {
+		this.a = a;
+	}
+
+	/**
+	 * returns the second vertex of this triangle.
+	 */
+	public Point getB() {
+		return b;
+	}
+
+	public void setB(Point b) {
+		this.b = b;
+	}
+
+	/**
+	 * returns the 3th vertex of this triangle.
+	 */
+	public Point getC() {
+		return c;
+	}
+
+	public void setC(Point c) {
+		this.c = c;
 	}
 }

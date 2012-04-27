@@ -12,18 +12,14 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 
 public class IOParsers {
 
@@ -122,9 +118,9 @@ public class IOParsers {
 		Set<Point> pointSet = new HashSet<Point>();
 		for (Triangle t : triangulation) {
 			if (!t.isHalfplane()) {
-				pointSet.add(t.p1());
-				pointSet.add(t.p2());
-				pointSet.add(t.p3());
+				pointSet.add(t.getA());
+				pointSet.add(t.getB());
+				pointSet.add(t.getC());
 			}
 		}
 		ArrayList<Point> pointList = new ArrayList<Point>(pointSet);
@@ -144,9 +140,9 @@ public class IOParsers {
 
 			for (Triangle t : triangulation) {
 				if (!t.isHalfplane()) {
-					Integer i1 = pointMap.get(t.p1()); 
-					Integer i2 = pointMap.get(t.p2()); 
-					Integer i3 = pointMap.get(t.p3()); 
+					Integer i1 = pointMap.get(t.getA()); 
+					Integer i2 = pointMap.get(t.getB()); 
+					Integer i3 = pointMap.get(t.getC()); 
 					if (i1 == null || i2 == null || i3 == null)
 						throw new RuntimeException("wrong triangulation inner bug - cant write as an SMF file!");
 					os.println("f " + (i1 + 1) + " " + (i2 + 1) + " " + (i3 + 1));

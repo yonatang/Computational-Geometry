@@ -10,32 +10,32 @@ public class BoundingBox {
 	/**
 	 * the minimum x-coordinate
 	 */
-	private double minx;
+	private double minX;
 
 	/**
 	 * the maximum x-coordinate
 	 */
-	private double maxx;
+	private double maxX;
 
 	/**
 	 * the minimum y-coordinate
 	 */
-	private double miny;
+	private double minY;
 
 	/**
 	 * the maximum y-coordinate
 	 */
-	private double maxy;
+	private double maxY;
 
 	/**
 	 * the minimum z-coordinate
 	 */
-	private double minz;
+	private double minZ;
 
 	/**
 	 * the maximum z-coordinate
 	 */
-	private double maxz;
+	private double maxZ;
 
 	/**
 	 * Creates an empty bounding box
@@ -54,7 +54,7 @@ public class BoundingBox {
 		if (other.isNull())
 			setToNull();
 		else
-			init(other.minx, other.maxx, other.miny, other.maxy, other.minz, other.maxz);
+			init(other.minX, other.maxX, other.minY, other.maxY, other.minZ, other.maxZ);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class BoundingBox {
 	 *            upper left point of the box
 	 */
 	public BoundingBox(Point lowerLeft, Point upperRight) {
-		init(lowerLeft.x(), upperRight.x(), lowerLeft.y(), upperRight.y(), lowerLeft.z(), upperRight.z());
+		init(lowerLeft.getX(), upperRight.getX(), lowerLeft.getY(), upperRight.getY(), lowerLeft.getZ(), upperRight.getZ());
 	}
 
 	/**
@@ -100,25 +100,25 @@ public class BoundingBox {
 	 */
 	private void init(double x1, double x2, double y1, double y2, double z1, double z2) {
 		if (x1 < x2) {
-			minx = x1;
-			maxx = x2;
+			minX = x1;
+			maxX = x2;
 		} else {
-			minx = x2;
-			maxx = x1;
+			minX = x2;
+			maxX = x1;
 		}
 		if (y1 < y2) {
-			miny = y1;
-			maxy = y2;
+			minY = y1;
+			maxY = y2;
 		} else {
-			miny = y2;
-			maxy = y1;
+			minY = y2;
+			maxY = y1;
 		}
 		if (z1 < z2) {
-			minz = z1;
-			maxz = z2;
+			minZ = z1;
+			maxZ = z2;
 		} else {
-			minz = z2;
-			maxz = z1;
+			minZ = z2;
+			maxZ = z1;
 		}
 	}
 
@@ -127,10 +127,10 @@ public class BoundingBox {
 	 * empty geometry.
 	 */
 	private void setToNull() {
-		minx = 0;
-		maxx = -1;
-		miny = 0;
-		maxy = -1;
+		minX = 0;
+		maxX = -1;
+		minY = 0;
+		maxY = -1;
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class BoundingBox {
 	 *         the empty geometry.
 	 */
 	public boolean isNull() {
-		return maxx < minx;
+		return maxX < minX;
 	}
 
 	/**
@@ -151,8 +151,8 @@ public class BoundingBox {
 	 * @return true if this BoundingBox contains the other BoundingBox
 	 */
 	public boolean contains(BoundingBox other) {
-		return !(isNull() || other.isNull()) && other.minx >= minx && other.maxy <= maxx && other.miny >= miny
-				&& other.maxy <= maxy;
+		return !(isNull() || other.isNull()) && other.minX >= minX && other.maxY <= maxX && other.minY >= minY
+				&& other.maxY <= maxY;
 	}
 
 	/**
@@ -169,8 +169,8 @@ public class BoundingBox {
 		if (isNull()) {
 			return new BoundingBox(other);
 		} else {
-			return new BoundingBox(Math.min(minx, other.minx), Math.max(maxx, other.maxx), Math.min(miny, other.miny),
-					Math.max(maxy, other.maxy), Math.min(minz, other.minz), Math.max(maxz, other.maxz));
+			return new BoundingBox(Math.min(minX, other.minX), Math.max(maxX, other.maxX), Math.min(minY, other.minY),
+					Math.max(maxY, other.maxY), Math.min(minZ, other.minZ), Math.max(maxZ, other.maxZ));
 		}
 	}
 
@@ -178,55 +178,55 @@ public class BoundingBox {
 	 * @return Minimum x value
 	 */
 	public double minX() {
-		return minx;
+		return minX;
 	}
 
 	/**
 	 * @return Minimum y value
 	 */
 	public double minY() {
-		return miny;
+		return minY;
 	}
 
 	/**
 	 * @return Maximum x value
 	 */
 	public double maxX() {
-		return maxx;
+		return maxX;
 	}
 
 	/**
 	 * @return Maximum y value
 	 */
 	public double maxY() {
-		return maxy;
+		return maxY;
 	}
 
 	/**
 	 * @return Width of the bounding box
 	 */
 	public double getWidth() {
-		return maxx - minx;
+		return maxX - minX;
 	}
 
 	/**
 	 * @return Height of the bounding box
 	 */
 	public double getHeight() {
-		return maxy - miny;
+		return maxY - minY;
 	}
 
 	/**
 	 * @return Maximum coordinate of bounding box
 	 */
 	public Point getMinPoint() {
-		return new Point(minx, miny, minz);
+		return new Point(minX, minY, minZ);
 	}
 
 	/**
 	 * @return Minimum coordinate of bounding box
 	 */
 	public Point getMaxPoint() {
-		return new Point(maxx, maxy, maxz);
+		return new Point(maxX, maxY, maxZ);
 	}
 }

@@ -37,7 +37,7 @@ public class Point implements Comparable<Point> {
 	}
 
 	/** returns the x-coordinate of this point. */
-	public double x() {
+	public double getX() {
 		return x;
 	};
 
@@ -52,7 +52,7 @@ public class Point implements Comparable<Point> {
 	}
 
 	/** returns the y-coordinate of this point. */
-	public double y() {
+	public double getY() {
 		return y;
 	};
 
@@ -67,7 +67,7 @@ public class Point implements Comparable<Point> {
 	}
 
 	/** returns the z-coordinate of this point. */
-	public double z() {
+	public double getZ() {
 		return z;
 	};
 
@@ -90,27 +90,27 @@ public class Point implements Comparable<Point> {
 	}
 
 	boolean isLess(Point p) {
-		return (x < p.x) || ((x == p.x) && (y < p.y));
+		return compareTo(p)<0;
 	}
 
 	boolean isGreater(Point p) {
-		return (x > p.x) || ((x == p.x) && (y > p.y));
+		return compareTo(p)>0;
 	}
 
-	/** return a String in the [x,y,z] format */
+	@Override
 	public String toString() {
-		return (new String(" Pt[" + x + "," + y + "," + z + "]"));
+		return "Point [x=" + x + ", y=" + y + ", z=" + z + "]";
 	}
 
 	/** @return the L2 distanse NOTE: 2D only!!! */
 	public double distance(Point p) {
-		double temp = Math.pow(p.x() - x, 2) + Math.pow(p.y() - y, 2);
+		double temp = Math.pow(p.getX() - x, 2) + Math.pow(p.getY() - y, 2);
 		return Math.sqrt(temp);
 	}
 
-	/** @return the L2 distanse NOTE: 2D only!!! */
+	/** @return the L2 distanse NOTE: 2 only!!! */
 	public double distance3D(Point p) {
-		double temp = Math.pow(p.x() - x, 2) + Math.pow(p.y() - y, 2) + Math.pow(p.z() - z, 2);
+		double temp = Math.pow(p.getX() - x, 2) + Math.pow(p.getY() - y, 2) + Math.pow(p.getZ() - z, 2);
 		return Math.sqrt(temp);
 	}
 
@@ -250,14 +250,14 @@ public class Point implements Comparable<Point> {
 		
 		Point d1 = this;
 		Point d2 = o;
-		if (d1.x() > d2.x())
+		if (d1.getX() > d2.getX())
 			return 1;
-		if (d1.x() < d2.x())
+		if (d1.getX() < d2.getX())
 			return -1;
 		// x1 == x2
-		if (d1.y() > d2.y())
+		if (d1.getY() > d2.getY())
 			return 1;
-		if (d1.y() < d2.y())
+		if (d1.getY() < d2.getY())
 			return -1;
 		// y1==y2
 		return 0;
