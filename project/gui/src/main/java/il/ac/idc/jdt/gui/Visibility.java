@@ -117,7 +117,7 @@ public class Visibility {
 		int f2 = p2.pointLineTest(pp1, pp2);
 		int f3 = p3.pointLineTest(pp1, pp2);
 
-		if ((f1 == Point.LEFT | f1 == Point.RIGHT) && (f1 == f2 && f1 == f3))
+		if ((f1 == Point.LEFT || f1 == Point.RIGHT) && (f1 == f2 && f1 == f3))
 			return false;
 
 		if (f1 != f2 && pp1.pointLineTest(p1, p2) != pp2.pointLineTest(p1, p2))
@@ -142,7 +142,7 @@ public class Visibility {
 		int f2 = p2.pointLineTest(_p1, _p2);
 		int f3 = p3.pointLineTest(_p1, _p2);
 
-		if ((f1 == Point.LEFT | f1 == Point.RIGHT) && (f1 == f2 && f1 == f3))
+		if ((f1 == Point.LEFT || f1 == Point.RIGHT) && (f1 == f2 && f1 == f3))
 			return;
 		if (f1 != f2 && _p1.pointLineTest(p1, p2) != _p2.pointLineTest(p1, p2))
 			add(intersection(p1, p2));

@@ -15,10 +15,10 @@
 		<url>http://code.google.com/p/jdt/issues/list</url>
 	</issueManagement>
 
-
 	<modules>
 		<module>core</module>
 		<module>gui</module>
+		<module>gui3d</module>
 	</modules>
 
 	<properties>
@@ -26,6 +26,7 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<testng.version>6.5.2</testng.version>
 		<hamcrest.version>1.3.RC2</hamcrest.version>
+		<java3d.version>1.3.1</java3d.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -39,6 +40,18 @@
 				<artifactId>jdt-gui</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>java3d</groupId>
+				<artifactId>j3d-core</artifactId>
+				<version>${java3d.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>java3d</groupId>
+				<artifactId>j3d-core-utils</artifactId>
+				<version>${java3d.version}</version>
+			</dependency>
+			
 
 			<dependency>
 				<groupId>org.testng</groupId>

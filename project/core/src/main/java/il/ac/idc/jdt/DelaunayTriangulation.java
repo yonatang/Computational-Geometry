@@ -1380,7 +1380,7 @@ public class DelaunayTriangulation {
 		while (cont) {
 			sx = curr.getA().getX() == x0 || curr.getA().getX() == x1;
 			sy = curr.getA().getY() == y0 || curr.getA().getY() == y1;
-			if ((sx & sy) | (!sx & !sy)) {
+			if ((sx && sy) || (!sx && !sy)) {
 				ans.add(curr.getA());
 			}
 			if (curr.getBcTriangle() != null && curr.getBcTriangle().isHalfplane())

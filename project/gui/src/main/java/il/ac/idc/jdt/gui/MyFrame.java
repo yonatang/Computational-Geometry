@@ -124,7 +124,7 @@ class MyFrame extends Frame implements ActionListener {
 
 		}
 
-		if (_los != null && (_stage == SECTION1 | _stage == SECTION2)) {
+		if (_los != null && (_stage == SECTION1 || _stage == SECTION2)) {
 			if (_los != null && _los._tr != null) {
 				it = _los._tr.iterator();
 				while (it.hasNext()) {
@@ -153,7 +153,7 @@ class MyFrame extends Frame implements ActionListener {
 		 */
 		if (_los == null)
 			_los = new Visibility(_ajd);
-		if (_stage == GUARD | _stage == CLIENT) {
+		if (_stage == GUARD || _stage == CLIENT) {
 			int[] ccc = new int[0];
 			if (_clients != null)
 				ccc = new int[_clients.size()];
@@ -339,7 +339,7 @@ class MyFrame extends Frame implements ActionListener {
 	// }
 
 	public void drawTriangle(Graphics g, Triangle t, Color cl) {
-		if (_view_flag == VIEW1 | t.isHalfplane()) {
+		if (_view_flag == VIEW1 || t.isHalfplane()) {
 			if (cl != null)
 				g.setColor(cl);
 			if (t.isHalfplane()) {
