@@ -115,9 +115,9 @@ public class IOParsers {
 			for (Iterator<Triangle> dt = dto.trianglesIterator(); dt.hasNext();) {
 				Triangle curr = dt.next();
 				if (!curr.halfplane) {
-					i1 = Arrays.binarySearch(ans, curr.a, comp);
-					i2 = Arrays.binarySearch(ans, curr.b, comp);
-					i3 = Arrays.binarySearch(ans, curr.c, comp);
+					i1 = Arrays.binarySearch(ans, curr.getA(), comp);
+					i2 = Arrays.binarySearch(ans, curr.getB(), comp);
+					i3 = Arrays.binarySearch(ans, curr.getC(), comp);
 					if (i1 < 0 || i2 < 0 || i3 < 0)
 						throw new RuntimeException("wrong triangulation inner bug - cant write as an SMF file!");
 					os.println("f " + (i1 + 1) + " " + (i2 + 1) + " " + (i3 + 1));

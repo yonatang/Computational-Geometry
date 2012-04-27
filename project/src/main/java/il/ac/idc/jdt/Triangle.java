@@ -6,8 +6,8 @@ package il.ac.idc.jdt;
  */
 
 public class Triangle {
-	Point a, b, c;
-	Triangle abnext, bcnext, canext;
+	private Point a, b, c;
+	private Triangle abnext, bcnext, canext;
 	Circle circum;
 	int _mc = 0; // modcounter for triangulation fast update.
 
@@ -16,6 +16,54 @@ public class Triangle {
 	boolean _mark = false; // tag - for bfs algorithms
 	// private static boolean visitValue=false;
 	public static int _counter = 0, _c2 = 0;
+
+	public Triangle getAbnext() {
+		return abnext;
+	}
+
+	public void setAbnext(Triangle abnext) {
+		this.abnext = abnext;
+	}
+
+	public Triangle getBcnext() {
+		return bcnext;
+	}
+
+	public void setBcnext(Triangle bcnext) {
+		this.bcnext = bcnext;
+	}
+
+	public Triangle getCanext() {
+		return canext;
+	}
+
+	public void setCanext(Triangle canext) {
+		this.canext = canext;
+	}
+
+	public Point getA() {
+		return a;
+	}
+
+	public void setA(Point a) {
+		this.a = a;
+	}
+
+	public Point getB() {
+		return b;
+	}
+
+	public void setB(Point b) {
+		this.b = b;
+	}
+
+	public Point getC() {
+		return c;
+	}
+
+	public void setC(Point c) {
+		this.c = c;
+	}
 
 	// public int _id;
 	/**

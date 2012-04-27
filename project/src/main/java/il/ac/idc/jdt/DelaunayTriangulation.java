@@ -185,7 +185,7 @@ public class DelaunayTriangulation {
 		currT = t; // recall the last point for - fast (last) update iterator.
 		do {
 			flip(tt, modCount);
-			tt = tt.canext;
+			tt = tt.getCanext();
 		} while (tt != t && !tt.halfplane);
 
 		// Update index with changed triangles
@@ -366,29 +366,29 @@ public class DelaunayTriangulation {
 			deletedTriangle.next_23().switchneighbors(deletedTriangle, addedTriangle);
 			// AB-BC || BA-BC
 			if ((addA.equals(delB) && addB.equals(delC)) || (addB.equals(delB) && addA.equals(delC))) {
-				addedTriangle.abnext = deletedTriangle.next_23();
+				addedTriangle.setAbnext(deletedTriangle.next_23());
 			}
 			// AC-BC || CA-BC
 			else if ((addA.equals(delB) && addC.equals(delC)) || (addC.equals(delB) && addA.equals(delC))) {
-				addedTriangle.canext = deletedTriangle.next_23();
+				addedTriangle.setCanext(deletedTriangle.next_23());
 			}
 			// BC-BC || CB-BC
 			else {
-				addedTriangle.bcnext = deletedTriangle.next_23();
+				addedTriangle.setBcnext(deletedTriangle.next_23());
 			}
 		} else if (pointToDelete.equals(delB)) {
 			deletedTriangle.next_31().switchneighbors(deletedTriangle, addedTriangle);
 			// AB-AC || BA-AC
 			if ((addA.equals(delA) && addB.equals(delC)) || (addB.equals(delA) && addA.equals(delC))) {
-				addedTriangle.abnext = deletedTriangle.next_31();
+				addedTriangle.setAbnext(deletedTriangle.next_31());
 			}
 			// AC-AC || CA-AC
 			else if ((addA.equals(delA) && addC.equals(delC)) || (addC.equals(delA) && addA.equals(delC))) {
-				addedTriangle.canext = deletedTriangle.next_31();
+				addedTriangle.setCanext(deletedTriangle.next_31());
 			}
 			// BC-AC || CB-AC
 			else {
-				addedTriangle.bcnext = deletedTriangle.next_31();
+				addedTriangle.setBcnext(deletedTriangle.next_31());
 			}
 		}
 		// equals c
@@ -396,15 +396,15 @@ public class DelaunayTriangulation {
 			deletedTriangle.next_12().switchneighbors(deletedTriangle, addedTriangle);
 			// AB-AB || BA-AB
 			if ((addA.equals(delA) && addB.equals(delB)) || (addB.equals(delA) && addA.equals(delB))) {
-				addedTriangle.abnext = deletedTriangle.next_12();
+				addedTriangle.setAbnext(deletedTriangle.next_12());
 			}
 			// AC-AB || CA-AB
 			else if ((addA.equals(delA) && addC.equals(delB)) || (addC.equals(delA) && addA.equals(delB))) {
-				addedTriangle.canext = deletedTriangle.next_12();
+				addedTriangle.setCanext(deletedTriangle.next_12());
 			}
 			// BC-AB || CB-AB
 			else {
-				addedTriangle.bcnext = deletedTriangle.next_12();
+				addedTriangle.setBcnext(deletedTriangle.next_12());
 			}
 		}
 	}
@@ -424,207 +424,208 @@ public class DelaunayTriangulation {
 		if (A1.equals(A2)) {
 			// A1B1-A2B2
 			if (B1.equals(B2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// A1B1-A2C2
 			else if (B1.equals(C2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// A1C1-A2B2
 			else if (C1.equals(B2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// A1C1-A2C2
 			else {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 		}
 		// A1-B2
 		else if (A1.equals(B2)) {
 			// A1B1-B2A2
 			if (B1.equals(A2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// A1B1-B2C2
 			else if (B1.equals(C2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
+
 			}
 			// A1C1-B2A2
 			else if (C1.equals(A2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// A1C1-B2C2
 			else {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 		}
 		// A1-C2
 		else if (A1.equals(C2)) {
 			// A1B1-C2A2
 			if (B1.equals(A2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// A1B1-C2B2
 			if (B1.equals(B2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 			// A1C1-C2A2
 			if (C1.equals(A2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// A1C1-C2B2
 			else {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 		}
 		// B1-A2
 		else if (B1.equals(A2)) {
 			// B1A1-A2B2
 			if (A1.equals(B2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// B1A1-A2C2
 			else if (A1.equals(C2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// B1C1-A2B2
 			else if (C1.equals(B2)) {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// B1C1-A2C2
 			else {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 		}
 		// B1-B2
 		else if (B1.equals(B2)) {
 			// B1A1-B2A2
 			if (A1.equals(A2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// B1A1-B2C2
 			else if (A1.equals(C2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 			// B1C1-B2A2
 			else if (C1.equals(A2)) {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// B1C1-B2C2
 			else {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 		}
 		// B1-C2
 		else if (B1.equals(C2)) {
 			// B1A1-C2A2
 			if (A1.equals(A2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// B1A1-C2B2
 			if (A1.equals(B2)) {
-				addedTriangle1.abnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setAbnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 			// B1C1-C2A2
 			if (C1.equals(A2)) {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// B1C1-C2B2
 			else {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 		}
 		// C1-A2
 		else if (C1.equals(A2)) {
 			// C1A1-A2B2
 			if (A1.equals(B2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 			// C1A1-A2C2
 			else if (A1.equals(C2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// C1B1-A2B2
 			else if (B1.equals(B2)) {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// C1B1-A2C2
 			else {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 		}
 		// C1-B2
 		else if (C1.equals(B2)) {
 			// C1A1-B2A2
 			if (A1.equals(A2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// C1A1-B2C2
 			else if (A1.equals(C2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 			// C1B1-B2A2
 			else if (B1.equals(A2)) {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.abnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setAbnext(addedTriangle1);
 			}
 			// C1B1-B2C2
 			else {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 		}
 		// C1-C2
 		else if (C1.equals(C2)) {
 			// C1A1-C2A2
 			if (A1.equals(A2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// C1A1-C2B2
 			if (A1.equals(B2)) {
-				addedTriangle1.canext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setCanext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 			// C1B1-C2A2
 			if (B1.equals(A2)) {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.canext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setCanext(addedTriangle1);
 			}
 			// C1B1-C2B2
 			else {
-				addedTriangle1.bcnext = addedTriangle2;
-				addedTriangle2.bcnext = addedTriangle1;
+				addedTriangle1.setBcnext(addedTriangle2);
+				addedTriangle2.setBcnext(addedTriangle1);
 			}
 		}
 	}
@@ -769,9 +770,9 @@ public class DelaunayTriangulation {
 	private void allTriangles(Triangle curr, Vector<Triangle> front, int mc) {
 		if (curr != null && curr._mc == mc && !front.contains(curr)) {
 			front.add(curr);
-			allTriangles(curr.abnext, front, mc);
-			allTriangles(curr.bcnext, front, mc);
-			allTriangles(curr.canext, front, mc);
+			allTriangles(curr.getAbnext(), front, mc);
+			allTriangles(curr.getBcnext(), front, mc);
+			allTriangles(curr.getCanext(), front, mc);
 		}
 	}
 
@@ -798,7 +799,7 @@ public class DelaunayTriangulation {
 
 		switch (p.pointLineTest(firstP, lastP)) {
 		case Point.LEFT:
-			startTriangle = extendOutside(firstT.abnext, p);
+			startTriangle = extendOutside(firstT.getAbnext(), p);
 			allCollinear = false;
 			break;
 		case Point.RIGHT:
@@ -825,49 +826,49 @@ public class DelaunayTriangulation {
 		case Point.INFRONTOFA:
 			t = new Triangle(firstP, p);
 			tp = new Triangle(p, firstP);
-			t.abnext = tp;
-			tp.abnext = t;
-			t.bcnext = tp;
-			tp.canext = t;
-			t.canext = firstT;
-			firstT.bcnext = t;
-			tp.bcnext = firstT.abnext;
-			firstT.abnext.canext = tp;
+			t.setAbnext(tp);
+			tp.setAbnext(t);
+			t.setBcnext(tp);
+			tp.setCanext(t);
+			t.setCanext(firstT);
+			firstT.setBcnext(t);
+			tp.setBcnext(firstT.getAbnext());
+			firstT.getAbnext().setCanext(tp);
 			firstT = t;
 			firstP = p;
 			break;
 		case Point.BEHINDB:
 			t = new Triangle(p, lastP);
 			tp = new Triangle(lastP, p);
-			t.abnext = tp;
-			tp.abnext = t;
-			t.bcnext = lastT;
-			lastT.canext = t;
-			t.canext = tp;
-			tp.bcnext = t;
-			tp.canext = lastT.abnext;
-			lastT.abnext.bcnext = tp;
+			t.setAbnext(tp);
+			tp.setAbnext(t);
+			t.setBcnext(lastT);
+			lastT.setCanext(t);
+			t.setCanext(tp);
+			tp.setBcnext(t);
+			tp.setCanext(lastT.getAbnext());
+			lastT.getAbnext().setBcnext(tp);
 			lastT = t;
 			lastP = p;
 			break;
 		case Point.ONSEGMENT:
 			u = firstT;
-			while (p.isGreater(u.a))
-				u = u.canext;
-			t = new Triangle(p, u.b);
-			tp = new Triangle(u.b, p);
-			u.b = p;
-			u.abnext.a = p;
-			t.abnext = tp;
-			tp.abnext = t;
-			t.bcnext = u.bcnext;
-			u.bcnext.canext = t;
-			t.canext = u;
-			u.bcnext = t;
-			tp.canext = u.abnext.canext;
-			u.abnext.canext.bcnext = tp;
-			tp.bcnext = u.abnext;
-			u.abnext.canext = tp;
+			while (p.isGreater(u.getA()))
+				u = u.getCanext();
+			t = new Triangle(p, u.getB());
+			tp = new Triangle(u.getB(), p);
+			u.setB(p);
+			u.getAbnext().setA(p);
+			t.setAbnext(tp);
+			tp.setAbnext(t);
+			t.setBcnext(u.getBcnext());
+			u.getBcnext().setCanext(t);
+			t.setCanext(u);
+			u.setBcnext(t);
+			tp.setCanext(u.getAbnext().getCanext());
+			u.getAbnext().getCanext().setBcnext(tp);
+			tp.setBcnext(u.getAbnext());
+			u.getAbnext().setCanext(tp);
 			if (firstT == u) {
 				firstT = t;
 			}
@@ -887,14 +888,14 @@ public class DelaunayTriangulation {
 		firstT = new Triangle(pb, ps);
 		lastT = firstT;
 		Triangle t = new Triangle(ps, pb);
-		firstT.abnext = t;
-		t.abnext = firstT;
-		firstT.bcnext = t;
-		t.canext = firstT;
-		firstT.canext = t;
-		t.bcnext = firstT;
-		firstP = firstT.b;
-		lastP = lastT.a;
+		firstT.setAbnext(t);
+		t.setAbnext(firstT);
+		firstT.setBcnext(t);
+		t.setCanext(firstT);
+		firstT.setCanext(t);
+		t.setBcnext(firstT);
+		firstP = firstT.getB();
+		lastP = lastT.getA();
 		startTriangleHull = firstT;
 	}
 
@@ -905,74 +906,74 @@ public class DelaunayTriangulation {
 		if (h1 != null)
 			return h1;
 
-		h1 = new Triangle(t.c, t.a, p);
-		h2 = new Triangle(t.b, t.c, p);
-		t.c = p;
+		h1 = new Triangle(t.getC(), t.getA(), p);
+		h2 = new Triangle(t.getB(), t.getC(), p);
+		t.setC(p);
 		t.circumcircle();
-		h1.abnext = t.canext;
-		h1.bcnext = t;
-		h1.canext = h2;
-		h2.abnext = t.bcnext;
-		h2.bcnext = h1;
-		h2.canext = t;
-		h1.abnext.switchneighbors(t, h1);
-		h2.abnext.switchneighbors(t, h2);
-		t.bcnext = h2;
-		t.canext = h1;
+		h1.setAbnext(t.getCanext());
+		h1.setBcnext(t);
+		h1.setCanext(h2);
+		h2.setAbnext(t.getBcnext());
+		h2.setBcnext(h1);
+		h2.setCanext(t);
+		h1.getAbnext().switchneighbors(t, h1);
+		h2.getAbnext().switchneighbors(t, h2);
+		t.setBcnext(h2);
+		t.setCanext(h1);
 		return t;
 	}
 
 	private Triangle treatDegeneracyInside(Triangle t, Point p) {
 
-		if (t.abnext.halfplane && p.pointLineTest(t.b, t.a) == Point.ONSEGMENT)
-			return extendOutside(t.abnext, p);
-		if (t.bcnext.halfplane && p.pointLineTest(t.c, t.b) == Point.ONSEGMENT)
-			return extendOutside(t.bcnext, p);
-		if (t.canext.halfplane && p.pointLineTest(t.a, t.c) == Point.ONSEGMENT)
-			return extendOutside(t.canext, p);
+		if (t.getAbnext().halfplane && p.pointLineTest(t.getB(), t.getA()) == Point.ONSEGMENT)
+			return extendOutside(t.getAbnext(), p);
+		if (t.getBcnext().halfplane && p.pointLineTest(t.getC(), t.getB()) == Point.ONSEGMENT)
+			return extendOutside(t.getBcnext(), p);
+		if (t.getCanext().halfplane && p.pointLineTest(t.getA(), t.getC()) == Point.ONSEGMENT)
+			return extendOutside(t.getCanext(), p);
 		return null;
 	}
 
 	private Triangle extendOutside(Triangle t, Point p) {
 
-		if (p.pointLineTest(t.a, t.b) == Point.ONSEGMENT) {
-			Triangle dg = new Triangle(t.a, t.b, p);
-			Triangle hp = new Triangle(p, t.b);
-			t.b = p;
-			dg.abnext = t.abnext;
-			dg.abnext.switchneighbors(t, dg);
-			dg.bcnext = hp;
-			hp.abnext = dg;
-			dg.canext = t;
-			t.abnext = dg;
-			hp.bcnext = t.bcnext;
-			hp.bcnext.canext = hp;
-			hp.canext = t;
-			t.bcnext = hp;
+		if (p.pointLineTest(t.getA(), t.getB()) == Point.ONSEGMENT) {
+			Triangle dg = new Triangle(t.getA(), t.getB(), p);
+			Triangle hp = new Triangle(p, t.getB());
+			t.setB(p);
+			dg.setAbnext(t.getAbnext());
+			dg.getAbnext().switchneighbors(t, dg);
+			dg.setBcnext(hp);
+			hp.setAbnext(dg);
+			dg.setCanext(t);
+			t.setAbnext(dg);
+			hp.setBcnext(t.getBcnext());
+			hp.getBcnext().setCanext(hp);
+			hp.setCanext(t);
+			t.setBcnext(hp);
 			return dg;
 		}
 		Triangle ccT = extendcounterclock(t, p);
 		Triangle cT = extendclock(t, p);
-		ccT.bcnext = cT;
-		cT.canext = ccT;
+		ccT.setBcnext(cT);
+		cT.setCanext(ccT);
 		startTriangleHull = cT;
-		return cT.abnext;
+		return cT.getAbnext();
 	}
 
 	private Triangle extendcounterclock(Triangle t, Point p) {
 
 		t.halfplane = false;
-		t.c = p;
+		t.setC(p);
 		t.circumcircle();
 
-		Triangle tca = t.canext;
+		Triangle tca = t.getCanext();
 
-		if (p.pointLineTest(tca.a, tca.b) >= Point.RIGHT) {
-			Triangle nT = new Triangle(t.a, p);
-			nT.abnext = t;
-			t.canext = nT;
-			nT.canext = tca;
-			tca.bcnext = nT;
+		if (p.pointLineTest(tca.getA(), tca.getB()) >= Point.RIGHT) {
+			Triangle nT = new Triangle(t.getA(), p);
+			nT.setAbnext(t);
+			t.setCanext(nT);
+			nT.setCanext(tca);
+			tca.setBcnext(nT);
 			return nT;
 		}
 		return extendcounterclock(tca, p);
@@ -981,52 +982,53 @@ public class DelaunayTriangulation {
 	private Triangle extendclock(Triangle t, Point p) {
 
 		t.halfplane = false;
-		t.c = p;
+		t.setC(p);
 		t.circumcircle();
 
-		Triangle tbc = t.bcnext;
+		Triangle tbc = t.getBcnext();
 
-		if (p.pointLineTest(tbc.a, tbc.b) >= Point.RIGHT) {
-			Triangle nT = new Triangle(p, t.b);
-			nT.abnext = t;
-			t.bcnext = nT;
-			nT.bcnext = tbc;
-			tbc.canext = nT;
+		if (p.pointLineTest(tbc.getA(), tbc.getB()) >= Point.RIGHT) {
+			Triangle nT = new Triangle(p, t.getB());
+			nT.setAbnext(t);
+			t.setBcnext(nT);
+			nT.setBcnext(tbc);
+			tbc.setCanext(nT);
 			return nT;
 		}
 		return extendclock(tbc, p);
 	}
 
 	private void flip(Triangle t, int mc) {
-		Triangle u = t.abnext, v;
+		Triangle u = t.getAbnext();
+		Triangle v;
 		t._mc = mc;
-		if (u.halfplane || !u.circumcircle_contains(t.c))
+		if (u.halfplane || !u.circumcircle_contains(t.getC()))
 			return;
 
-		if (t.a == u.a) {
-			v = new Triangle(u.b, t.b, t.c);
-			v.abnext = u.bcnext;
-			t.abnext = u.abnext;
-		} else if (t.a == u.b) {
-			v = new Triangle(u.c, t.b, t.c);
-			v.abnext = u.canext;
-			t.abnext = u.bcnext;
-		} else if (t.a == u.c) {
-			v = new Triangle(u.a, t.b, t.c);
-			v.abnext = u.abnext;
-			t.abnext = u.canext;
+		if (t.getA() == u.getA()) {
+			v = new Triangle(u.getB(), t.getB(), t.getC());
+			v.setAbnext(u.getBcnext());
+			t.setAbnext(u.getAbnext());
+		} else if (t.getA() == u.getB()) {
+			v = new Triangle(u.getC(), t.getB(), t.getC());
+			v.setAbnext(u.getCanext());
+			t.setAbnext(u.getBcnext());
+		} else if (t.getA() == u.getC()) {
+			v = new Triangle(u.getA(), t.getB(), t.getC());
+			v.setAbnext(u.getAbnext());
+			t.setAbnext(u.getCanext());
 		} else {
 			throw new RuntimeException("Error in flip.");
 		}
 
 		v._mc = mc;
-		v.bcnext = t.bcnext;
-		v.abnext.switchneighbors(u, v);
-		v.bcnext.switchneighbors(t, v);
-		t.bcnext = v;
-		v.canext = t;
-		t.b = v.a;
-		t.abnext.switchneighbors(u, t);
+		v.setBcnext(t.getBcnext());
+		v.getAbnext().switchneighbors(u, v);
+		v.getBcnext().switchneighbors(t, v);
+		t.setBcnext(v);
+		v.setCanext(t);
+		t.setB(v.getA());
+		t.getAbnext().switchneighbors(u, t);
 		t.circumcircle();
 
 		currT = v;
@@ -1119,29 +1121,29 @@ public class DelaunayTriangulation {
 	 * assumes v is NOT an halfplane! returns the next triangle for find.
 	 */
 	private static Triangle findnext1(Point p, Triangle v) {
-		if (p.pointLineTest(v.a, v.b) == Point.RIGHT && !v.abnext.halfplane)
-			return v.abnext;
-		if (p.pointLineTest(v.b, v.c) == Point.RIGHT && !v.bcnext.halfplane)
-			return v.bcnext;
-		if (p.pointLineTest(v.c, v.a) == Point.RIGHT && !v.canext.halfplane)
-			return v.canext;
-		if (p.pointLineTest(v.a, v.b) == Point.RIGHT)
-			return v.abnext;
-		if (p.pointLineTest(v.b, v.c) == Point.RIGHT)
-			return v.bcnext;
-		if (p.pointLineTest(v.c, v.a) == Point.RIGHT)
-			return v.canext;
+		if (p.pointLineTest(v.getA(), v.getB()) == Point.RIGHT && !v.getAbnext().halfplane)
+			return v.getAbnext();
+		if (p.pointLineTest(v.getB(), v.getC()) == Point.RIGHT && !v.getBcnext().halfplane)
+			return v.getBcnext();
+		if (p.pointLineTest(v.getC(), v.getA()) == Point.RIGHT && !v.getCanext().halfplane)
+			return v.getCanext();
+		if (p.pointLineTest(v.getA(), v.getB()) == Point.RIGHT)
+			return v.getAbnext();
+		if (p.pointLineTest(v.getB(), v.getC()) == Point.RIGHT)
+			return v.getBcnext();
+		if (p.pointLineTest(v.getC(), v.getA()) == Point.RIGHT)
+			return v.getCanext();
 		return null;
 	}
 
 	/** assumes v is an halfplane! - returns another (none halfplane) triangle */
 	private static Triangle findnext2(Point p, Triangle v) {
-		if (v.abnext != null && !v.abnext.halfplane)
-			return v.abnext;
-		if (v.bcnext != null && !v.bcnext.halfplane)
-			return v.bcnext;
-		if (v.canext != null && !v.canext.halfplane)
-			return v.canext;
+		if (v.getAbnext() != null && !v.getAbnext().halfplane)
+			return v.getAbnext();
+		if (v.getBcnext() != null && !v.getBcnext().halfplane)
+			return v.getBcnext();
+		if (v.getCanext() != null && !v.getCanext().halfplane)
+			return v.getCanext();
 		return null;
 	}
 
@@ -1407,8 +1409,8 @@ public class DelaunayTriangulation {
 			if ((sx & sy) | (!sx & !sy)) {
 				ans.add(curr.p1());
 			}
-			if (curr.bcnext != null && curr.bcnext.halfplane)
-				curr = curr.bcnext;
+			if (curr.getBcnext() != null && curr.getBcnext().halfplane)
+				curr = curr.getBcnext();
 			if (curr == this.startTriangleHull)
 				cont = false;
 		}
@@ -1437,14 +1439,14 @@ public class DelaunayTriangulation {
 				if (t._mark == false) {
 					t._mark = true;
 					triangles.add(t);
-					if (t.abnext != null && !t.abnext._mark) {
-						front.add(t.abnext);
+					if (t.getAbnext() != null && !t.getAbnext()._mark) {
+						front.add(t.getAbnext());
 					}
-					if (t.bcnext != null && !t.bcnext._mark) {
-						front.add(t.bcnext);
+					if (t.getBcnext() != null && !t.getBcnext()._mark) {
+						front.add(t.getBcnext());
 					}
-					if (t.canext != null && !t.canext._mark) {
-						front.add(t.canext);
+					if (t.getCanext() != null && !t.getCanext()._mark) {
+						front.add(t.getCanext());
 					}
 				}
 			}
