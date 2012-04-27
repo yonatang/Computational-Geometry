@@ -4,6 +4,7 @@ import il.ac.idc.jdt.DelaunayTriangulation;
 import il.ac.idc.jdt.IOParsers;
 import il.ac.idc.jdt.Point;
 import il.ac.idc.jdt.Triangle;
+import il.ac.idc.jtd.extra.topographic.CounterLine;
 
 import java.awt.Color;
 import java.awt.FileDialog;
@@ -19,13 +20,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 /**
  * GUI class to test the DelaunayTriangulation Triangulation package:
  */
 
-class MyFrame extends Frame implements ActionListener {
+public class MyFrame extends Frame implements ActionListener {
 
 	public static void main(String[] args) {
 		MyFrame win = new MyFrame();
@@ -171,7 +173,7 @@ class MyFrame extends Frame implements ActionListener {
 					}
 				}
 			}
-			int c1 = 0, c2 = 0, c3 = 0;
+			int c1 = 0, c2 = 0;
 			for (int i = 0; i < ccc.length; i++) {
 				if (ccc[i] > 0) {
 					c1++;
@@ -314,29 +316,27 @@ class MyFrame extends Frame implements ActionListener {
 		return ans;
 	}
 
-	// TODO add support when has CounterLine
-	// public void drawTopographicMap(Graphics g, ArrayList<CounterLine>
-	// counterLines) {
-	// g.setColor(Color.YELLOW);
-	// for (CounterLine line : counterLines) {
-	// int[] xPoints = new int[line.getNumberOfPoints()];
-	// int[] yPoints = new int[line.getNumberOfPoints()];
-	//
-	// Iterator<Point> pointsItr = line.getPointsListIterator();
-	// int index = 0;
-	// while (pointsItr.hasNext()) {
-	// Point point = pointsItr.next();
-	// Point screenPoint = world2screen(point);
-	// xPoints[index] = (int) screenPoint.getX();
-	// yPoints[index] = (int) screenPoint.getY();
-	// index++;
-	// }
-	// if (line.isClosed())
-	// g.drawPolygon(xPoints, yPoints, xPoints.length);
-	// else
-	// g.drawPolyline(xPoints, yPoints, xPoints.length);
-	// }
-	// }
+	public void drawTopographicMap(Graphics g, List<CounterLine> counterLines) {
+		g.setColor(Color.YELLOW);
+		for (CounterLine line : counterLines) {
+			int[] xPoints = new int[line.getNumberOfPoints()];
+			int[] yPoints = new int[line.getNumberOfPoints()];
+
+			Iterator<Point> pointsItr = line.getPointsListIterator();
+			int index = 0;
+			while (pointsItr.hasNext()) {
+				Point point = pointsItr.next();
+				Point screenPoint = world2screen(point);
+				xPoints[index] = (int) screenPoint.getX();
+				yPoints[index] = (int) screenPoint.getY();
+				index++;
+			}
+			if (line.isClosed())
+				g.drawPolygon(xPoints, yPoints, xPoints.length);
+			else
+				g.drawPolyline(xPoints, yPoints, xPoints.length);
+		}
+	}
 
 	public void drawTriangle(Graphics g, Triangle t, Color cl) {
 		if (_view_flag == VIEW1 || t.isHalfplane()) {
@@ -422,11 +422,11 @@ class MyFrame extends Frame implements ActionListener {
 	}
 
 	public void start() {
-		this.show();
-		Dialog();
+		setVisible(true);
+		initMenuBar();
 	}
 
-	public void Dialog() {
+	private void initMenuBar() {
 		MenuBar mbar = new MenuBar();
 
 		Menu m = new Menu("File");
@@ -501,7 +501,7 @@ class MyFrame extends Frame implements ActionListener {
 		mbar.add(m);
 
 		setMenuBar(mbar);
-		this.addMouseListener(new mouseManeger());
+		this.addMouseListener(new MouseManeger());
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -553,10 +553,10 @@ class MyFrame extends Frame implements ActionListener {
 			_stage = SECTION1;
 		} else if (arg.equals("Client-5m")) {
 			// System.out.println("CL!");
-			_stage = this.CLIENT;
+			_stage = MyFrame.CLIENT;
 
 		} else if (arg.equals("Guard-30m")) {// System.out.println("GR!");
-			_stage = this.GUARD;
+			_stage = MyFrame.GUARD;
 		} else if (arg.equals("Info")) {
 			String ans = "" + _ajd.getClass().getCanonicalName() + "  # vertices:" + _ajd.size() + "  # triangles:" + _ajd.trianglesSize();
 			ans += "   min BB:" + _ajd.minBoundingBox() + "   max BB:" + _ajd.maxBoundingBox();
@@ -578,7 +578,7 @@ class MyFrame extends Frame implements ActionListener {
 	private void openTextFile() {
 		_stage = 0;
 		FileDialog d = new FileDialog(this, "Open text file", FileDialog.LOAD);
-		d.show();
+		d.setVisible(true);
 		String dr = d.getDirectory();
 		String fi = d.getFile();
 		_clients = null;
@@ -600,15 +600,14 @@ class MyFrame extends Frame implements ActionListener {
 	private void saveTextFile() {
 		_stage = 0;
 		FileDialog d = new FileDialog(this, "Saving TSIN text file", FileDialog.SAVE);
-		d.show();
+		d.setVisible(true);
 		String dr = d.getDirectory();
 		String fi = d.getFile();
 		if (fi != null) {
 			try {
-				// _ajd.write_tsin2(dr+fi);
-				// _ajd.write_CH(dr+"CH_"+fi);
 				IOParsers.exportTsin(_ajd, dr + fi);
 			} catch (Exception e) {
+				// TODO - better error message
 				System.out.println("ERR cant save to text file: " + dr + fi);
 				e.printStackTrace();
 			}
@@ -618,13 +617,14 @@ class MyFrame extends Frame implements ActionListener {
 	public void saveTextFile2() {
 		_stage = 0;
 		FileDialog d = new FileDialog(this, "Saving SMF text file", FileDialog.SAVE);
-		d.show();
+		d.setVisible(true);
 		String dr = d.getDirectory();
 		String fi = d.getFile();
 		if (fi != null) {
 			try {
 				IOParsers.exportSmf(_ajd.getTriangulation(), dr + fi);
 			} catch (Exception e) {
+				// TODO - better error message
 				System.out.println("ERR cant save to text file: " + dr + fi);
 				e.printStackTrace();
 			}
@@ -638,7 +638,7 @@ class MyFrame extends Frame implements ActionListener {
 	// }
 	// }
 
-	class mouseManeger extends MouseAdapter { // inner class!!
+	private class MouseManeger extends MouseAdapter {
 		public void mousePressed(MouseEvent e) {
 			int xx = e.getX();
 			int yy = e.getY();

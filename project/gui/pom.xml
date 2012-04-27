@@ -14,6 +14,10 @@
 			<artifactId>jdt-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>il.ac.idc.jdt</groupId>
+			<artifactId>jdt-extra</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<scope>test</scope>
