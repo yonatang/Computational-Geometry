@@ -6,7 +6,7 @@ package il.ac.idc.jdt;
  */
 
 public class Triangle {
-	Pointdt a, b, c;
+	Point a, b, c;
 	Triangle abnext, bcnext, canext;
 	Circle circum;
 	int _mc = 0; // modcounter for triangulation fast update.
@@ -21,11 +21,11 @@ public class Triangle {
 	/**
 	 * constructs a triangle form 3 point - store it in counterclockwised order.
 	 */
-	public Triangle(Pointdt A, Pointdt B, Pointdt C) {
+	public Triangle(Point A, Point B, Point C) {
 		// visitflag=visitValue;
 		a = A;
 		int res = C.pointLineTest(A, B);
-		if ((res <= Pointdt.LEFT) || (res == Pointdt.INFRONTOFA) || (res == Pointdt.BEHINDB)) {
+		if ((res <= Point.LEFT) || (res == Point.INFRONTOFA) || (res == Point.BEHINDB)) {
 			b = B;
 			c = C;
 		} else { // RIGHT
@@ -46,7 +46,7 @@ public class Triangle {
 	 * @param A
 	 * @param B
 	 */
-	public Triangle(Pointdt A, Pointdt B) {
+	public Triangle(Point A, Point B) {
 		// visitflag=visitValue;
 		a = A;
 		b = B;
@@ -75,21 +75,21 @@ public class Triangle {
 	/**
 	 * returns the first vertex of this triangle.
 	 */
-	public Pointdt p1() {
+	public Point p1() {
 		return a;
 	}
 
 	/**
 	 * returns the second vertex of this triangle.
 	 */
-	public Pointdt p2() {
+	public Point p2() {
 		return b;
 	}
 
 	/**
 	 * returns the 3th vertex of this triangle.
 	 */
-	public Pointdt p3() {
+	public Point p3() {
 		return c;
 	}
 
@@ -119,9 +119,9 @@ public class Triangle {
 	 *         of the triangle
 	 */
 	public BoundingBox getBoundingBox() {
-		Pointdt lowerLeft, upperRight;
-		lowerLeft = new Pointdt(Math.min(a.x(), Math.min(b.x(), c.x())), Math.min(a.y(), Math.min(b.y(), c.y())));
-		upperRight = new Pointdt(Math.max(a.x(), Math.max(b.x(), c.x())), Math.max(a.y(), Math.max(b.y(), c.y())));
+		Point lowerLeft, upperRight;
+		lowerLeft = new Point(Math.min(a.x(), Math.min(b.x(), c.x())), Math.min(a.y(), Math.min(b.y(), c.y())));
+		upperRight = new Point(Math.max(a.x(), Math.max(b.x(), c.x())), Math.max(a.y(), Math.max(b.y(), c.y())));
 		return new BoundingBox(lowerLeft, upperRight);
 	}
 
@@ -136,7 +136,7 @@ public class Triangle {
 			System.out.println("Error, switchneighbors can't find Old.");
 	}
 
-	Triangle neighbor(Pointdt p) {
+	Triangle neighbor(Point p) {
 		if (a == p)
 			return canext;
 		if (b == p)
@@ -160,7 +160,7 @@ public class Triangle {
 	 * 
 	 *         By: Eyal Roth & Doron Ganel.
 	 */
-	Triangle nextNeighbor(Pointdt p, Triangle prevTriangle) {
+	Triangle nextNeighbor(Point p, Triangle prevTriangle) {
 		Triangle neighbor = null;
 
 		if (a.equals(p)) {
@@ -199,7 +199,7 @@ public class Triangle {
 		if (den == 0) // oops, degenerate case
 			circum = new Circle(a, Double.POSITIVE_INFINITY);
 		else {
-			Pointdt cen = new Pointdt((u * (b.y() - c.y()) - v * (a.y() - b.y())) / den, (v * (a.x() - b.x()) - u
+			Point cen = new Point((u * (b.y() - c.y()) - v * (a.y() - b.y())) / den, (v * (a.x() - b.x()) - u
 					* (b.x() - c.x()))
 					/ den);
 			circum = new Circle(cen, cen.distance2(a));
@@ -207,7 +207,7 @@ public class Triangle {
 		return circum;
 	}
 
-	boolean circumcircle_contains(Pointdt p) {
+	boolean circumcircle_contains(Point p) {
 
 		return circum.radius() > circum.center().distance2(p);
 	}
@@ -229,7 +229,7 @@ public class Triangle {
 	 * @return true iff p is not null and is inside this triangle (Note: on
 	 *         boundary is considered inside!!).
 	 */
-	public boolean contains(Pointdt p) {
+	public boolean contains(Point p) {
 		boolean ans = false;
 		if (this.halfplane || p == null)
 			return false;
@@ -242,9 +242,9 @@ public class Triangle {
 		int a23 = p.pointLineTest(b, c);
 		int a31 = p.pointLineTest(c, a);
 
-		if ((a12 == Pointdt.LEFT && a23 == Pointdt.LEFT && a31 == Pointdt.LEFT)
-				|| (a12 == Pointdt.RIGHT && a23 == Pointdt.RIGHT && a31 == Pointdt.RIGHT)
-				|| (a12 == Pointdt.ONSEGMENT || a23 == Pointdt.ONSEGMENT || a31 == Pointdt.ONSEGMENT))
+		if ((a12 == Point.LEFT && a23 == Point.LEFT && a31 == Point.LEFT)
+				|| (a12 == Point.RIGHT && a23 == Point.RIGHT && a31 == Point.RIGHT)
+				|| (a12 == Point.ONSEGMENT || a23 == Point.ONSEGMENT || a31 == Point.ONSEGMENT))
 			ans = true;
 
 		return ans;
@@ -258,7 +258,7 @@ public class Triangle {
 	 * @return true iff p is not null and is inside this triangle (Note: on
 	 *         boundary is considered outside!!).
 	 */
-	public boolean contains_BoundaryIsOutside(Pointdt p) {
+	public boolean contains_BoundaryIsOutside(Point p) {
 		boolean ans = false;
 		if (this.halfplane || p == null)
 			return false;
@@ -271,8 +271,8 @@ public class Triangle {
 		int a23 = p.pointLineTest(b, c);
 		int a31 = p.pointLineTest(c, a);
 
-		if ((a12 == Pointdt.LEFT && a23 == Pointdt.LEFT && a31 == Pointdt.LEFT)
-				|| (a12 == Pointdt.RIGHT && a23 == Pointdt.RIGHT && a31 == Pointdt.RIGHT))
+		if ((a12 == Point.LEFT && a23 == Point.LEFT && a31 == Point.LEFT)
+				|| (a12 == Point.RIGHT && a23 == Point.RIGHT && a31 == Point.RIGHT))
 			ans = true;
 
 		return ans;
@@ -287,20 +287,20 @@ public class Triangle {
 	 * 
 	 *         By Eyal Roth & Doron Ganel.
 	 */
-	public boolean isCorner(Pointdt p) {
+	public boolean isCorner(Point p) {
 		return (p.x() == a.x() && p.y() == a.y()) || (p.x() == b.x() && p.y() == b.y())
 				|| (p.x() == c.x() && p.y() == c.y());
 	}
 
 	// Doron
-	public boolean fallInsideCircumcircle(Pointdt[] arrayPoints) {
+	public boolean fallInsideCircumcircle(Point[] arrayPoints) {
 		boolean isInside = false;
-		Pointdt p1 = this.p1();
-		Pointdt p2 = this.p2();
-		Pointdt p3 = this.p3();
+		Point p1 = this.p1();
+		Point p2 = this.p2();
+		Point p3 = this.p3();
 		int i = 0;
 		while (!isInside && i < arrayPoints.length) {
-			Pointdt p = arrayPoints[i];
+			Point p = arrayPoints[i];
 			if (!p.equals(p1) && !p.equals(p2) && !p.equals(p3)) {
 				isInside = this.circumcircle_contains(p);
 			}
@@ -319,7 +319,7 @@ public class Triangle {
 	 *            query point (its Z value is ignored).
 	 * @return the Z value of this plane implies by this triangle 3 points.
 	 */
-	public double z_value(Pointdt q) {
+	public double z_value(Point q) {
 		if (q == null || this.halfplane)
 			throw new RuntimeException("*** ERR wrong parameters, can't approximate the z value ..***: " + q);
 		/* incase the query point is on one of the points */
@@ -398,7 +398,7 @@ public class Triangle {
 	 * 
 	 */
 	public double z(double x, double y) {
-		return z_value(new Pointdt(x, y));
+		return z_value(new Point(x, y));
 	}
 
 	/**
@@ -410,8 +410,8 @@ public class Triangle {
 	 * @return q with updated Z value.
 	 * 
 	 */
-	public Pointdt z(Pointdt q) {
+	public Point z(Point q) {
 		double z = z_value(q);
-		return new Pointdt(q.x(), q.y(), z);
+		return new Point(q.x(), q.y(), z);
 	}
 }

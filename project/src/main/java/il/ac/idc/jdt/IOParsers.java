@@ -17,20 +17,17 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
 public class IOParsers {
 
-	public static Pointdt[] read(File file) throws IOException {
+	public static Point[] read(File file) throws IOException {
 		return read(new FileInputStream(file));
 	}
 
-	public static Pointdt[] read(String file) throws IOException {
+	public static Point[] read(String file) throws IOException {
 		return read(new FileInputStream(file));
 	}
 
-	public static Pointdt[] read(InputStream is) throws IOException {
+	public static Point[] read(InputStream is) throws IOException {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(is));
@@ -39,17 +36,17 @@ public class IOParsers {
 			}
 			if (s.equals("begin")) {
 				return readSmf(br);
-			} else if (StringUtils.isNumeric(s)) {
+			} else if (Utils.isNumeric(s)) {
 				return readTsin(br, s);
 			} else {
 				throw new UnsupportedFormatException("File format not recognized");
 			}
 		} finally {
-			IOUtils.closeQuietly(br);
+			Utils.closeQuietly(br);
 		}
 	}
 
-	private static Pointdt[] readSmf(BufferedReader is) throws IOException {
+	private static Point[] readSmf(BufferedReader is) throws IOException {
 		String s;
 		while (!(s = is.readLine()).startsWith("v")) {
 
@@ -57,29 +54,29 @@ public class IOParsers {
 
 		double dx = 1, dy = 1, dz = 1, minX = 0, minY = 0, minZ = 0;
 
-		Vector<Pointdt> vec = new Vector<Pointdt>();
-		Pointdt[] ans = null; //
+		Vector<Point> vec = new Vector<Point>();
+		Point[] ans = null; //
 		while (s != null && s.charAt(0) == 'v') {
 			StringTokenizer st = new StringTokenizer(s);
 			st.nextToken();
 			double d1 = new Double(st.nextToken()).doubleValue() * dx + minX;
 			double d2 = new Double(st.nextToken()).doubleValue() * dy + minY;
 			double d3 = new Double(st.nextToken()).doubleValue() * dz + minZ;
-			vec.add(new Pointdt((int) d1, (int) d2, d3));
+			vec.add(new Point((int) d1, (int) d2, d3));
 			s = is.readLine();
 		}
-		ans = new Pointdt[vec.size()];
+		ans = new Point[vec.size()];
 		for (int i = 0; i < vec.size(); i++)
-			ans[i] = (Pointdt) vec.elementAt(i);
+			ans[i] = (Point) vec.elementAt(i);
 		return ans;
 	}
 
-	private static Pointdt[] readTsin(BufferedReader is, String firstLine) throws IOException {
+	private static Point[] readTsin(BufferedReader is, String firstLine) throws IOException {
 
 		StringTokenizer st;
 		int numOfVer = new Integer(firstLine).intValue();
 
-		Pointdt[] ans = new Pointdt[numOfVer];
+		Point[] ans = new Point[numOfVer];
 
 		// reading the file verteces - insert them to the triangulation
 		for (int i = 0; i < numOfVer; i++) {
@@ -87,7 +84,7 @@ public class IOParsers {
 			double d1 = new Double(st.nextToken()).doubleValue();
 			double d2 = new Double(st.nextToken()).doubleValue();
 			double d3 = new Double(st.nextToken()).doubleValue();
-			ans[i] = new Pointdt((int) d1, (int) d2, d3);
+			ans[i] = new Point((int) d1, (int) d2, d3);
 		}
 		return ans;
 	}
@@ -98,9 +95,9 @@ public class IOParsers {
 
 	public static void exportSmf(DelaunayTriangulation dto, Writer writer) {
 		int len = dto.size();
-		Pointdt[] ans = new Pointdt[len];
-		Iterator<Pointdt> it = dto.verticesIterator();
-		Comparator<Pointdt> comp = Pointdt.getComparator();
+		Point[] ans = new Point[len];
+		Iterator<Point> it = dto.verticesIterator();
+		Comparator<Point> comp = Point.getComparator();
 		for (int i = 0; i < len; i++) {
 			ans[i] = it.next();
 		}
@@ -128,7 +125,7 @@ public class IOParsers {
 			}
 			os.println("end");
 		} finally {
-			IOUtils.closeQuietly(os);
+			Utils.closeQuietly(os);
 		}
 
 	}
@@ -159,12 +156,12 @@ public class IOParsers {
 			// prints the tsin file header:
 			int len = dto.size();
 			os.println(len);
-			Iterator<Pointdt> it = dto.verticesIterator();
+			Iterator<Point> it = dto.verticesIterator();
 			while (it.hasNext()) {
 				os.println(it.next().toFile());
 			}
 		} finally {
-			IOUtils.closeQuietly(os);
+			Utils.closeQuietly(os);
 		}
 	}
 
@@ -173,7 +170,7 @@ public class IOParsers {
 		PrintWriter os = new PrintWriter(fw);
 		// prints the tsin file header:
 		os.println(dto.getConvexHullSize());
-		Iterator<Pointdt> it = dto.getConvexHullVerticesIterator();
+		Iterator<Point> it = dto.getConvexHullVerticesIterator();
 		while (it.hasNext()) {
 			os.println(it.next().toFileXY());
 		}

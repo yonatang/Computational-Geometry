@@ -10,7 +10,7 @@ package il.ac.idc.jdt;
  */
 public class Circle {
 
-	private Pointdt c;
+	private Point c;
 	private double r;
 
 	/**
@@ -22,7 +22,7 @@ public class Circle {
 	 * @param r
 	 *            Radius of the circle.
 	 */
-	public Circle(Pointdt c, double r) {
+	public Circle(Point c, double r) {
 		this.c = c;
 		this.r = r;
 	}
@@ -49,7 +49,7 @@ public class Circle {
 	 * 
 	 * @return the center of the circle.
 	 */
-	public Pointdt center() {
+	public Point center() {
 		return this.c;
 	}
 

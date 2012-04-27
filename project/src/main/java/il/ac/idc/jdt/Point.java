@@ -6,33 +6,33 @@ import java.util.Comparator;
  * This class represents a 3D point, with some simple geometric methods
  * (pointLineTest).
  */
-public class Pointdt {
+public class Point {
 	private double x, y, z;
 
 	/**
 	 * Default Constructor. <br />
 	 * constructs a 3D point at (0,0,0).
 	 */
-	public Pointdt() {
+	public Point() {
 		this(0, 0);
 	}
 
 	/**
 	 * constructs a 3D point
 	 */
-	public Pointdt(double x, double y, double z) {
+	public Point(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 
 	/** constructs a 3D point with a z value of 0. */
-	public Pointdt(double x, double y) {
+	public Point(double x, double y) {
 		this(x, y, 0);
 	}
 
 	/** simple copy constructor */
-	public Pointdt(Pointdt p) {
+	public Point(Point p) {
 		x = p.x;
 		y = p.y;
 		z = p.z;
@@ -83,7 +83,7 @@ public class Pointdt {
 		this.z = z;
 	}
 
-	double distance2(Pointdt p) {
+	double distance2(Point p) {
 		return (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y);
 	}
 
@@ -91,11 +91,11 @@ public class Pointdt {
 		return (px - x) * (px - x) + (py - y) * (py - y);
 	}
 
-	boolean isLess(Pointdt p) {
+	boolean isLess(Point p) {
 		return (x < p.x) || ((x == p.x) && (y < p.y));
 	}
 
-	boolean isGreater(Pointdt p) {
+	boolean isGreater(Point p) {
 		return (x > p.x) || ((x == p.x) && (y > p.y));
 	}
 
@@ -103,7 +103,7 @@ public class Pointdt {
 	 * return true iff this point [x,y] coordinates are the same as p [x,y]
 	 * coordinates. (the z value is ignored).
 	 */
-	public boolean equals(Pointdt p) {
+	public boolean equals(Point p) {
 		return (x == p.x) && (y == p.y);
 	}
 
@@ -113,13 +113,13 @@ public class Pointdt {
 	}
 
 	/** @return the L2 distanse NOTE: 2D only!!! */
-	public double distance(Pointdt p) {
+	public double distance(Point p) {
 		double temp = Math.pow(p.x() - x, 2) + Math.pow(p.y() - y, 2);
 		return Math.sqrt(temp);
 	}
 
 	/** @return the L2 distanse NOTE: 2D only!!! */
-	public double distance3D(Pointdt p) {
+	public double distance3D(Point p) {
 		double temp = Math.pow(p.x() - x, 2) + Math.pow(p.y() - y, 2) + Math.pow(p.z() - z, 2);
 		return Math.sqrt(temp);
 	}
@@ -155,7 +155,7 @@ public class Pointdt {
 	 * @return the value (flag) of the relation between this point and the a,b
 	 *         line-segment.
 	 */
-	public int pointLineTest(Pointdt a, Pointdt b) {
+	public int pointLineTest(Point a, Point b) {
 
 		double dx = b.x - a.x;
 		double dy = b.y - a.y;
@@ -198,7 +198,7 @@ public class Pointdt {
 		return ERROR;
 	}
 
-	boolean areCollinear(Pointdt a, Pointdt b) {
+	boolean areCollinear(Point a, Point b) {
 		double dx = b.x - a.x;
 		double dy = b.y - a.y;
 		double res = dy * (x - a.x) - dx * (y - a.y);
@@ -212,26 +212,26 @@ public class Pointdt {
 	 * ajSegment( p1,p2 ); }
 	 */
 
-	Pointdt circumcenter(Pointdt a, Pointdt b) {
+	Point circumcenter(Point a, Point b) {
 
 		double u = ((a.x - b.x) * (a.x + b.x) + (a.y - b.y) * (a.y + b.y)) / 2.0f;
 		double v = ((b.x - x) * (b.x + x) + (b.y - y) * (b.y + y)) / 2.0f;
 		double den = (a.x - b.x) * (b.y - y) - (b.x - x) * (a.y - b.y);
 		if (den == 0) // oops
 			System.out.println("circumcenter, degenerate case");
-		return new Pointdt((u * (b.y - y) - v * (a.y - b.y)) / den, (v * (a.x - b.x) - u * (b.x - x)) / den);
+		return new Point((u * (b.y - y) - v * (a.y - b.y)) / den, (v * (a.x - b.x) - u * (b.x - x)) / den);
 	}
 
-	public static Comparator<Pointdt> getComparator(int flag) {
+	public static Comparator<Point> getComparator(int flag) {
 		return new Compare(flag);
 	}
 
-	public static Comparator<Pointdt> getComparator() {
+	public static Comparator<Point> getComparator() {
 		return new Compare(0);
 	}
 }
 
-class Compare implements Comparator<Pointdt> {
+class Compare implements Comparator<Point> {
 	private int _flag;
 
 	public Compare(int i) {
@@ -239,11 +239,11 @@ class Compare implements Comparator<Pointdt> {
 	}
 
 	/** compare between two points. */
-	public int compare(Pointdt o1, Pointdt o2) {
+	public int compare(Point o1, Point o2) {
 		int ans = 0;
-		if (o1 != null && o2 != null && o1 instanceof Pointdt && o2 instanceof Pointdt) {
-			Pointdt d1 = (Pointdt) o1;
-			Pointdt d2 = (Pointdt) o2;
+		if (o1 != null && o2 != null && o1 instanceof Point && o2 instanceof Point) {
+			Point d1 = (Point) o1;
+			Point d2 = (Point) o2;
 			if (_flag == 0) {
 				if (d1.x() > d2.x())
 					return 1;

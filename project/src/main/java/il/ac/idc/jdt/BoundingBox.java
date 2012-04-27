@@ -81,7 +81,7 @@ public class BoundingBox {
 	 * @param upperRight
 	 *            upper left point of the box
 	 */
-	public BoundingBox(Pointdt lowerLeft, Pointdt upperRight) {
+	public BoundingBox(Point lowerLeft, Point upperRight) {
 		init(lowerLeft.x(), upperRight.x(), lowerLeft.y(), upperRight.y(), lowerLeft.z(), upperRight.z());
 	}
 
@@ -219,14 +219,14 @@ public class BoundingBox {
 	/**
 	 * @return Maximum coordinate of bounding box
 	 */
-	public Pointdt getMinPoint() {
-		return new Pointdt(minx, miny, minz);
+	public Point getMinPoint() {
+		return new Point(minx, miny, minz);
 	}
 
 	/**
 	 * @return Minimum coordinate of bounding box
 	 */
-	public Pointdt getMaxPoint() {
-		return new Pointdt(maxx, maxy, maxz);
+	public Point getMaxPoint() {
+		return new Point(maxx, maxy, maxz);
 	}
 }
