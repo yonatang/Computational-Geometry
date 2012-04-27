@@ -1,12 +1,10 @@
 package il.ac.idc.jdt;
 
-import java.util.Comparator;
-
 /**
  * This class represents a 3D point, with some simple geometric methods
  * (pointLineTest).
  */
-public class Point {
+public class Point implements Comparable<Point> {
 	private double x, y, z;
 
 	/**
@@ -97,14 +95,6 @@ public class Point {
 
 	boolean isGreater(Point p) {
 		return (x > p.x) || ((x == p.x) && (y > p.y));
-	}
-
-	/**
-	 * return true iff this point [x,y] coordinates are the same as p [x,y]
-	 * coordinates. (the z value is ignored).
-	 */
-	public boolean equals(Point p) {
-		return (x == p.x) && (y == p.y);
 	}
 
 	/** return a String in the [x,y,z] format */
@@ -213,7 +203,6 @@ public class Point {
 	 */
 
 	Point circumcenter(Point a, Point b) {
-
 		double u = ((a.x - b.x) * (a.x + b.x) + (a.y - b.y) * (a.y + b.y)) / 2.0f;
 		double v = ((b.x - x) * (b.x + x) + (b.y - y) * (b.y + y)) / 2.0f;
 		double den = (a.x - b.x) * (b.y - y) - (b.x - x) * (a.y - b.y);
@@ -222,82 +211,56 @@ public class Point {
 		return new Point((u * (b.y - y) - v * (a.y - b.y)) / den, (v * (a.x - b.x) - u * (b.x - x)) / den);
 	}
 
-	public static Comparator<Point> getComparator(int flag) {
-		return new Compare(flag);
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(x);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 
-	public static Comparator<Point> getComparator() {
-		return new Compare(0);
-	}
-}
-
-class Compare implements Comparator<Point> {
-	private int _flag;
-
-	public Compare(int i) {
-		_flag = i;
-	}
-
-	/** compare between two points. */
-	public int compare(Point o1, Point o2) {
-		int ans = 0;
-		if (o1 != null && o2 != null && o1 instanceof Point && o2 instanceof Point) {
-			Point d1 = (Point) o1;
-			Point d2 = (Point) o2;
-			if (_flag == 0) {
-				if (d1.x() > d2.x())
-					return 1;
-				if (d1.x() < d2.x())
-					return -1;
-				// x1 == x2
-				if (d1.y() > d2.y())
-					return 1;
-				if (d1.y() < d2.y())
-					return -1;
-			} else if (_flag == 1) {
-				if (d1.x() > d2.x())
-					return -1;
-				if (d1.x() < d2.x())
-					return 1;
-				// x1 == x2
-				if (d1.y() > d2.y())
-					return -1;
-				if (d1.y() < d2.y())
-					return 1;
-			} else if (_flag == 2) {
-				if (d1.y() > d2.y())
-					return 1;
-				if (d1.y() < d2.y())
-					return -1;
-				// y1 == y2
-				if (d1.x() > d2.x())
-					return 1;
-				if (d1.x() < d2.x())
-					return -1;
-
-			} else if (_flag == 3) {
-				if (d1.y() > d2.y())
-					return -1;
-				if (d1.y() < d2.y())
-					return 1;
-				// y1 == y2
-				if (d1.x() > d2.x())
-					return -1;
-				if (d1.x() < d2.x())
-					return 1;
-			}
-		} else {
-			if (o1 == null && o2 == null)
-				return 0;
-			if (o1 == null && o2 != null)
-				return 1;
-			if (o1 != null && o2 == null)
-				return -1;
-		}
-		return ans;
+	/**
+	 * return true iff this point [x,y] coordinates are the same as p [x,y]
+	 * coordinates. (the z value is ignored).
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Point other = (Point) obj;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+			return false;
+		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+			return false;
+		return true;
 	}
 
-	public boolean equals(Object ob) {
-		return false;
+	@Override
+	public int compareTo(Point o) {
+		if (o == null)
+			return 1;
+		
+		Point d1 = this;
+		Point d2 = o;
+		if (d1.x() > d2.x())
+			return 1;
+		if (d1.x() < d2.x())
+			return -1;
+		// x1 == x2
+		if (d1.y() > d2.y())
+			return 1;
+		if (d1.y() < d2.y())
+			return -1;
+		// y1==y2
+		return 0;
 	}
+
 }

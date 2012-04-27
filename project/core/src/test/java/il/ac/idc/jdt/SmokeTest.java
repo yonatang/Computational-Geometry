@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -17,7 +18,8 @@ public class SmokeTest {
 	public void shouldRunOnExampleData() throws Exception {
 		for (String data : Arrays.asList("t1_1000.tsin", "t1_5000.tsin", "il_1000.smf", "t1_5000.smf",
 				"terra_13000.smf", "terra_13000.tsin")) {
-			DelaunayTriangulation dt = new DelaunayTriangulation(this.getClass().getResourceAsStream("/inputs/" + data));
+			List<Point> points=IOParsers.readPoints(this.getClass().getResourceAsStream("/inputs/" + data));
+			DelaunayTriangulation dt = new DelaunayTriangulation(points);
 			File smfTemp = File.createTempFile("jdt-", ".smf");
 			File tsinTemp = File.createTempFile("jdt-", ".tsin");
 

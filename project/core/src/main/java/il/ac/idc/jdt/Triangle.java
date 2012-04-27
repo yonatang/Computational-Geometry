@@ -12,9 +12,7 @@ public class Triangle {
 	private int _mc = 0; // modcounter for triangulation fast update.
 
 	private boolean halfplane = false; // true iff it is an infinite face.
-	// public boolean visitflag;
 	private boolean _mark = false; // tag - for bfs algorithms
-	// private static boolean visitValue=false;
 	public static int _counter = 0, _c2 = 0;
 
 	public boolean isMark() {

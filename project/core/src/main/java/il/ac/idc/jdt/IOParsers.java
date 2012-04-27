@@ -11,23 +11,55 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.TreeSet;
 
 public class IOParsers {
 
-	public static Point[] read(File file) throws IOException {
-		return read(new FileInputStream(file));
+	/**
+	 * creates a Delaunay Triangulation from all the points in the suggested
+	 * tsin file or from a smf file (off like). if the file name is .smf - read
+	 * it as an smf file as try to read it as .tsin <br>
+	 * Note: duplicated points are ignored! <br>
+	 * SMF file has an OFF like format (a face (f) is presented by the indexes
+	 * of its points - starting from 1 - not from 0): <br>
+	 * begin <br>
+	 * v x1 y1 z1 <br>
+	 * ... <br>
+	 * v xn yn zn <br>
+	 * f i11 i12 i13 <br>
+	 * ... <br>
+	 * f im1 im2 im3 <br>
+	 * end <br>
+	 * <br>
+	 * The tsin text file has the following (very simple) format <br>
+	 * vertices# (n) <br>
+	 * x1 y1 z1 <br>
+	 * ... <br>
+	 * xn yn zn <br>
+	 * 
+	 * 
+	 */
+	public static List<Point> readPoints(File file) throws IOException {
+		return readPoints(new FileInputStream(file));
 	}
 
-	public static Point[] read(String file) throws IOException {
-		return read(new FileInputStream(file));
+	public static List<Point> readPoints(String file) throws IOException {
+		return readPoints(new FileInputStream(file));
 	}
 
-	public static Point[] read(InputStream is) throws IOException {
+	public static List<Point> readPoints(InputStream is) throws IOException {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(is));
@@ -46,47 +78,38 @@ public class IOParsers {
 		}
 	}
 
-	private static Point[] readSmf(BufferedReader is) throws IOException {
+	private static List<Point> readSmf(BufferedReader is) throws IOException {
 		String s;
 		while (!(s = is.readLine()).startsWith("v")) {
-
 		}
 
 		double dx = 1, dy = 1, dz = 1, minX = 0, minY = 0, minZ = 0;
 
-		Vector<Point> vec = new Vector<Point>();
-		Point[] ans = null; //
+		List<Point> points = new ArrayList<Point>();
 		while (s != null && s.charAt(0) == 'v') {
 			StringTokenizer st = new StringTokenizer(s);
 			st.nextToken();
 			double d1 = new Double(st.nextToken()).doubleValue() * dx + minX;
 			double d2 = new Double(st.nextToken()).doubleValue() * dy + minY;
 			double d3 = new Double(st.nextToken()).doubleValue() * dz + minZ;
-			vec.add(new Point((int) d1, (int) d2, d3));
+			points.add(new Point((int) d1, (int) d2, d3));
 			s = is.readLine();
 		}
-		ans = new Point[vec.size()];
-		for (int i = 0; i < vec.size(); i++)
-			ans[i] = (Point) vec.elementAt(i);
-		return ans;
+		return points;
 	}
 
-	private static Point[] readTsin(BufferedReader is, String firstLine) throws IOException {
+	private static List<Point> readTsin(BufferedReader is, String firstLine) throws IOException {
 
-		StringTokenizer st;
-		int numOfVer = new Integer(firstLine).intValue();
-
-		Point[] ans = new Point[numOfVer];
-
-		// reading the file verteces - insert them to the triangulation
-		for (int i = 0; i < numOfVer; i++) {
-			st = new StringTokenizer(is.readLine());
+		List<Point> points = new ArrayList<Point>();
+		String s;
+		while ((s = is.readLine()) != null) {
+			StringTokenizer st = new StringTokenizer(s);
 			double d1 = new Double(st.nextToken()).doubleValue();
 			double d2 = new Double(st.nextToken()).doubleValue();
 			double d3 = new Double(st.nextToken()).doubleValue();
-			ans[i] = new Point((int) d1, (int) d2, d3);
+			points.add(new Point((int) d1, (int) d2, d3));
 		}
-		return ans;
+		return points;
 	}
 
 	public static void exportSmf(DelaunayTriangulation dto, OutputStream os) {
@@ -94,31 +117,37 @@ public class IOParsers {
 	}
 
 	public static void exportSmf(DelaunayTriangulation dto, Writer writer) {
-		int len = dto.size();
-		Point[] ans = new Point[len];
-		Iterator<Point> it = dto.verticesIterator();
-		Comparator<Point> comp = Point.getComparator();
-		for (int i = 0; i < len; i++) {
-			ans[i] = it.next();
+		List<Triangle> triangulation = dto.getTriangulation();
+
+		Set<Point> pointSet = new HashSet<Point>();
+		for (Triangle t : triangulation) {
+			if (!t.isHalfplane()) {
+				pointSet.add(t.p1());
+				pointSet.add(t.p2());
+				pointSet.add(t.p3());
+			}
 		}
-		Arrays.sort(ans, comp);
+		ArrayList<Point> pointList = new ArrayList<Point>(pointSet);
+		Collections.sort(pointList);
+		Map<Point, Integer> pointMap = new HashMap<Point, Integer>();
+		for (int i = 0; i < pointList.size(); i++) {
+			pointMap.put(pointList.get(i), i);
+		}
 
 		PrintWriter os = new PrintWriter(writer);
-		// prints the tsin file header:
 		try {
 			os.println("begin");
 
-			for (int i = 0; i < len; i++) {
-				os.println("v " + ans[i].toFile());
+			for (Point p : pointList) {
+				os.println("v " + p.toFile());
 			}
-			int i1 = -1, i2 = -1, i3 = -1;
-			for (Iterator<Triangle> dt = dto.trianglesIterator(); dt.hasNext();) {
-				Triangle curr = dt.next();
-				if (!curr.isHalfplane()) {
-					i1 = Arrays.binarySearch(ans, curr.p1(), comp);
-					i2 = Arrays.binarySearch(ans, curr.p2(), comp);
-					i3 = Arrays.binarySearch(ans, curr.p3(), comp);
-					if (i1 < 0 || i2 < 0 || i3 < 0)
+
+			for (Triangle t : triangulation) {
+				if (!t.isHalfplane()) {
+					Integer i1 = pointMap.get(t.p1()); 
+					Integer i2 = pointMap.get(t.p2()); 
+					Integer i3 = pointMap.get(t.p3()); 
+					if (i1 == null || i2 == null || i3 == null)
 						throw new RuntimeException("wrong triangulation inner bug - cant write as an SMF file!");
 					os.println("f " + (i1 + 1) + " " + (i2 + 1) + " " + (i3 + 1));
 				}
@@ -127,7 +156,6 @@ public class IOParsers {
 		} finally {
 			Utils.closeQuietly(os);
 		}
-
 	}
 
 	public static void exportSmf(DelaunayTriangulation dto, File smfFile) throws IOException {

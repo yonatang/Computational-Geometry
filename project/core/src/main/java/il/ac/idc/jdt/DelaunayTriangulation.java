@@ -1,9 +1,11 @@
 package il.ac.idc.jdt;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -85,55 +87,25 @@ public class DelaunayTriangulation {
 		this(new Point[] {});
 	}
 
-	public DelaunayTriangulation(InputStream stream) throws IOException, UnsupportedFormatException {
-		this(IOParsers.read(stream));
-	}
-
 	/**
 	 * creates a Delaunay Triangulation from all the points. Note: duplicated
 	 * points are ignored.
 	 */
 	public DelaunayTriangulation(Point[] ps) {
+		this(Arrays.asList(ps));
+	}
+	
+	public DelaunayTriangulation(Collection<Point> points){
 		modCount = 0;
 		modCount2 = 0;
 		bbMin = null;
 		bbMax = null;
-		this.vertices = new TreeSet<Point>(Point.getComparator());
+		this.vertices = new TreeSet<Point>();
 		triangles = new Vector<Triangle>();
 		deletedTriangles = null;
 		addedTriangles = new Vector<Triangle>();
 		allCollinear = true;
-		for (int i = 0; ps != null && i < ps.length && ps[i] != null; i++) {
-			this.insertPoint(ps[i]);
-		}
-	}
-
-	/**
-	 * creates a Delaunay Triangulation from all the points in the suggested
-	 * tsin file or from a smf file (off like). if the file name is .smf - read
-	 * it as an smf file as try to read it as .tsin <br>
-	 * Note: duplicated points are ignored! <br>
-	 * SMF file has an OFF like format (a face (f) is presented by the indexes
-	 * of its points - starting from 1 - not from 0): <br>
-	 * begin <br>
-	 * v x1 y1 z1 <br>
-	 * ... <br>
-	 * v xn yn zn <br>
-	 * f i11 i12 i13 <br>
-	 * ... <br>
-	 * f im1 im2 im3 <br>
-	 * end <br>
-	 * <br>
-	 * The tsin text file has the following (very simple) format <br>
-	 * vertices# (n) <br>
-	 * x1 y1 z1 <br>
-	 * ... <br>
-	 * xn yn zn <br>
-	 * 
-	 * 
-	 */
-	public DelaunayTriangulation(String file) throws IOException, UnsupportedFormatException {
-		this(IOParsers.read(file));
+		insertPoints(points);
 	}
 
 	/**
@@ -164,7 +136,13 @@ public class DelaunayTriangulation {
 	public int getModeCounter() {
 		return this.modCount;
 	}
-
+	
+	public void insertPoints(Collection<Point> points){
+		for (Point p:points){
+			insertPoint(p);
+		}
+	}
+ 
 	/**
 	 * insert the point to this Delaunay Triangulation. Note: if p is null or
 	 * already exist in this triangulation p is ignored.
@@ -714,8 +692,7 @@ public class DelaunayTriangulation {
 				third = neighbor.p3();
 
 			// delta (slope) of half plane edge
-			double halfplaneDelta = (halfplane.p1().y() - halfplane.p2().y())
-					/ (halfplane.p1().x() - halfplane.p2().x());
+			double halfplaneDelta = (halfplane.p1().y() - halfplane.p2().y()) / (halfplane.p1().x() - halfplane.p2().x());
 
 			// delta of line perpendicular to current half plane edge
 			double perpDelta = (1.0 / halfplaneDelta) * (-1.0);
@@ -1165,9 +1142,8 @@ public class DelaunayTriangulation {
 
 		// Validating find result.
 		if (!triangle.isCorner(point)) {
-			System.err
-					.println("findConnectedVertices: Could not find connected vertices since the first found triangle doesn't"
-							+ " share the given point.");
+			System.err.println("findConnectedVertices: Could not find connected vertices since the first found triangle doesn't"
+					+ " share the given point.");
 			return null;
 		}
 
@@ -1474,5 +1450,13 @@ public class DelaunayTriangulation {
 	 */
 	public void removeIndex() {
 		gridIndex = null;
+	}
+
+	public List<Triangle> getTriangulation() {
+		if (this.size() <= 2)
+			triangles = new Vector<Triangle>();
+		initTriangles();
+		List<Triangle> triangulation = new ArrayList<Triangle>(triangles);
+		return triangulation;
 	}
 }
