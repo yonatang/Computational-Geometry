@@ -15,7 +15,7 @@ public class Circle {
 
 	/**
 	 * Constructor. <br />
-	 * Constructs a new Circle_dt.
+	 * Constructs a new Circle
 	 * 
 	 * @param c
 	 *            Center of the circle.

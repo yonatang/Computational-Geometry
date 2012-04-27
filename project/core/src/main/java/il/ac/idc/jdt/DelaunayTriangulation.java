@@ -977,7 +977,7 @@ public class DelaunayTriangulation {
 		Triangle u = t.getAbTriangle();
 		Triangle v;
 		t.setMc(mc);
-		if (u.isHalfplane() || !u.circumcircle_contains(t.getC()))
+		if (u.isHalfplane() || !u.circumcircleContains(t.getC()))
 			return;
 
 		if (t.getA() == u.getA()) {
@@ -1075,20 +1075,20 @@ public class DelaunayTriangulation {
 	private static Triangle find(Triangle curr, Point p) {
 		if (p == null)
 			return null;
-		Triangle next_t;
+		Triangle nextT;
 		if (curr.isHalfplane()) {
-			next_t = findnext2(p, curr);
-			if (next_t == null || next_t.isHalfplane())
+			nextT = findnext2(p, curr);
+			if (nextT == null || nextT.isHalfplane())
 				return curr;
-			curr = next_t;
+			curr = nextT;
 		}
 		while (true) {
-			next_t = findnext1(p, curr);
-			if (next_t == null)
+			nextT = findnext1(p, curr);
+			if (nextT == null)
 				return curr;
-			if (next_t.isHalfplane())
-				return next_t;
-			curr = next_t;
+			if (nextT.isHalfplane())
+				return nextT;
+			curr = nextT;
 		}
 	}
 
@@ -1241,7 +1241,7 @@ public class DelaunayTriangulation {
 				}
 				// if there are only 4 points use contains that refers to point
 				// on boundary as outside
-				if (size == 4 && (calcDet(p1, p2, p3) >= 0) && !t.contains_BoundaryIsOutside(p)) {
+				if (size == 4 && (calcDet(p1, p2, p3) >= 0) && !t.containsBoundaryIsOutside(p)) {
 					if (!t.fallInsideCircumcircle(arrayPoints))
 						return t;
 				}
@@ -1424,7 +1424,6 @@ public class DelaunayTriangulation {
 					}
 				}
 			}
-			// _triNum = _triangles.size();
 			for (int i = 0; i < triangles.size(); i++) {
 				triangles.elementAt(i).setMark(false);
 			}

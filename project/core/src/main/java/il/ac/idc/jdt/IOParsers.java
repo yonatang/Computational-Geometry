@@ -108,13 +108,11 @@ public class IOParsers {
 		return points;
 	}
 
-	public static void exportSmf(DelaunayTriangulation dto, OutputStream os) {
-		exportSmf(dto, new OutputStreamWriter(os));
+	public static void exportSmf(List<Triangle> triangulation, OutputStream os) {
+		exportSmf(triangulation, new OutputStreamWriter(os));
 	}
 
-	public static void exportSmf(DelaunayTriangulation dto, Writer writer) {
-		List<Triangle> triangulation = dto.getTriangulation();
-
+	public static void exportSmf(List<Triangle> triangulation, Writer writer) {
 		Set<Point> pointSet = new HashSet<Point>();
 		for (Triangle t : triangulation) {
 			if (!t.isHalfplane()) {
@@ -135,17 +133,17 @@ public class IOParsers {
 			os.println("begin");
 
 			for (Point p : pointList) {
-				os.println("v " + p.toFile());
+				os.println(String.format("v %s %s %s", p.getX(), p.getY(), p.getZ()));
 			}
 
 			for (Triangle t : triangulation) {
 				if (!t.isHalfplane()) {
-					Integer i1 = pointMap.get(t.getA()); 
-					Integer i2 = pointMap.get(t.getB()); 
-					Integer i3 = pointMap.get(t.getC()); 
+					Integer i1 = pointMap.get(t.getA());
+					Integer i2 = pointMap.get(t.getB());
+					Integer i3 = pointMap.get(t.getC());
 					if (i1 == null || i2 == null || i3 == null)
 						throw new RuntimeException("wrong triangulation inner bug - cant write as an SMF file!");
-					os.println("f " + (i1 + 1) + " " + (i2 + 1) + " " + (i3 + 1));
+					os.println(String.format("f %d %d %d", (i1 + 1), (i2 + 1), (i3 + 1)));
 				}
 			}
 			os.println("end");
@@ -154,12 +152,12 @@ public class IOParsers {
 		}
 	}
 
-	public static void exportSmf(DelaunayTriangulation dto, File smfFile) throws IOException {
-		exportSmf(dto, new FileWriter(smfFile));
+	public static void exportSmf(List<Triangle> triangulation, File smfFile) throws IOException {
+		exportSmf(triangulation, new FileWriter(smfFile));
 	}
 
-	public static void exportSmf(DelaunayTriangulation dto, String smfFile) throws IOException {
-		exportSmf(dto, new FileWriter(smfFile));
+	public static void exportSmf(List<Triangle> triangulation, String smfFile) throws IOException {
+		exportSmf(triangulation, new FileWriter(smfFile));
 	}
 
 	public static void exportTsin(DelaunayTriangulation dto, File tsinFile) throws IOException {
@@ -182,7 +180,8 @@ public class IOParsers {
 			os.println(len);
 			Iterator<Point> it = dto.verticesIterator();
 			while (it.hasNext()) {
-				os.println(it.next().toFile());
+				Point p = it.next();
+				os.println(String.format("%s %s %s", p.getX(), p.getY(), p.getZ()));
 			}
 		} finally {
 			Utils.closeQuietly(os);
@@ -196,7 +195,8 @@ public class IOParsers {
 		os.println(dto.getConvexHullSize());
 		Iterator<Point> it = dto.getConvexHullVerticesIterator();
 		while (it.hasNext()) {
-			os.println(it.next().toFileXY());
+			Point p = it.next();
+			os.println(String.format("%s %s", p.getX(), p.getY()));
 		}
 		os.close();
 		fw.close();

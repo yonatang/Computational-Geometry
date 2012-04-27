@@ -250,15 +250,15 @@ public class GridIndex {
 	/**
 	 * Create a point at the center of a cell
 	 * 
-	 * @param x_index
+	 * @param xIndex
 	 *            horizontal cell index
-	 * @param y_index
+	 * @param yIndex
 	 *            vertical cell index
-	 * @return Point at the center of the cell at (x_index, y_index)
+	 * @return Point at the center of the cell at (xIndex, yIndex)
 	 */
-	private Point middleOfCell(int x_index, int y_index) {
-		double middleXCell = indexRegion.minX() + x_index * xSize + xSize / 2;
-		double middleYCell = indexRegion.minY() + y_index * ySize + ySize / 2;
+	private Point middleOfCell(int xIndex, int yIndex) {
+		double middleXCell = indexRegion.minX() + xIndex * xSize + xSize / 2;
+		double middleYCell = indexRegion.minY() + yIndex * ySize + ySize / 2;
 		return new Point(middleXCell, middleYCell);
 	}
 }

@@ -24,7 +24,7 @@ public class SmokeTest {
 			File tsinTemp = File.createTempFile("jdt-", ".tsin");
 
 			try {
-				IOParsers.exportSmf(dt, smfTemp);
+				IOParsers.exportSmf(dt.getTriangulation(), smfTemp);
 				assertThat(
 						data + " trangulation is correct for smf",
 						IOUtils.contentEquals(FileUtils.openInputStream(smfTemp),

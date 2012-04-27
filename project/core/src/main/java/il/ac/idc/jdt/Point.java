@@ -108,19 +108,10 @@ public class Point implements Comparable<Point> {
 		return Math.sqrt(temp);
 	}
 
-	/** @return the L2 distanse NOTE: 2 only!!! */
+	/** @return the L2 distanse NOTE: 3D only!!! */
 	public double distance3D(Point p) {
 		double temp = Math.pow(p.getX() - x, 2) + Math.pow(p.getY() - y, 2) + Math.pow(p.getZ() - z, 2);
 		return Math.sqrt(temp);
-	}
-
-	/** return a String: x y z (used by the save to file - write_tsin method). */
-	public String toFile() {
-		return ("" + x + " " + y + " " + z);
-	}
-
-	String toFileXY() {
-		return ("" + x + " " + y);
 	}
 
 	// pointLineTest

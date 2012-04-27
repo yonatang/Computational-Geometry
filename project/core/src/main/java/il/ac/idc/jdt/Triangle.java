@@ -1,5 +1,6 @@
 package il.ac.idc.jdt;
 
+
 /**
  * This class performs a 3D triangulation for each point inserted or deleted
  * 
@@ -140,7 +141,7 @@ public class Triangle {
 		return circum;
 	}
 
-	boolean circumcircle_contains(Point p) {
+	boolean circumcircleContains(Point p) {
 
 		return circum.radius() > circum.center().distance2(p);
 	}
@@ -191,7 +192,7 @@ public class Triangle {
 	 * @return true iff p is not null and is inside this triangle (Note: on
 	 *         boundary is considered outside!!).
 	 */
-	public boolean contains_BoundaryIsOutside(Point p) {
+	public boolean containsBoundaryIsOutside(Point p) {
 		boolean ans = false;
 		if (this.halfplane || p == null)
 			return false;
@@ -235,7 +236,7 @@ public class Triangle {
 		while (!isInside && i < arrayPoints.length) {
 			Point p = arrayPoints[i];
 			if (!p.equals(p1) && !p.equals(p2) && !p.equals(p3)) {
-				isInside = this.circumcircle_contains(p);
+				isInside = this.circumcircleContains(p);
 			}
 			i++;
 		}
