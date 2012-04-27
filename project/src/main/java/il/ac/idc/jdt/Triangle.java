@@ -12,9 +12,7 @@ public class Triangle {
 	private int _mc = 0; // modcounter for triangulation fast update.
 
 	private boolean halfplane = false; // true iff it is an infinite face.
-	// public boolean visitflag;
 	private boolean _mark = false; // tag - for bfs algorithms
-	// private static boolean visitValue=false;
 	public static int _counter = 0, _c2 = 0;
 
 	public boolean isMark() {
@@ -61,24 +59,12 @@ public class Triangle {
 		this.canext = canext;
 	}
 
-	public Point getA() {
-		return a;
-	}
-
 	public void setA(Point a) {
 		this.a = a;
 	}
 
-	public Point getB() {
-		return b;
-	}
-
 	public void setB(Point b) {
 		this.b = b;
-	}
-
-	public Point getC() {
-		return c;
 	}
 
 	public void setC(Point c) {
@@ -143,21 +129,21 @@ public class Triangle {
 	/**
 	 * returns the first vertex of this triangle.
 	 */
-	public Point p1() {
+	public Point getA() {
 		return a;
 	}
 
 	/**
 	 * returns the second vertex of this triangle.
 	 */
-	public Point p2() {
+	public Point getB() {
 		return b;
 	}
 
 	/**
 	 * returns the 3th vertex of this triangle.
 	 */
-	public Point p3() {
+	public Point getC() {
 		return c;
 	}
 
@@ -363,9 +349,9 @@ public class Triangle {
 	// Doron
 	public boolean fallInsideCircumcircle(Point[] arrayPoints) {
 		boolean isInside = false;
-		Point p1 = this.p1();
-		Point p2 = this.p2();
-		Point p3 = this.p3();
+		Point p1 = this.getA();
+		Point p2 = this.getB();
+		Point p3 = this.getC();
 		int i = 0;
 		while (!isInside && i < arrayPoints.length) {
 			Point p = arrayPoints[i];

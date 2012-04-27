@@ -253,8 +253,8 @@ public class DelaunayTriangulation {
 	 */
 	public Point findClosePoint(Point pointToDelete) {
 		Triangle triangle = find(pointToDelete);
-		Point p1 = triangle.p1();
-		Point p2 = triangle.p2();
+		Point p1 = triangle.getA();
+		Point p2 = triangle.getB();
 		double d1 = p1.distance(pointToDelete);
 		double d2 = p2.distance(pointToDelete);
 		if (triangle.isHalfplane()) {
@@ -264,7 +264,7 @@ public class DelaunayTriangulation {
 				return p2;
 			}
 		} else {
-			Point p3 = triangle.p3();
+			Point p3 = triangle.getC();
 
 			double d3 = p3.distance(pointToDelete);
 			if (d1 <= d2 && d1 <= d3) {
@@ -308,12 +308,12 @@ public class DelaunayTriangulation {
 	// by Doron Ganel & Eyal Roth(2009)
 	private boolean shareSegment(Triangle t1, Triangle t2) {
 		int counter = 0;
-		Point t1P1 = t1.p1();
-		Point t1P2 = t1.p2();
-		Point t1P3 = t1.p3();
-		Point t2P1 = t2.p1();
-		Point t2P2 = t2.p2();
-		Point t2P3 = t2.p3();
+		Point t1P1 = t1.getA();
+		Point t1P2 = t1.getB();
+		Point t1P3 = t1.getC();
+		Point t2P1 = t2.getA();
+		Point t2P2 = t2.getB();
+		Point t2P3 = t2.getC();
 
 		if (t1P1.equals(t2P1)) {
 			counter++;
@@ -352,12 +352,12 @@ public class DelaunayTriangulation {
 	// we assume the 2 triangles share a segment
 	// by Doron Ganel & Eyal Roth(2009)
 	private void updateNeighbor(Triangle addedTriangle, Triangle deletedTriangle, Point pointToDelete) {
-		Point delA = deletedTriangle.p1();
-		Point delB = deletedTriangle.p2();
-		Point delC = deletedTriangle.p3();
-		Point addA = addedTriangle.p1();
-		Point addB = addedTriangle.p2();
-		Point addC = addedTriangle.p3();
+		Point delA = deletedTriangle.getA();
+		Point delB = deletedTriangle.getB();
+		Point delC = deletedTriangle.getC();
+		Point addA = addedTriangle.getA();
+		Point addB = addedTriangle.getB();
+		Point addC = addedTriangle.getC();
 
 		// updates the neighbor of the deleted triangle to point to the added
 		// triangle
@@ -413,12 +413,12 @@ public class DelaunayTriangulation {
 	// we assume the 2 triangles share a segment
 	// by Doron Ganel & Eyal Roth(2009)
 	private void updateNeighbor(Triangle addedTriangle1, Triangle addedTriangle2) {
-		Point A1 = addedTriangle1.p1();
-		Point B1 = addedTriangle1.p2();
-		Point C1 = addedTriangle1.p3();
-		Point A2 = addedTriangle2.p1();
-		Point B2 = addedTriangle2.p2();
-		Point C2 = addedTriangle2.p3();
+		Point A1 = addedTriangle1.getA();
+		Point B1 = addedTriangle1.getB();
+		Point C1 = addedTriangle1.getC();
+		Point A2 = addedTriangle2.getA();
+		Point B2 = addedTriangle2.getB();
+		Point C2 = addedTriangle2.getC();
 
 		// A1-A2
 		if (A1.equals(A2)) {
@@ -636,9 +636,9 @@ public class DelaunayTriangulation {
 	// of the segment
 	// by Doron Ganel & Eyal Roth(2009)
 	private Point findDiagonal(Triangle triangle, Point point) {
-		Point p1 = triangle.p1();
-		Point p2 = triangle.p2();
-		Point p3 = triangle.p3();
+		Point p1 = triangle.getA();
+		Point p2 = triangle.getB();
+		Point p3 = triangle.getC();
 
 		if ((p1.pointLineTest(point, p3) == Point.LEFT) && (p2.pointLineTest(point, p3) == Point.RIGHT))
 			return p3;
@@ -706,16 +706,16 @@ public class DelaunayTriangulation {
 			// find third point of neighbor triangle
 			// (the one which is not shared with current half plane)
 			// this is used in determining half plane orientation
-			if (!neighbor.p1().equals(halfplane.p1()) && !neighbor.p1().equals(halfplane.p2()))
-				third = neighbor.p1();
-			if (!neighbor.p2().equals(halfplane.p1()) && !neighbor.p2().equals(halfplane.p2()))
-				third = neighbor.p2();
-			if (!neighbor.p3().equals(halfplane.p1()) && !neighbor.p3().equals(halfplane.p2()))
-				third = neighbor.p3();
+			if (!neighbor.getA().equals(halfplane.getA()) && !neighbor.getA().equals(halfplane.getB()))
+				third = neighbor.getA();
+			if (!neighbor.getB().equals(halfplane.getA()) && !neighbor.getB().equals(halfplane.getB()))
+				third = neighbor.getB();
+			if (!neighbor.getC().equals(halfplane.getA()) && !neighbor.getC().equals(halfplane.getB()))
+				third = neighbor.getC();
 
 			// delta (slope) of half plane edge
-			double halfplaneDelta = (halfplane.p1().y() - halfplane.p2().y())
-					/ (halfplane.p1().x() - halfplane.p2().x());
+			double halfplaneDelta = (halfplane.getA().y() - halfplane.getB().y())
+					/ (halfplane.getA().x() - halfplane.getB().x());
 
 			// delta of line perpendicular to current half plane edge
 			double perpDelta = (1.0 / halfplaneDelta) * (-1.0);
@@ -725,7 +725,7 @@ public class DelaunayTriangulation {
 			// works by finding the matching y value on the half plane line
 			// equation
 			// for the same x value as the third point
-			double yOrient = halfplaneDelta * (third.x() - halfplane.p1().x()) + halfplane.p1().y();
+			double yOrient = halfplaneDelta * (third.x() - halfplane.getA().x()) + halfplane.getA().y();
 			boolean above = true;
 			if (yOrient > third.y())
 				above = false;
@@ -1181,9 +1181,9 @@ public class DelaunayTriangulation {
 		}
 
 		for (Triangle tmpTriangle : triangles) {
-			Point point1 = tmpTriangle.p1();
-			Point point2 = tmpTriangle.p2();
-			Point point3 = tmpTriangle.p3();
+			Point point1 = tmpTriangle.getA();
+			Point point2 = tmpTriangle.getB();
+			Point point3 = tmpTriangle.getC();
 
 			if (point1.equals(point) && !pointsSet.contains(point2)) {
 				pointsSet.add(point2);
@@ -1404,10 +1404,10 @@ public class DelaunayTriangulation {
 		double y0 = bbMin.y(), y1 = bbMax.y();
 		boolean sx, sy;
 		while (cont) {
-			sx = curr.p1().x() == x0 || curr.p1().x() == x1;
-			sy = curr.p1().y() == y0 || curr.p1().y() == y1;
+			sx = curr.getA().x() == x0 || curr.getA().x() == x1;
+			sy = curr.getA().y() == y0 || curr.getA().y() == y1;
 			if ((sx & sy) | (!sx & !sy)) {
-				ans.add(curr.p1());
+				ans.add(curr.getA());
 			}
 			if (curr.getBcnext() != null && curr.getBcnext().isHalfplane())
 				curr = curr.getBcnext();
