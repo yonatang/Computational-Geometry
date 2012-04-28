@@ -34,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class RealtimeFrame extends JFrame implements ActionListener, Runnable, ItemListener {
 	/**
 	 * Defines how many milliseconds to sleep between each repaint() in the
@@ -339,7 +340,7 @@ public class RealtimeFrame extends JFrame implements ActionListener, Runnable, I
 	private void startRealtimeTriangulation() {
 		if (m_isFirstTimeRun == true) {
 			FileDialog dialog = new FileDialog(this, "Open Terra executable file", FileDialog.LOAD);
-			dialog.show();
+			dialog.setVisible(true);
 			String fileName = dialog.getFile();
 			String directoryName = dialog.getDirectory();
 
@@ -348,7 +349,7 @@ public class RealtimeFrame extends JFrame implements ActionListener, Runnable, I
 			}
 
 			dialog = new FileDialog(this, "Choose directory to save temporary .pgm and .smf files", FileDialog.LOAD);
-			dialog.show();
+			dialog.setVisible(true);
 
 			directoryName = dialog.getDirectory();
 

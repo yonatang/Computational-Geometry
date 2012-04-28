@@ -1,10 +1,13 @@
 package il.ac.idc.jdt;
 
+import java.io.Serializable;
+
 /**
  * This class represents a 3D point, with some simple geometric methods
  * (pointLineTest).
  */
-public class Point implements Comparable<Point> {
+@SuppressWarnings("serial")
+public class Point implements Comparable<Point>, Serializable {
 	private double x, y, z;
 
 	/**
@@ -90,11 +93,11 @@ public class Point implements Comparable<Point> {
 	}
 
 	boolean isLess(Point p) {
-		return compareTo(p)<0;
+		return compareTo(p) < 0;
 	}
 
 	boolean isGreater(Point p) {
-		return compareTo(p)>0;
+		return compareTo(p) > 0;
 	}
 
 	@Override
@@ -238,7 +241,7 @@ public class Point implements Comparable<Point> {
 	public int compareTo(Point o) {
 		if (o == null)
 			return 1;
-		
+
 		Point d1 = this;
 		Point d2 = o;
 		if (d1.getX() > d2.getX())

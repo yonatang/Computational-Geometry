@@ -1,12 +1,16 @@
 package il.ac.idc.jdt;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA. User: Aviad Segev Date: 22/11/2009 Time: 20:29:56
  * BoundingBox represents a horizontal bounding rectangle defined by its lower
- * left and upper right point. This is usually used as a rough approximation of
+ * left and upper right point. This is usually used as a rough approximation of@SuppressWarnings("serial")
+
  * the bounded geometry
  */
-public class BoundingBox {
+@SuppressWarnings("serial")
+public class BoundingBox implements Serializable {
 	/**
 	 * the minimum x-coordinate
 	 */
@@ -151,8 +155,7 @@ public class BoundingBox {
 	 * @return true if this BoundingBox contains the other BoundingBox
 	 */
 	public boolean contains(BoundingBox other) {
-		return !(isNull() || other.isNull()) && other.minX >= minX && other.maxY <= maxX && other.minY >= minY
-				&& other.maxY <= maxY;
+		return !(isNull() || other.isNull()) && other.minX >= minX && other.maxY <= maxX && other.minY >= minY && other.maxY <= maxY;
 	}
 
 	/**
@@ -169,8 +172,8 @@ public class BoundingBox {
 		if (isNull()) {
 			return new BoundingBox(other);
 		} else {
-			return new BoundingBox(Math.min(minX, other.minX), Math.max(maxX, other.maxX), Math.min(minY, other.minY),
-					Math.max(maxY, other.maxY), Math.min(minZ, other.minZ), Math.max(maxZ, other.maxZ));
+			return new BoundingBox(Math.min(minX, other.minX), Math.max(maxX, other.maxX), Math.min(minY, other.minY), Math.max(maxY,
+					other.maxY), Math.min(minZ, other.minZ), Math.max(maxZ, other.maxZ));
 		}
 	}
 

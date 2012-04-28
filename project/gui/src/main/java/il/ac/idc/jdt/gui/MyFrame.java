@@ -4,6 +4,8 @@ import il.ac.idc.jdt.DelaunayTriangulation;
 import il.ac.idc.jdt.IOParsers;
 import il.ac.idc.jdt.Point;
 import il.ac.idc.jdt.Triangle;
+import il.ac.idc.jtd.extra.los.Section;
+import il.ac.idc.jtd.extra.los.Visibility;
 import il.ac.idc.jtd.extra.topographic.CounterLine;
 
 import java.awt.Color;
@@ -41,6 +43,8 @@ public class MyFrame extends Frame implements ActionListener {
 	private int _stage, _view_flag = VIEW1, _mc = 0;
 	private Triangle _t1, _t2; // tmp triangle for find testing for selection
 	private DelaunayTriangulation _ajd = null;
+
+	private Section section;
 	protected Vector<Point> _clients, _guards;
 	protected Point _dx_f, _dy_f, _dx_map, _dy_map, _p1, _p2;// ,_guard=null,
 																// _client=null;
@@ -86,6 +90,7 @@ public class MyFrame extends Frame implements ActionListener {
 		});
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		// _ajd.initTriangle();
 		// ajTriangle[] tt = _ajd._triangles;
@@ -126,27 +131,49 @@ public class MyFrame extends Frame implements ActionListener {
 
 		}
 
-		if (_los != null && (_stage == SECTION1 || _stage == SECTION2)) {
-			if (_los != null && _los._tr != null) {
-				it = _los._tr.iterator();
-				while (it.hasNext()) {
-					curr = it.next();
-					if (!curr.isHalfplane())
-						drawTriangle(g, curr, Color.RED);
+		if (section != null) {
+			for (Triangle tr : section.getTriangles()) {
+				if (!tr.isHalfplane())
+					drawTriangle(g, tr, Color.RED);
+			}
+			if (_view_flag != VORONOI) {
+				for (Point p : section.getPoints()) {
+					if (p != null) {
+						drawPoint(g, p, Color.BLUE);
+					}
 				}
 			}
-			Iterator<Point> pit = _los._section.iterator();
-			int i = 0;
-			while (pit.hasNext()) {
-				Point curr_p = pit.next();
-				if (curr_p != null && _view_flag != VORONOI) {
-					drawPoint(g, curr_p, Color.BLUE);
-					System.out.println(i + ") " + curr_p + "  dist _p1: " + _p1.distance(curr_p));
-					i++;
-				}
+			Color c;
+			if (_los.isVisible(section)) {
+				c = Color.GREEN;
+			} else {
+				c = Color.BLUE;
 			}
-			drawLine(g, _p1, _p2);
+			drawLine(g, _p1, _p2, c);
 		}
+
+		// if (_los != null && (_stage == SECTION1 || _stage == SECTION2)) {
+		// if (_los != null && _los._tr != null) {
+		// it = _los._tr.iterator();
+		// while (it.hasNext()) {
+		// curr = it.next();
+		// if (!curr.isHalfplane())
+		// drawTriangle(g, curr, Color.RED);
+		// }
+		// }
+		// Iterator<Point> pit = _los._section.iterator();
+		// int i = 0;
+		// while (pit.hasNext()) {
+		// Point curr_p = pit.next();
+		// if (curr_p != null && _view_flag != VORONOI) {
+		// drawPoint(g, curr_p, Color.BLUE);
+		// System.out.println(i + ") " + curr_p + "  dist _p1: " +
+		// _p1.distance(curr_p));
+		// i++;
+		// }
+		// }
+		// drawLine(g, _p1, _p2);
+		// }
 		/*
 		 * if(_stage == GUARD | _stage == CLIENT) { if(_p1!=null)
 		 * drawPoint(g,_p1,6,Color.ORANGE); if(_p2!=null) { if(_visible)
@@ -167,7 +194,8 @@ public class MyFrame extends Frame implements ActionListener {
 					Point cc = _clients.elementAt(c);
 					drawPoint(g, cc, 6, Color.white);
 					// Color cl = Color.RED;
-					if (_los.los(gg, cc)) {
+					Section section=_los.computeSection(gg, cc);
+					if (_los.isVisible(section)) {
 						this.drawLine(g, gg, cc);
 						ccc[c]++;
 					}
@@ -199,7 +227,7 @@ public class MyFrame extends Frame implements ActionListener {
 	 * @param g
 	 *            Graphics object
 	 */
-	void drawVoronoi(Graphics g) {
+	private void drawVoronoi(Graphics g) {
 		Iterator<Triangle> it = _ajd.trianglesIterator();
 
 		while (it.hasNext()) {
@@ -242,7 +270,7 @@ public class MyFrame extends Frame implements ActionListener {
 		}
 	}
 
-	void drawTopo(Graphics g) {
+	private void drawTopo(Graphics g) {
 		Triangle curr = null;
 		Iterator<Triangle> it = _ajd.trianglesIterator();
 		g.setColor(Color.red);
@@ -253,7 +281,7 @@ public class MyFrame extends Frame implements ActionListener {
 		}
 	}
 
-	void drawTriangleTopoLines(Graphics g, Triangle t, double dz, Color cl) {
+	private void drawTriangleTopoLines(Graphics g, Triangle t, double dz, Color cl) {
 		if (t.getA().getZ() < 0 || t.getB().getZ() < 0 || t.getC().getZ() < 0)
 			return;
 		Point[] p12 = computePoints(t.getA(), t.getB(), dz);
@@ -294,7 +322,7 @@ public class MyFrame extends Frame implements ActionListener {
 		}
 	}
 
-	Point[] computePoints(Point p1, Point p2, double dz) {
+	private Point[] computePoints(Point p1, Point p2, double dz) {
 		Point[] ans = new Point[0];
 		double z1 = Math.min(p1.getZ(), p2.getZ()), z2 = Math.max(p1.getZ(), p2.getZ());
 		if (z1 == z2)
@@ -402,8 +430,13 @@ public class MyFrame extends Frame implements ActionListener {
 	}
 
 	public void drawLine(Graphics g, Point p1, Point p2) {
-		// g.drawLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(),
-		// (int)p2.getY());
+		drawLine(g, p1, p2, null);
+	}
+
+	public void drawLine(Graphics g, Point p1, Point p2, Color color) {
+		if (color != null) {
+			g.setColor(color);
+		}
 		Point t1 = this.world2screen(p1);
 		Point t2 = this.world2screen(p2);
 		g.drawLine((int) t1.getX(), (int) t1.getY(), (int) t2.getX(), (int) t2.getY());
@@ -504,6 +537,7 @@ public class MyFrame extends Frame implements ActionListener {
 		this.addMouseListener(new MouseManeger());
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent evt) {
 		String arg = evt.getActionCommand();
 		if (arg.equals("Open"))
@@ -678,20 +712,16 @@ public class MyFrame extends Frame implements ActionListener {
 			case (SECTION1): {
 				Point q = new Point(xx, yy);
 				_p1 = screen2world(q);
-				// _p1 = new Point(99792.03,1073355.0,30.0);
-
-				// _t1 = _ajd.find(_p1);
 				_stage = SECTION2;
 				break;
 			}
 			case (SECTION2): {
 				Point q = new Point(xx, yy);
 				_p2 = screen2world(q);
-				// _p2 = new Point(149587.055,1040477.0,5.0);
-
-				// _t2 = _ajd.find(_p2);
 				_los = new Visibility(_ajd);
-				_los.computeSection(_p1, _p2);
+
+				// _los.computeSection(_p1, _p2);
+				section = _los.computeSection(_p1, _p2);
 				repaint();
 				_stage = SECTION1;
 				break;
@@ -730,13 +760,13 @@ public class MyFrame extends Frame implements ActionListener {
 		}
 	}
 
-	Point screen2world(Point p) {
+	private Point screen2world(Point p) {
 		double x = transform(_dx_f, p.getX(), _dx_map);
 		double y = transformY(_dy_f, p.getY(), _dy_map);
 		return new Point(x, y);
 	}
 
-	Point world2screen(Point p) {
+	private Point world2screen(Point p) {
 		double x = transform(_dx_map, p.getX(), _dx_f);
 		double y = transformY(_dy_map, p.getY(), _dy_f);
 		return new Point(x, y);

@@ -1,5 +1,7 @@
 package il.ac.idc.jdt;
 
+import java.io.Serializable;
+
 /**
  * this class represents a simple circle. <br />
  * it is used by the Delaunay Triangulation class. <br />
@@ -8,7 +10,8 @@ package il.ac.idc.jdt;
  * 
  * @see DelaunayTriangulation
  */
-public class Circle {
+@SuppressWarnings("serial")
+public class Circle implements Serializable {
 
 	private Point center;
 	private double radius;
@@ -91,5 +94,5 @@ public class Circle {
 			return false;
 		return true;
 	}
-	
+
 }

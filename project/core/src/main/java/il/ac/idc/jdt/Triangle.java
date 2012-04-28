@@ -1,11 +1,14 @@
 package il.ac.idc.jdt;
 
+import java.io.Serializable;
+
 
 /**
  * This class performs a 3D triangulation for each point inserted or deleted
  * 
  */
-public class Triangle {
+@SuppressWarnings("serial")
+public class Triangle implements Serializable {
 	private Point a, b, c;
 	private Triangle abTriangle, bcTriangle, caTriangle;
 	private Circle circum;
