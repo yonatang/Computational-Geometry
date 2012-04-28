@@ -51,7 +51,7 @@ public class MyFrame extends Frame implements ActionListener {
 	protected boolean _visible = false;
 	private double _topo_dz = 100.0, GH = 30, CH = 5;
 	// private Vector<Triangle_dt> _tr = null;//new Vector<Triangle_dt>();
-	private Visibility _los;// , _section2;
+	private Visibility _los = new Visibility();
 
 	// *** text area ***
 	public MyFrame() {
@@ -180,8 +180,6 @@ public class MyFrame extends Frame implements ActionListener {
 		 * drawPoint(g,_p2,6,Color.BLUE); else drawPoint(g,_p2,6, Color.RED); }
 		 * }
 		 */
-		if (_los == null)
-			_los = new Visibility(_ajd);
 		if (_stage == GUARD || _stage == CLIENT) {
 			int[] ccc = new int[0];
 			if (_clients != null)
@@ -194,7 +192,7 @@ public class MyFrame extends Frame implements ActionListener {
 					Point cc = _clients.elementAt(c);
 					drawPoint(g, cc, 6, Color.white);
 					// Color cl = Color.RED;
-					Section section=_los.computeSection(gg, cc);
+					Section section = _los.computeSection(_ajd, gg, cc);
 					if (_los.isVisible(section)) {
 						this.drawLine(g, gg, cc);
 						ccc[c]++;
@@ -718,10 +716,7 @@ public class MyFrame extends Frame implements ActionListener {
 			case (SECTION2): {
 				Point q = new Point(xx, yy);
 				_p2 = screen2world(q);
-				_los = new Visibility(_ajd);
-
-				// _los.computeSection(_p1, _p2);
-				section = _los.computeSection(_p1, _p2);
+				section = _los.computeSection(_ajd, _p1, _p2);
 				repaint();
 				_stage = SECTION1;
 				break;

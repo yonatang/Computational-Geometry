@@ -10,11 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Visibility {
-	private DelaunayTriangulation _dt;
-
-	public Visibility(DelaunayTriangulation dt) {
-		_dt = dt;
-	}
 
 	/**
 	 * Calculate the section between p1 and p2. A section contains the list of
@@ -25,9 +20,9 @@ public class Visibility {
 	 * @param p2
 	 * @return Section object.
 	 */
-	public Section computeSection(Point p1, Point p2) {
-		Triangle t1 = _dt.find(p1);
-		Triangle t2 = _dt.find(p2);
+	public Section computeSection(DelaunayTriangulation dt, Point p1, Point p2) {
+		Triangle t1 = dt.find(p1);
+		Triangle t2 = dt.find(p2);
 		p1 = t1.getZ(p1);
 		p2 = t2.getZ(p2);
 		List<Triangle> triangles = new ArrayList<Triangle>();
