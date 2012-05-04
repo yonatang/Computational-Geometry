@@ -1,4 +1,4 @@
-package il.ac.idc.jtd.extra.los;
+package il.ac.idc.jdt.extra.los;
 
 import il.ac.idc.jdt.DelaunayTriangulation;
 import il.ac.idc.jdt.Point;

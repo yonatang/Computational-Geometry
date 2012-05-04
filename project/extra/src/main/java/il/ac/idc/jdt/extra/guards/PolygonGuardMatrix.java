@@ -1,4 +1,4 @@
-package il.ac.idc.jtd.extra.guards;
+package il.ac.idc.jdt.extra.guards;
 
 public class PolygonGuardMatrix {
 

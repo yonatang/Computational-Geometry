@@ -4,9 +4,9 @@ import il.ac.idc.jdt.DelaunayTriangulation;
 import il.ac.idc.jdt.IOParsers;
 import il.ac.idc.jdt.Point;
 import il.ac.idc.jdt.Triangle;
-import il.ac.idc.jtd.extra.los.Section;
-import il.ac.idc.jtd.extra.los.Visibility;
-import il.ac.idc.jtd.extra.topographic.CounterLine;
+import il.ac.idc.jdt.extra.los.Section;
+import il.ac.idc.jdt.extra.los.Visibility;
+import il.ac.idc.jdt.extra.topographic.CounterLine;
 
 import java.awt.Color;
 import java.awt.FileDialog;
