@@ -7,19 +7,40 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class GuardGraph {
 	private Map<Guard, Set<Target>> guardToTarget = new HashMap<Guard, Set<Target>>();
 	private Map<Target, Set<Guard>> targetToGuards = new HashMap<Target, Set<Guard>>();
 
+	public GuardGraph deepCopy() {
+		GuardGraph g2 = new GuardGraph(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+		for (Entry<Guard, Set<Target>> ent : guardToTarget.entrySet()) {
+			g2.guardToTarget.put(ent.getKey(), new HashSet<Target>());
+			for (Target t : ent.getValue()) {
+				g2.guardToTarget.get(ent.getKey()).add(t);
+			}
+		}
+
+		for (Entry<Target, Set<Guard>> ent : targetToGuards.entrySet()) {
+			g2.targetToGuards.put(ent.getKey(), new HashSet<Guard>());
+			for (Guard t : ent.getValue()) {
+				g2.targetToGuards.get(ent.getKey()).add(t);
+			}
+		}
+		return g2;
+	}
 
 	public GuardGraph(Collection<Point> guards, Collection<Point> targets) {
+		int count;
+		count = 0;
 		for (Point guard : guards) {
-			guardToTarget.put(new Guard(guard), new HashSet<Target>());
+			guardToTarget.put(new Guard(guard, count++), new HashSet<Target>());
 		}
+		count = 0;
 		for (Point target : targets) {
-			targetToGuards.put(new Target(target), new HashSet<Guard>());
+			targetToGuards.put(new Target(target, count++), new HashSet<Guard>());
 		}
 
 	}
@@ -66,6 +87,11 @@ public class GuardGraph {
 
 		guardToTarget.get(guard).add(target);
 		targetToGuards.get(target).add(guard);
+	}
+
+	@Override
+	public String toString() {
+		return "GuardGraph [\n\tguardToTarget=" + guardToTarget + ",\n\ttargetToGuards=" + targetToGuards + "]";
 	}
 
 }

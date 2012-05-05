@@ -4,6 +4,7 @@ import il.ac.idc.jdt.Point;
 
 public class Guard {
 	private Point point;
+	private Integer nick;
 
 	Point getPoint() {
 		return point;
@@ -13,8 +14,16 @@ public class Guard {
 		this.point = guard;
 	}
 
+	public Guard(Point guard, int nick) {
+		this.point = guard;
+		this.nick = nick;
+	}
+
 	@Override
 	public String toString() {
+		if (nick != null) {
+			return "Guard [nick=" + nick + "]";
+		}
 		return "Guard [x=" + point.getX() + ", y=" + point.getY() + "]";
 	}
 

@@ -11,14 +11,7 @@ public class Greedy implements Algorithm {
 
 		Set<Point> result = new HashSet<Point>();
 		while (!graph.getTargets().isEmpty()) {
-			int max = Integer.MIN_VALUE;
-			Guard maxGuard = null;
-			for (Guard guard : graph.getGuards()) {
-				if (graph.getTargets(guard).size() > max) {
-					maxGuard = guard;
-					max = graph.getTargets(guard).size();
-				}
-			}
+			Guard maxGuard = Utils.maxTargetGuard(graph);
 			if (maxGuard == null) {
 				System.out.println("Few points cannot be guarded.");
 				System.out.println(graph.getTargets());

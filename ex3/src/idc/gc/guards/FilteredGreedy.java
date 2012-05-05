@@ -9,15 +9,12 @@ public class FilteredGreedy implements Algorithm {
 
 	public Set<Point> guard(GuardGraph graph) {
 
-		Set<Point> result = new HashSet<Point>();
+		Set<Guard> result = new HashSet<Guard>();
 		while (!graph.getTargets().isEmpty()) {
-			Set<Guard> mandatoryGuards = Utils.filterMandatory(graph);
-			for (Guard g : mandatoryGuards) {
-				result.add(g.getPoint());
-			}
+			result.addAll(Utils.filterMandatory(graph));
 			if (graph.getTargets().isEmpty())
 				break;
-			
+
 			int max = Integer.MIN_VALUE;
 			Guard maxGuard = null;
 			for (Guard guard : graph.getGuards()) {
@@ -31,13 +28,13 @@ public class FilteredGreedy implements Algorithm {
 				System.out.println(graph.getTargets());
 				return null;
 			}
-			result.add(maxGuard.getPoint());
+			result.add(maxGuard);
 			Set<Target> guardedTargets = graph.getTargets(maxGuard);
 			graph.removeGuard(maxGuard);
 			for (Target target : guardedTargets) {
 				graph.removeTarget(target);
 			}
 		}
-		return result;
+		return Utils.guardsToPoints(result);
 	}
 }

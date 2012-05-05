@@ -5,17 +5,27 @@ import il.ac.idc.jdt.Point;
 public class Target {
 
 	private Point point;
+	private Integer nick;
 
 	Point getPoint() {
 		return point;
 	}
+
 	public Target(Point target) {
 		this.point = target;
 	}
 
+	public Target(Point target, int nick) {
+		this.point = target;
+		this.nick = nick;
+	}
+
 	@Override
 	public String toString() {
-		return "Guard [x=" + point.getX() + ", y=" + point.getY() + "]";
+		if (nick != null) {
+			return "Target [nick=" + nick + "]";
+		}
+		return "Target [x=" + point.getX() + ", y=" + point.getY() + "]";
 	}
 
 	@Override
