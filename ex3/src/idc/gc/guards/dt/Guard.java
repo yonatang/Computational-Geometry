@@ -1,4 +1,4 @@
-package idc.gc.guards;
+package idc.gc.guards.dt;
 
 import il.ac.idc.jdt.Point;
 
@@ -6,7 +6,7 @@ public class Guard {
 	private Point point;
 	private Integer nick;
 
-	Point getPoint() {
+	public Point getPoint() {
 		return point;
 	}
 

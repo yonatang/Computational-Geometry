@@ -1,5 +1,6 @@
-package idc.gc.guards;
+package idc.gc.guards.dt;
 
+import idc.gc.guards.Timer;
 import il.ac.idc.jdt.DelaunayTriangulation;
 import il.ac.idc.jdt.Point;
 import il.ac.idc.jdt.extra.los.Section;
@@ -16,16 +17,23 @@ public class Utils {
 
 	public static void calcVisibilities(DelaunayTriangulation dt, GuardGraph graph) {
 		Visibility v = new Visibility();
+		Timer timer = new Timer();
+		System.out.println("About to do it for " + graph.getTargets().size() * graph.getGuards().size() + " elements");
+		long calc = 0;
 		for (Target target : graph.getTargets()) {
 			for (Guard guard : graph.getGuards()) {
+				timer.start();
 				Point targetPoint = target.getPoint();
 				Point guardPoint = guard.getPoint();
 				Section section = v.computeSection(dt, targetPoint, guardPoint);
 				if (v.isVisible(section, targetPoint.getZ(), guardPoint.getZ())) {
 					graph.addGuardToTarget(guard, target);
 				}
+				calc += (long) timer.duration();
 			}
 		}
+		System.out.println(String.format("Average time per couple is %.2f ms", ((double) calc / (double) (graph
+				.getTargets().size() * graph.getGuards().size()))));
 	}
 
 	public static Set<Guard> filterMandatory(GuardGraph graph) {
@@ -74,6 +82,14 @@ public class Utils {
 		return points;
 	}
 
+	public static Set<Point> targetsToPoint(Set<Target> targets) {
+		Set<Point> points = new HashSet<Point>();
+		for (Target t : targets) {
+			points.add(t.getPoint());
+		}
+		return points;
+	}
+
 	public static Guard maxTargetGuard(GuardGraph graph) {
 		return maxTargetGuard(graph.getGuards(), graph);
 	}
@@ -104,7 +120,7 @@ public class Utils {
 		}
 		return one;
 	}
-	
+
 	public static <T> T pickOne(List<T> col) {
 		if (col.isEmpty())
 			throw new IllegalArgumentException("Collection must be non empty");
@@ -125,13 +141,11 @@ public class Utils {
 		return minGuard;
 	}
 
-	public static boolean verifyCoverage(DelaunayTriangulation dt, Collection<Point> guards, Collection<Point> targets) {
-		return verifyCoverage(dt, guards, targets, false);
+	public static boolean verifyCoverage(GuardGraph graph) {
+		return verifyCoverage(graph, false);
 	}
 
-	public static boolean verifyCoverage(DelaunayTriangulation dt, Collection<Point> guards, Collection<Point> targets, boolean output) {
-		GuardGraph graph = new GuardGraph(guards, targets);
-		calcVisibilities(dt, graph);
+	public static boolean verifyCoverage(GuardGraph graph, boolean output) {
 		boolean ok = true;
 
 		for (Target target : graph.getTargets()) {

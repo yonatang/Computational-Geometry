@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jdt-core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jdt-extra"/>
+	<classpathentry kind="lib" path="jdt-core-2.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="jdt-extra-2.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

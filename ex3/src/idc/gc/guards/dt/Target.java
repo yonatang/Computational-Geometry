@@ -1,4 +1,4 @@
-package idc.gc.guards;
+package idc.gc.guards.dt;
 
 import il.ac.idc.jdt.Point;
 
@@ -23,7 +23,7 @@ public class Target {
 	@Override
 	public String toString() {
 		if (nick != null) {
-			return "Target [nick=" + nick + "]";
+			return "Target [nick=" + nick + "][x=" + point.getX() + ", y=" + point.getY() + "]";
 		}
 		return "Target [x=" + point.getX() + ", y=" + point.getY() + "]";
 	}

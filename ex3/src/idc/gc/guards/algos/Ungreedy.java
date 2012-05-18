@@ -1,5 +1,9 @@
-package idc.gc.guards;
+package idc.gc.guards.algos;
 
+import idc.gc.guards.dt.Guard;
+import idc.gc.guards.dt.GuardGraph;
+import idc.gc.guards.dt.Target;
+import idc.gc.guards.dt.Utils;
 import il.ac.idc.jdt.Point;
 
 import java.util.HashSet;

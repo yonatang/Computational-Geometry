@@ -1,4 +1,4 @@
-package idc.gc.guards;
+package idc.gc.guards.dt;
 
 import il.ac.idc.jdt.Point;
 
@@ -15,7 +15,7 @@ public class GuardGraph {
 	private Map<Target, Set<Guard>> targetToGuards = new HashMap<Target, Set<Guard>>();
 
 	public GuardGraph deepCopy() {
-		GuardGraph g2 = new GuardGraph(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+		GuardGraph g2 = new GuardGraph(Collections.<Point> emptyList(), Collections.<Point> emptyList());
 		for (Entry<Guard, Set<Target>> ent : guardToTarget.entrySet()) {
 			g2.guardToTarget.put(ent.getKey(), new HashSet<Target>());
 			for (Target t : ent.getValue()) {
